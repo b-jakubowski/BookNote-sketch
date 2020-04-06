@@ -1,3 +1,5 @@
+import {categoriesMock} from "./categories";
+
 export const booksMock = [
 	{
 		id: "1",
