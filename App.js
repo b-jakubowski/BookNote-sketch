@@ -25,6 +25,8 @@ export default function App(props) {
 				setInitialNavigationState(await getInitialState());
 
 				await Font.loadAsync({
+					Roboto: require("native-base/Fonts/Roboto.ttf"),
+					Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
 					...Ionicons.font,
 					"space-mono": require("./assets/fonts/SpaceMono-Regular.ttf"),
 				});
@@ -56,7 +58,7 @@ export default function App(props) {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
 		backgroundColor: "#fff",
+		flex: 1,
 	},
 });
