@@ -2,12 +2,19 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import {StyleSheet, View, Image} from "react-native";
 import {Text, CardItem, Card} from "native-base";
+import {useNavigation} from "@react-navigation/native";
 
 export default function BookListItem({cover, name, author, quotes}) {
+	const navigation = useNavigation();
+
+	const handlePress = () => {
+		navigation.navigate("BookDetails", {cover, name, author, quotes});
+	};
+
 	return (
 		<View style={styles.card}>
 			<Card>
-				<CardItem>
+				<CardItem button onPress={() => handlePress()}>
 					<Image source={{uri: cover}} style={styles.cardImg} />
 					<View style={styles.bookDetails}>
 						<Text style={styles.bookTitle}>{name}</Text>
@@ -46,6 +53,9 @@ const styles = StyleSheet.create({
 });
 
 BookListItem.propTypes = {
+	navigation: PropTypes.shape({
+		navigate: PropTypes.func,
+	}),
 	cover: PropTypes.string,
 	name: PropTypes.string,
 	author: PropTypes.string,

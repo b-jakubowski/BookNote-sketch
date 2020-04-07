@@ -3,11 +3,13 @@ import {Platform, StatusBar, StyleSheet, View} from "react-native";
 import {SplashScreen} from "expo";
 import * as Font from "expo-font";
 import {Ionicons} from "@expo/vector-icons";
+import PropTypes from "prop-types";
 import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
 
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import useLinking from "./navigation/useLinking";
+import BookDetails from "./screens/BookDetails";
 
 const Stack = createStackNavigator();
 
@@ -47,9 +49,11 @@ export default function App(props) {
 			<NavigationContainer
 				ref={containerRef}
 				initialState={initialNavigationState}
+				initialRouteName="Root"
 			>
 				<Stack.Navigator>
 					<Stack.Screen name="Root" component={BottomTabNavigator} />
+					<Stack.Screen name="BookDetails" component={BookDetails} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</View>
@@ -62,3 +66,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 });
+
+App.propTypes = {
+	skipLoadingScreen: PropTypes.bool,
+};
