@@ -1,18 +1,11 @@
 import * as React from "react";
-import {StyleSheet, View} from "react-native";
 import BookList from "../components/BookList";
+import {Container} from "native-base";
 
 export default function BooksScreen() {
 	return (
-		<View style={styles.container}>
+		<Container>
 			<BookList />
-		</View>
+		</Container>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		backgroundColor: "#fff",
-		flex: 1,
-	},
-});

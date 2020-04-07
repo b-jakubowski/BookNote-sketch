@@ -19,6 +19,6 @@ export default function BookList() {
 const styles = StyleSheet.create({
 	contentContainer: {
 		alignItems: "center",
-		paddingTop: 30,
+		paddingVertical: 15,
 	},
 });

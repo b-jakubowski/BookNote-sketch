@@ -81,7 +81,8 @@
 			"react-hooks/rules-of-hooks": "error",
 			"react-hooks/exhaustive-deps": 0,
 			"react-native/no-raw-text": 0,
-			"react-native/no-color-literals": 0
+			"react-native/no-color-literals": 0,
+			"react/display-name": 0
 		},
 		"env": {
 			"react-native/react-native": true,
