@@ -31,6 +31,7 @@ export default function App(props) {
 					Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
 					...Ionicons.font,
 					"space-mono": require("./assets/fonts/SpaceMono-Regular.ttf"),
+					gotu: require("./assets/fonts/Gotu-Regular.ttf"),
 				});
 			} catch (e) {
 				console.warn(e);
