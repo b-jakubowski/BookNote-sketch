@@ -1,9 +1,8 @@
-import * as React from "react";
+import React from "react";
 import {ScrollView, StyleSheet, View, Image} from "react-native";
 import PropTypes from "prop-types";
-import {Container, Body, Text, Card, CardItem, Badge} from "native-base";
-import {MonoText} from "../components/StyledText";
-import Colors from "../constants/Colors";
+import {Container, Text, Card, CardItem} from "native-base";
+import Quote from "../components/Quote";
 
 export default function BookDetails({route}) {
 	const {cover, name, author, quotes} = route.params;
@@ -20,18 +19,7 @@ export default function BookDetails({route}) {
 				</CardItem>
 				<ScrollView>
 					{quotes.map((quote) => (
-						<CardItem key={quote.id} bordered>
-							<Body>
-								<MonoText>{quote.quote}</MonoText>
-								<View style={styles.categories}>
-									{quote.categories.map((category, index) => (
-										<Badge key={index} style={styles.categoryBadge}>
-											<Text style={styles.categoryText}>{category}</Text>
-										</Badge>
-									))}
-								</View>
-							</Body>
-						</CardItem>
+						<Quote key={quote.id} quote={quote} />
 					))}
 				</ScrollView>
 			</Card>
@@ -45,18 +33,6 @@ const styles = StyleSheet.create({
 		height: 70,
 		marginRight: 10,
 		maxWidth: 40,
-	},
-	categories: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-		marginTop: 5,
-	},
-	categoryBadge: {
-		backgroundColor: Colors.accentOrange,
-		marginRight: 3,
-	},
-	categoryText: {
-		fontSize: 12,
 	},
 });
 
