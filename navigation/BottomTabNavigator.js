@@ -3,7 +3,9 @@ import * as React from "react";
 
 import TabBarIcon from "../components/TabBarIcon";
 import BooksScreen from "../screens/BooksScreen";
-import LinksScreen from "../screens/LinksScreen";
+import QuotesScreen from "../screens/QuotesScreen";
+import AddQuoteScreen from "../screens/AddQuoteScreen";
+import DailyQuoteScreen from "../screens/DailyQuoteScreen";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
@@ -14,7 +16,7 @@ export default function BottomTabNavigator({navigation, route}) {
 	return (
 		<BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
 			<BottomTab.Screen
-				name="Home"
+				name="Books"
 				component={BooksScreen}
 				options={{
 					title: "Books",
@@ -24,12 +26,32 @@ export default function BottomTabNavigator({navigation, route}) {
 				}}
 			/>
 			<BottomTab.Screen
-				name="Links"
-				component={LinksScreen}
+				name="Daily Quote"
+				component={DailyQuoteScreen}
+				options={{
+					title: "Daily Quote",
+					tabBarIcon: ({focused}) => (
+						<TabBarIcon focused={focused} name="md-shuffle" />
+					),
+				}}
+			/>
+			<BottomTab.Screen
+				name="Quotes"
+				component={QuotesScreen}
 				options={{
 					title: "Quotes",
 					tabBarIcon: ({focused}) => (
 						<TabBarIcon focused={focused} name="md-quote" />
+					),
+				}}
+			/>
+			<BottomTab.Screen
+				name="Add Quote"
+				component={AddQuoteScreen}
+				options={{
+					title: "Add Quote",
+					tabBarIcon: ({focused}) => (
+						<TabBarIcon focused={focused} name="md-add-circle-outline" />
 					),
 				}}
 			/>
@@ -42,9 +64,13 @@ function getHeaderTitle(route) {
 		route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
 
 	switch (routeName) {
-		case "Home":
+		case "Books":
 			return "Books";
-		case "Links":
+		case "Quotes":
 			return "Quotes";
+		case "Add Quote":
+			return "Add Quote";
+		case "Daily Quote":
+			return "Daily Quote";
 	}
 }
