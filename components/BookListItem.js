@@ -12,22 +12,20 @@ export default function BookListItem({cover, name, author, quotes}) {
 	};
 
 	return (
-		<View style={styles.card}>
-			<Card>
-				<CardItem button onPress={() => handlePress()}>
-					<Image source={{uri: cover}} style={styles.cardImg} />
-					<View style={styles.bookDetails}>
-						<Text style={styles.bookTitle}>{name}</Text>
-						<Text note style={styles.bookAuthor}>
-							{author}
-						</Text>
-						<Text note style={styles.bookAuthor}>
-							Quotes: {quotes.length}
-						</Text>
-					</View>
-				</CardItem>
-			</Card>
-		</View>
+		<Card style={styles.card}>
+			<CardItem button onPress={() => handlePress()}>
+				<Image source={{uri: cover}} style={styles.cardImg} />
+				<View style={styles.bookDetails}>
+					<Text style={styles.bookTitle}>{name}</Text>
+					<Text note style={styles.bookAuthor}>
+						{author}
+					</Text>
+					<Text note style={styles.bookAuthor}>
+						Quotes: {quotes.length}
+					</Text>
+				</View>
+			</CardItem>
+		</Card>
 	);
 }
 
