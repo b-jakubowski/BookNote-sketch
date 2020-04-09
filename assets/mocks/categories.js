@@ -1,10 +1,10 @@
 export const categoriesMock = {
 	1: "motivation",
 	2: "love",
-	3: "ignorance",
+	3: "wisdom",
 	4: "time",
-	5: "life",
-	6: "leadership",
-	7: "money",
+	5: "happiness",
+	6: "funny",
+	7: "success",
 	8: "productivity",
 };
