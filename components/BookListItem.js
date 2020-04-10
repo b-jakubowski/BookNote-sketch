@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import {StyleSheet, View, Image} from "react-native";
 import {Text, CardItem, Card} from "native-base";

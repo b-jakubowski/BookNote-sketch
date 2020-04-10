@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import PropTypes from "prop-types";
 import {StyleSheet} from "react-native";
 import {
 	Container,
@@ -12,6 +13,8 @@ import {
 	View,
 	CheckBox,
 } from "native-base";
+import {addQuote} from "../store/actions/quote";
+import {connect} from "react-redux";
 
 const initialForm = {
 	name: "",
@@ -30,10 +33,27 @@ const initialForm = {
 	},
 };
 
-export default function AddQuoteScreen() {
+const categoriesMapped = (categories) =>
+	Object.keys(categories).filter((category) => categories[category]);
+
+const AddQuoteScreen = (props) => {
 	const [form, setForm] = useState(initialForm);
-	const handleSubmit = (values) => {
-		console.log(values);
+
+	const handleSubmit = ({name, author, cover, quote, categories}) => {
+		const formValues = {
+			id: `${Math.random()}`,
+			name,
+			author,
+			cover,
+			quotes: [
+				{
+					id: `${Math.random()}`,
+					categories: categoriesMapped(categories),
+					quote,
+				},
+			],
+		};
+		props.addQuote(formValues);
 	};
 
 	return (
@@ -130,7 +150,7 @@ export default function AddQuoteScreen() {
 			</Content>
 		</Container>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	categories: {
@@ -152,3 +172,9 @@ const styles = StyleSheet.create({
 		width: "100%",
 	},
 });
+
+AddQuoteScreen.propTypes = {
+	addQuote: PropTypes.func,
+};
+
+export default connect(null, {addQuote})(AddQuoteScreen);
