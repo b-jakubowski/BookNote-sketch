@@ -1,15 +1,16 @@
 import * as React from "react";
 import {ScrollView, StyleSheet} from "react-native";
-import {booksMock} from "../assets/mocks/books";
 import Quote from "../components/Quote";
+import {BooksPropTypes} from "../constants/PropTypes";
+import {connect} from "react-redux";
 
-export default function QuotesScreen() {
+const QuotesScreen = ({quotes}) => {
 	return (
 		<ScrollView
 			style={styles.container}
 			contentContainerStyle={styles.contentContainer}
 		>
-			{booksMock.map((book) =>
+			{quotes.map((book) =>
 				book.quotes.map((quote) => (
 					<Quote
 						key={quote.id}
@@ -21,7 +22,7 @@ export default function QuotesScreen() {
 			)}
 		</ScrollView>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	container: {
@@ -32,3 +33,13 @@ const styles = StyleSheet.create({
 		paddingTop: 15,
 	},
 });
+
+QuotesScreen.propTypes = BooksPropTypes;
+
+const mapStateToProps = (state) => {
+	return {
+		quotes: state.quoteReducer.quotes,
+	};
+};
+
+export default connect(mapStateToProps)(QuotesScreen);
