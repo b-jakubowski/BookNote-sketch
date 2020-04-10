@@ -3,6 +3,7 @@ import {ScrollView, StyleSheet} from "react-native";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import BookListItem from "./BookListItem";
+import {BooksPropTypes} from "../constants/PropTypes";
 
 export const BookList = ({quotes}) => {
 	return (
@@ -24,25 +25,7 @@ const styles = StyleSheet.create({
 	},
 });
 
-BookList.propTypes = {
-	quotes: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.string,
-			name: PropTypes.string,
-			author: PropTypes.string,
-			cover: PropTypes.string,
-			startedReading: PropTypes.number,
-			endedReading: PropTypes.number,
-			quotes: PropTypes.arrayOf(
-				PropTypes.shape({
-					id: PropTypes.string,
-					categories: PropTypes.arrayOf(PropTypes.string),
-					quote: PropTypes.string,
-				})
-			),
-		})
-	),
-};
+BookList.propTypes = BooksPropTypes;
 
 const mapStateToProps = (state) => {
 	return {
