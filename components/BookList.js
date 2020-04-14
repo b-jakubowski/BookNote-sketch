@@ -1,11 +1,10 @@
 import * as React from "react";
 import {ScrollView, StyleSheet} from "react-native";
-import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import BookListItem from "./BookListItem";
 import {BooksPropTypes} from "../constants/PropTypes";
 
-export const BookList = ({quotes}) => {
+const BookList = ({quotes}) => {
 	return (
 		<ScrollView
 			style={styles.container}
