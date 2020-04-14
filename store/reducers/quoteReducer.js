@@ -1,12 +1,12 @@
 import {
 	ADD_BOOK,
-	DELETE_QUOTE,
+	DELETE_BOOK,
 	ADD_QUOTE_TO_BOOK,
 } from "../../constants/ActionTypes";
 import {booksMock} from "../../assets/mocks/books";
 
 export const initialState = {
-	quotes: booksMock,
+	books: booksMock,
 };
 
 const quoteReducer = (state = initialState, action) => {
@@ -17,17 +17,20 @@ const quoteReducer = (state = initialState, action) => {
 				books: [...state.books, action.payload],
 			};
 		case ADD_QUOTE_TO_BOOK:
-			console.log(state.quotes.filter((item) => item.id === action.bookId));
 			return {
 				...state,
-				books: [
-					...state.books,
-					state.books
-						.filter((item) => item.id === action.bookId)
-						.quotes.concat([action.payload]),
-				],
+				books: state.books.map((book) => {
+					if (book.id === action.bookId) {
+						return {
+							...book,
+							quotes: [...book.quotes, action.payload],
+						};
+					}
+
+					return book;
+				}),
 			};
-		case DELETE_QUOTE:
+		case DELETE_BOOK:
 			return {
 				...state,
 				books: [state.books.filter((item) => item.id !== action.id)],

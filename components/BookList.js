@@ -4,13 +4,13 @@ import {connect} from "react-redux";
 import BookListItem from "./BookListItem";
 import {BooksPropTypes} from "../constants/PropTypes";
 
-const BookList = ({quotes}) => {
+const BookList = ({books}) => {
 	return (
 		<ScrollView
 			style={styles.container}
 			contentContainerStyle={styles.contentContainer}
 		>
-			{quotes.map((book) => (
+			{books.map((book) => (
 				<BookListItem key={book.id} {...book} />
 			))}
 		</ScrollView>
@@ -28,7 +28,7 @@ BookList.propTypes = BooksPropTypes;
 
 const mapStateToProps = (state) => {
 	return {
-		quotes: state.quoteReducer.quotes,
+		books: state.quoteReducer.books,
 	};
 };
 

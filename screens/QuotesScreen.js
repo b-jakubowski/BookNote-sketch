@@ -4,13 +4,13 @@ import Quote from "../components/Quote";
 import {BooksPropTypes} from "../constants/PropTypes";
 import {connect} from "react-redux";
 
-const QuotesScreen = ({quotes}) => {
+const QuotesScreen = ({books}) => {
 	return (
 		<ScrollView
 			style={styles.container}
 			contentContainerStyle={styles.contentContainer}
 		>
-			{quotes.map((book) =>
+			{books.map((book) =>
 				book.quotes.map((quote) => (
 					<Quote
 						key={quote.id}
@@ -38,7 +38,7 @@ QuotesScreen.propTypes = BooksPropTypes;
 
 const mapStateToProps = (state) => {
 	return {
-		quotes: state.quoteReducer.quotes,
+		books: state.quoteReducer.books,
 	};
 };
 

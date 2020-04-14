@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 export const BooksPropTypes = {
-	quotes: PropTypes.arrayOf(
+	books: PropTypes.arrayOf(
 		PropTypes.shape({
 			id: PropTypes.string,
 			name: PropTypes.string,
