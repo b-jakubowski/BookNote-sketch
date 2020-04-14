@@ -12,6 +12,7 @@ import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import useLinking from "./navigation/useLinking";
 import BookDetails from "./screens/BookDetails";
 import configureStore from "./store/store";
+import EditQuoteScreen from "./screens/EditQuoteScreen";
 
 const Stack = createStackNavigator();
 const store = configureStore();
@@ -59,6 +60,7 @@ export default function App(props) {
 					<Stack.Navigator>
 						<Stack.Screen name="Books" component={BottomTabNavigator} />
 						<Stack.Screen name="BookDetails" component={BookDetails} />
+						<Stack.Screen name="EditQuote" component={EditQuoteScreen} />
 					</Stack.Navigator>
 				</NavigationContainer>
 			</View>
