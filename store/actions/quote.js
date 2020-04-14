@@ -1,11 +1,21 @@
-import {ADD_QUOTE, DELETE_QUOTE} from "../../constants/ActionTypes";
+import {
+	ADD_BOOK,
+	DELETE_BOOK,
+	ADD_QUOTE_TO_BOOK,
+} from "../../constants/ActionTypes";
 
-export const addQuote = (quote) => ({
-	type: ADD_QUOTE,
+export const addBook = (quote) => ({
+	type: ADD_BOOK,
 	payload: quote,
 });
 
-export const DeleteQuote = (id) => ({
-	type: DELETE_QUOTE,
+export const addQuoteToBook = (quote, id) => ({
+	type: ADD_QUOTE_TO_BOOK,
+	bookId: id,
+	payload: quote,
+});
+
+export const DeleteBook = (id) => ({
+	type: DELETE_BOOK,
 	payload: id,
 });

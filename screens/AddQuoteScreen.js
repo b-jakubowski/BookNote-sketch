@@ -13,7 +13,7 @@ import {
 	View,
 	CheckBox,
 } from "native-base";
-import {addQuote} from "../store/actions/quote";
+import {addBook} from "../store/actions/quote";
 import {connect} from "react-redux";
 
 const initialForm = {
@@ -53,7 +53,8 @@ const AddQuoteScreen = (props) => {
 				},
 			],
 		};
-		props.addQuote(formValues);
+
+		props.addBook(formValues);
 	};
 
 	return (
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
 });
 
 AddQuoteScreen.propTypes = {
-	addQuote: PropTypes.func,
+	addBook: PropTypes.func,
 };
 
-export default connect(null, {addQuote})(AddQuoteScreen);
+export default connect(null, {addBook})(AddQuoteScreen);

@@ -1,4 +1,8 @@
-import {ADD_QUOTE, DELETE_QUOTE} from "../../constants/ActionTypes";
+import {
+	ADD_BOOK,
+	DELETE_QUOTE,
+	ADD_QUOTE_TO_BOOK,
+} from "../../constants/ActionTypes";
 import {booksMock} from "../../assets/mocks/books";
 
 export const initialState = {
@@ -7,15 +11,26 @@ export const initialState = {
 
 const quoteReducer = (state = initialState, action) => {
 	switch (action.type) {
-		case ADD_QUOTE:
+		case ADD_BOOK:
 			return {
 				...state,
-				quotes: [...state.quotes, action.payload],
+				books: [...state.books, action.payload],
+			};
+		case ADD_QUOTE_TO_BOOK:
+			console.log(state.quotes.filter((item) => item.id === action.bookId));
+			return {
+				...state,
+				books: [
+					...state.books,
+					state.books
+						.filter((item) => item.id === action.bookId)
+						.quotes.concat([action.payload]),
+				],
 			};
 		case DELETE_QUOTE:
 			return {
 				...state,
-				quotes: [state.quotes.filter((item) => item.id !== action.id)],
+				books: [state.books.filter((item) => item.id !== action.id)],
 			};
 		default:
 			return state;
