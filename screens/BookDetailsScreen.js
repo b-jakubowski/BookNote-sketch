@@ -1,7 +1,7 @@
 import React from "react";
 import {ScrollView, StyleSheet, View, Image} from "react-native";
 import PropTypes from "prop-types";
-import {Container, Text, Card, CardItem, Button} from "native-base";
+import {Container, Text, Card, CardItem, Button, Content} from "native-base";
 import Quote from "../components/Quote";
 
 export default function BookDetailsScreen({route, ...props}) {
@@ -26,12 +26,18 @@ export default function BookDetailsScreen({route, ...props}) {
 						</Button>
 					</View>
 				</CardItem>
-				<ScrollView>
-					{quotes.map((quote) => (
-						<Quote key={quote.id} quote={quote} />
-					))}
-				</ScrollView>
 			</Card>
+			<Content>
+				<Card>
+					<CardItem>
+						<ScrollView style={styles.scrollContainer}>
+							{quotes.map((quote) => (
+								<Quote key={quote.id} quote={quote} />
+							))}
+						</ScrollView>
+					</CardItem>
+				</Card>
+			</Content>
 		</Container>
 	);
 }

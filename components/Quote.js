@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
 	categoryBadge: {
 		backgroundColor: Colors.accentOrange,
 		marginRight: 3,
+		marginTop: 3,
 	},
 	categoryText: {
 		fontSize: 12,
