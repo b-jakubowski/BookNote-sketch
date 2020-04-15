@@ -13,6 +13,10 @@ import {
 	View,
 	CheckBox,
 } from "native-base";
+import * as ImagePicker from "expo-image-picker";
+import Constants from "expo-constants";
+import * as Permissions from "expo-permissions";
+import {useNavigation} from "@react-navigation/native";
 import {addBook} from "../store/actions/quote";
 import {connect} from "react-redux";
 
@@ -37,6 +41,7 @@ const categoriesMapped = (categories) =>
 	Object.keys(categories).filter((category) => categories[category]);
 
 const AddQuoteScreen = (props) => {
+	const navigation = useNavigation();
 	const [form, setForm] = useState(initialForm);
 
 	const handleSubmit = ({name, author, cover, quote, categories}) => {
@@ -55,6 +60,37 @@ const AddQuoteScreen = (props) => {
 		};
 
 		props.addBook(formValues);
+		setForm(initialForm);
+		navigation.navigate("Books");
+	};
+
+	const getPermissionAsync = async () => {
+		if (Constants.platform.ios) {
+			const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+			if (status !== "granted") {
+				alert("Sorry, we need camera roll permissions to make this work!");
+				return;
+			}
+			_pickImage();
+		}
+		_pickImage();
+	};
+
+	const _pickImage = async () => {
+		try {
+			let result = await ImagePicker.launchImageLibraryAsync({
+				mediaTypes: ImagePicker.MediaTypeOptions.Images,
+				allowsEditing: true,
+				aspect: [1, 1.6],
+				quality: 0.2,
+			});
+			if (!result.cancelled) {
+				setForm({...form, cover: result.uri});
+			}
+		} catch (E) {
+			console.log(E);
+		}
 	};
 
 	return (
@@ -84,6 +120,9 @@ const AddQuoteScreen = (props) => {
 								value={form.cover}
 							/>
 						</Item>
+						<Button onPress={() => getPermissionAsync()}>
+							<Text>Choose cover image...</Text>
+						</Button>
 					</View>
 					<View style={styles.formItem}>
 						<Text note>Categories</Text>
