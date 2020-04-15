@@ -10,7 +10,7 @@ import {Provider} from "react-redux";
 
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import useLinking from "./navigation/useLinking";
-import BookDetails from "./screens/BookDetails";
+import BookDetailsScreen from "./screens/BookDetailsScreen";
 import configureStore from "./store/store";
 import EditQuoteScreen from "./screens/EditQuoteScreen";
 
@@ -59,7 +59,7 @@ export default function App(props) {
 				>
 					<Stack.Navigator>
 						<Stack.Screen name="Books" component={BottomTabNavigator} />
-						<Stack.Screen name="BookDetails" component={BookDetails} />
+						<Stack.Screen name="BookDetails" component={BookDetailsScreen} />
 						<Stack.Screen name="EditQuote" component={EditQuoteScreen} />
 					</Stack.Navigator>
 				</NavigationContainer>

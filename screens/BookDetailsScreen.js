@@ -2,15 +2,13 @@ import React from "react";
 import {ScrollView, StyleSheet, View, Image} from "react-native";
 import PropTypes from "prop-types";
 import {Container, Text, Card, CardItem, Button} from "native-base";
-import {useNavigation} from "@react-navigation/native";
 import Quote from "../components/Quote";
 
-export default function BookDetails({route}) {
-	const navigation = useNavigation();
+export default function BookDetailsScreen({route, ...props}) {
 	const {id, cover, name, author, quotes} = route.params;
 
 	const navigateToEditQuote = () => {
-		navigation.navigate("EditQuote", {id});
+		props.navigation.navigate("EditQuote", {id});
 	};
 
 	return (
@@ -51,7 +49,7 @@ const styles = StyleSheet.create({
 	},
 });
 
-BookDetails.propTypes = {
+BookDetailsScreen.propTypes = {
 	navigation: PropTypes.shape({
 		navigate: PropTypes.func.isRequired,
 	}),

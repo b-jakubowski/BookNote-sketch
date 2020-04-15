@@ -32,7 +32,7 @@ const initialForm = {
 const categoriesMapped = (categories) =>
 	Object.keys(categories).filter((category) => categories[category]);
 
-const EditQuoteScreen = (props) => {
+const EditQuoteScreen = ({route, addQuoteToBook}) => {
 	const [form, setForm] = useState(initialForm);
 
 	const handleSubmit = ({quote, categories}) => {
@@ -42,7 +42,7 @@ const EditQuoteScreen = (props) => {
 			quote,
 		};
 
-		props.addQuoteToBook(formValues, props.route.params.id);
+		addQuoteToBook(formValues, route.params.id);
 	};
 
 	return (
