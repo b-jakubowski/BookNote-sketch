@@ -9,9 +9,7 @@ import {
 	Form,
 	Text,
 	Button,
-	Textarea,
 	View,
-	CheckBox,
 } from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
@@ -19,6 +17,8 @@ import * as Permissions from "expo-permissions";
 import {useNavigation} from "@react-navigation/native";
 import {addBook} from "../store/actions/quote";
 import {connect} from "react-redux";
+import QuoteForm from "../components/QuoteForm";
+import CategoryCheckBox from "../components/CategoryCheckBox";
 
 const initialForm = {
 	name: "",
@@ -40,7 +40,7 @@ const initialForm = {
 const categoriesMapped = (categories) =>
 	Object.keys(categories).filter((category) => categories[category]);
 
-const AddQuoteScreen = (props) => {
+const AddBookScreen = (props) => {
 	const navigation = useNavigation();
 	const [form, setForm] = useState(initialForm);
 
@@ -93,6 +93,16 @@ const AddQuoteScreen = (props) => {
 		}
 	};
 
+	const toggleCategory = (category) => {
+		setForm({
+			...form,
+			categories: {
+				...form.categories,
+				[category]: !form.categories[category],
+			},
+		});
+	};
+
 	return (
 		<Container>
 			<Content style={styles.content}>
@@ -120,72 +130,46 @@ const AddQuoteScreen = (props) => {
 								value={form.cover}
 							/>
 						</Item>
-						<Button onPress={() => getPermissionAsync()}>
+						<Button style={styles.button} onPress={() => getPermissionAsync()}>
 							<Text>Choose cover image...</Text>
 						</Button>
 					</View>
-					<View style={styles.formItem}>
-						<Text note>Categories</Text>
-						<View style={styles.categories}>
-							{Object.keys(initialForm.categories).map((category, index) => (
-								<View key={index}>
-									<Button
-										small
-										style={styles.categoryButton}
-										onPress={() => {
-											setForm({
-												...form,
-												categories: {
-													...form.categories,
-													[category]: !form.categories[category],
-												},
-											});
-										}}
-									>
-										<CheckBox
-											name={category}
-											value={category}
-											checked={form.categories[category]}
-											onPress={() => {
-												setForm({
-													...form,
-													categories: {
-														...form.categories,
-														[category]: !form.categories[category],
-													},
-												});
-											}}
-										/>
-										<Text>{category}</Text>
-									</Button>
-								</View>
-							))}
-						</View>
+					<Text note>Categories</Text>
+					<View style={styles.categories}>
+						{Object.keys(initialForm.categories).map((category, index) => (
+							<View key={index}>
+								<CategoryCheckBox
+									category={category}
+									checked={form.categories[category]}
+									onPress={() => toggleCategory(category)}
+								/>
+							</View>
+						))}
 					</View>
-					<View style={styles.formItem}>
-						<Text note>Quote</Text>
-						<Item>
-							<Textarea
-								rowSpan={5}
-								bordered
-								style={styles.quoteField}
-								placeholder="Quote"
-								onChangeText={(value) => setForm({...form, quote: value})}
-								value={form.quote}
-							/>
-						</Item>
+					<QuoteForm
+						categories={form.categories}
+						quote={form.quote}
+						onChangeText={(value) => setForm({...form, quote: value})}
+					/>
+					<View style={styles.buttonsContainer}>
+						<Button
+							title="submit"
+							block
+							style={styles.button}
+							onPress={() => handleSubmit(form)}
+						>
+							<Text>Add Quote</Text>
+						</Button>
+						<Button
+							title="submit"
+							block
+							danger
+							style={styles.button}
+							onPress={() => setForm(initialForm)}
+						>
+							<Text>Clear Form</Text>
+						</Button>
 					</View>
-					<Button title="submit" block onPress={() => handleSubmit(form)}>
-						<Text>Add Quote</Text>
-					</Button>
-					<Button
-						title="submit"
-						block
-						danger
-						onPress={() => setForm(initialForm)}
-					>
-						<Text>Clear Form</Text>
-					</Button>
 				</Form>
 			</Content>
 		</Container>
@@ -193,14 +177,17 @@ const AddQuoteScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
+	button: {
+		flex: 1,
+		margin: 5,
+	},
+	buttonsContainer: {
+		flexDirection: "row",
+	},
 	categories: {
 		flexDirection: "row",
 		flexWrap: "wrap",
 		justifyContent: "center",
-	},
-	categoryButton: {
-		marginRight: 5,
-		marginTop: 5,
 	},
 	content: {
 		padding: 10,
@@ -208,13 +195,10 @@ const styles = StyleSheet.create({
 	formItem: {
 		marginBottom: 15,
 	},
-	quoteField: {
-		width: "100%",
-	},
 });
 
-AddQuoteScreen.propTypes = {
+AddBookScreen.propTypes = {
 	addBook: PropTypes.func,
 };
 
-export default connect(null, {addBook})(AddQuoteScreen);
+export default connect(null, {addBook})(AddBookScreen);

@@ -4,7 +4,7 @@ import * as React from "react";
 import TabBarIcon from "../components/TabBarIcon";
 import BooksScreen from "../screens/BooksScreen";
 import QuotesScreen from "../screens/QuotesScreen";
-import AddQuoteScreen from "../screens/AddQuoteScreen";
+import AddBookScreen from "../screens/AddBookScreen";
 import DailyQuoteScreen from "../screens/DailyQuoteScreen";
 
 const BottomTab = createBottomTabNavigator();
@@ -46,10 +46,10 @@ export default function BottomTabNavigator({navigation, route}) {
 				}}
 			/>
 			<BottomTab.Screen
-				name="Add Quote"
-				component={AddQuoteScreen}
+				name="Add Book"
+				component={AddBookScreen}
 				options={{
-					title: "Add Quote",
+					title: "Add Book",
 					tabBarIcon: ({focused}) => (
 						<TabBarIcon focused={focused} name="md-add-circle-outline" />
 					),
@@ -68,8 +68,8 @@ function getHeaderTitle(route) {
 			return "Books";
 		case "Quotes":
 			return "Quotes";
-		case "Add Quote":
-			return "Add Quote";
+		case "Add Book":
+			return "Add Book";
 		case "Daily Quote":
 			return "Daily Quote";
 	}
