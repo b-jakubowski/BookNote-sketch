@@ -13,6 +13,7 @@ import useLinking from "./navigation/useLinking";
 import BookDetailsScreen from "./screens/BookDetailsScreen";
 import configureStore from "./store/store";
 import EditQuoteScreen from "./screens/EditQuoteScreen";
+import {Root} from "native-base";
 
 const Stack = createStackNavigator();
 const store = configureStore();
@@ -50,20 +51,22 @@ export default function App(props) {
 
 	return !isLoadingComplete && !props.skipLoadingScreen ? null : (
 		<Provider store={store}>
-			<View style={styles.container}>
-				{Platform.OS === "ios" && <StatusBar barStyle="default" />}
-				<NavigationContainer
-					ref={containerRef}
-					initialState={initialNavigationState}
-					initialRouteName="Books"
-				>
-					<Stack.Navigator>
-						<Stack.Screen name="Books" component={BottomTabNavigator} />
-						<Stack.Screen name="BookDetails" component={BookDetailsScreen} />
-						<Stack.Screen name="EditQuote" component={EditQuoteScreen} />
-					</Stack.Navigator>
-				</NavigationContainer>
-			</View>
+			<Root>
+				<View style={styles.container}>
+					{Platform.OS === "ios" && <StatusBar barStyle="default" />}
+					<NavigationContainer
+						ref={containerRef}
+						initialState={initialNavigationState}
+						initialRouteName="Books"
+					>
+						<Stack.Navigator>
+							<Stack.Screen name="Books" component={BottomTabNavigator} />
+							<Stack.Screen name="BookDetails" component={BookDetailsScreen} />
+							<Stack.Screen name="EditQuote" component={EditQuoteScreen} />
+						</Stack.Navigator>
+					</NavigationContainer>
+				</View>
+			</Root>
 		</Provider>
 	);
 }

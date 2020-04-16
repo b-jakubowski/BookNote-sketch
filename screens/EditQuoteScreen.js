@@ -1,11 +1,13 @@
 import React, {useState} from "react";
 import PropTypes from "prop-types";
 import {StyleSheet} from "react-native";
-import {Container, Content, Form, Text, Button, View} from "native-base";
+import {Container, Content, Form, Text, Toast, Button, View} from "native-base";
 import {addQuoteToBook} from "../store/actions/quote";
 import {connect} from "react-redux";
 import CategoryCheckBox from "../components/CategoryCheckBox";
 import QuoteForm from "../components/QuoteForm";
+import * as yup from "yup";
+import {useNavigation} from "@react-navigation/native";
 
 const initialForm = {
 	quote: "",
@@ -21,20 +23,50 @@ const initialForm = {
 	},
 };
 
+const quoteSchema = yup.object({
+	quote: yup.string().required().min(5),
+	categories: yup.object({
+		motivation: yup.boolean(),
+		love: yup.boolean(),
+		wisdom: yup.boolean(),
+		time: yup.boolean(),
+		happiness: yup.boolean(),
+		funny: yup.boolean(),
+		success: yup.boolean(),
+		productivity: yup.boolean(),
+	}),
+});
+
 const categoriesMapped = (categories) =>
 	Object.keys(categories).filter((category) => categories[category]);
 
 const EditQuoteScreen = ({route, addQuoteToBook}) => {
 	const [form, setForm] = useState(initialForm);
+	const navigation = useNavigation();
 
 	const handleSubmit = ({quote, categories}) => {
-		const formValues = {
-			id: `${Math.random()}`,
-			categories: categoriesMapped(categories),
-			quote,
-		};
+		quoteSchema
+			.validate(form, {abortEarly: false})
+			.then(() => {
+				addQuoteToBook(
+					{
+						id: `${Math.random()}`,
+						categories: categoriesMapped(categories),
+						quote,
+					},
+					route.params.id
+				);
 
-		addQuoteToBook(formValues, route.params.id);
+				navigation.navigate("Books");
+			})
+			.catch((e) => {
+				Toast.show({
+					text: e.errors.join(",\r\n"),
+					buttonText: "Okay",
+					type: "warning",
+					duration: 10000000,
+				});
+			});
 	};
 
 	const toggleCategory = (category) => {
@@ -70,17 +102,25 @@ const EditQuoteScreen = ({route, addQuoteToBook}) => {
 						quote={form.quote}
 						onChangeText={(value) => setForm({...form, quote: value})}
 					/>
-					<Button title="submit" block onPress={() => handleSubmit(form)}>
-						<Text>Add Quote</Text>
-					</Button>
-					<Button
-						title="submit"
-						block
-						danger
-						onPress={() => setForm(initialForm)}
-					>
-						<Text>Clear Form</Text>
-					</Button>
+					<View style={styles.buttonsContainer}>
+						<Button
+							title="submit"
+							block
+							style={styles.button}
+							onPress={() => handleSubmit(form)}
+						>
+							<Text>Add Quote</Text>
+						</Button>
+						<Button
+							title="submit"
+							block
+							danger
+							style={styles.button}
+							onPress={() => setForm(initialForm)}
+						>
+							<Text>Clear Form</Text>
+						</Button>
+					</View>
 				</Form>
 			</Content>
 		</Container>
@@ -88,6 +128,13 @@ const EditQuoteScreen = ({route, addQuoteToBook}) => {
 };
 
 const styles = StyleSheet.create({
+	button: {
+		flex: 1,
+		margin: 5,
+	},
+	buttonsContainer: {
+		flexDirection: "row",
+	},
 	categories: {
 		flexDirection: "row",
 		flexWrap: "wrap",
