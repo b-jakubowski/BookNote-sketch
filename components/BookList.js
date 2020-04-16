@@ -1,20 +1,21 @@
 import * as React from "react";
 import {ScrollView, StyleSheet} from "react-native";
-import {booksMock} from "../assets/mocks/books";
+import {connect} from "react-redux";
 import BookListItem from "./BookListItem";
+import {BooksPropTypes} from "../constants/PropTypes";
 
-export default function BookList() {
+const BookList = ({books}) => {
 	return (
 		<ScrollView
 			style={styles.container}
 			contentContainerStyle={styles.contentContainer}
 		>
-			{booksMock.map((book) => (
+			{books.map((book) => (
 				<BookListItem key={book.id} {...book} />
 			))}
 		</ScrollView>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	contentContainer: {
@@ -22,3 +23,13 @@ const styles = StyleSheet.create({
 		paddingVertical: 15,
 	},
 });
+
+BookList.propTypes = BooksPropTypes;
+
+const mapStateToProps = (state) => {
+	return {
+		books: state.quoteReducer.books,
+	};
+};
+
+export default connect(mapStateToProps)(BookList);

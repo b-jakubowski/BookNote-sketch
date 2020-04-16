@@ -6,12 +6,17 @@ import {Ionicons} from "@expo/vector-icons";
 import PropTypes from "prop-types";
 import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
+import {Provider} from "react-redux";
 
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import useLinking from "./navigation/useLinking";
-import BookDetails from "./screens/BookDetails";
+import BookDetailsScreen from "./screens/BookDetailsScreen";
+import configureStore from "./store/store";
+import EditQuoteScreen from "./screens/EditQuoteScreen";
+import {Root} from "native-base";
 
 const Stack = createStackNavigator();
+const store = configureStore();
 
 export default function App(props) {
 	const [isLoadingComplete, setLoadingComplete] = React.useState(false);
@@ -45,19 +50,24 @@ export default function App(props) {
 	}, []);
 
 	return !isLoadingComplete && !props.skipLoadingScreen ? null : (
-		<View style={styles.container}>
-			{Platform.OS === "ios" && <StatusBar barStyle="default" />}
-			<NavigationContainer
-				ref={containerRef}
-				initialState={initialNavigationState}
-				initialRouteName="Root"
-			>
-				<Stack.Navigator>
-					<Stack.Screen name="Root" component={BottomTabNavigator} />
-					<Stack.Screen name="BookDetails" component={BookDetails} />
-				</Stack.Navigator>
-			</NavigationContainer>
-		</View>
+		<Provider store={store}>
+			<Root>
+				<View style={styles.container}>
+					{Platform.OS === "ios" && <StatusBar barStyle="default" />}
+					<NavigationContainer
+						ref={containerRef}
+						initialState={initialNavigationState}
+						initialRouteName="Books"
+					>
+						<Stack.Navigator>
+							<Stack.Screen name="Books" component={BottomTabNavigator} />
+							<Stack.Screen name="BookDetails" component={BookDetailsScreen} />
+							<Stack.Screen name="EditQuote" component={EditQuoteScreen} />
+						</Stack.Navigator>
+					</NavigationContainer>
+				</View>
+			</Root>
+		</Provider>
 	);
 }
 

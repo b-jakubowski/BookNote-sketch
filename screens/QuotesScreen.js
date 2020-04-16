@@ -1,34 +1,34 @@
 import * as React from "react";
-import {ScrollView, StyleSheet, Text} from "react-native";
-import {booksMock} from "../assets/mocks/books";
 import Quote from "../components/Quote";
+import {BooksPropTypes} from "../constants/PropTypes";
+import {connect} from "react-redux";
+import {Container, Content} from "native-base";
 
-export default function QuotesScreen() {
+const QuotesScreen = ({books}) => {
 	return (
-		<ScrollView
-			style={styles.container}
-			contentContainerStyle={styles.contentContainer}
-		>
-			{booksMock.map((book) =>
-				book.quotes.map((quote) => (
-					<Quote
-						key={quote.id}
-						quote={quote}
-						author={book.author}
-						title={book.name}
-					/>
-				))
-			)}
-		</ScrollView>
+		<Container>
+			<Content>
+				{books.map((book) =>
+					book.quotes.map((quote) => (
+						<Quote
+							key={quote.id}
+							quote={quote}
+							author={book.author}
+							title={book.name}
+						/>
+					))
+				)}
+			</Content>
+		</Container>
 	);
-}
+};
 
-const styles = StyleSheet.create({
-	container: {
-		backgroundColor: "#fafafa",
-		flex: 1,
-	},
-	contentContainer: {
-		paddingTop: 15,
-	},
-});
+QuotesScreen.propTypes = BooksPropTypes;
+
+const mapStateToProps = (state) => {
+	return {
+		books: state.quoteReducer.books,
+	};
+};
+
+export default connect(mapStateToProps)(QuotesScreen);
