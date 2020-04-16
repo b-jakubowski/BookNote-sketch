@@ -1,7 +1,16 @@
 import React from "react";
 import {ScrollView, StyleSheet, View, Image} from "react-native";
 import PropTypes from "prop-types";
-import {Container, Text, Card, CardItem, Button, Content} from "native-base";
+import {
+	Container,
+	Text,
+	Card,
+	CardItem,
+	Button,
+	Content,
+	Fab,
+	Icon,
+} from "native-base";
 import Quote from "../components/Quote";
 
 export default function BookDetailsScreen({route, ...props}) {
@@ -16,13 +25,13 @@ export default function BookDetailsScreen({route, ...props}) {
 			<Card>
 				<CardItem header bordered>
 					<Image source={{uri: cover}} style={styles.cardImg} />
-					<View>
+					<View style={styles.bookDescription}>
 						<Text>{name}</Text>
 						<Text note>{author}</Text>
 					</View>
-					<View style={styles.addQuoteContainer}>
-						<Button small block onPress={() => navigateToEditQuote()}>
-							<Text>Add quote</Text>
+					<View style={styles.editQuoteContainer}>
+						<Button small block onPress={() => console.log("Edit book")}>
+							<Text>Edit book</Text>
 						</Button>
 					</View>
 				</CardItem>
@@ -38,20 +47,30 @@ export default function BookDetailsScreen({route, ...props}) {
 					</CardItem>
 				</Card>
 			</Content>
+			<Fab
+				button
+				position="bottomRight"
+				secondary
+				onPress={() => navigateToEditQuote()}
+			>
+				<Icon name="add" />
+			</Fab>
 		</Container>
 	);
 }
 
 const styles = StyleSheet.create({
-	addQuoteContainer: {
-		flex: 1,
-		paddingHorizontal: 20,
+	bookDescription: {
+		flex: 2,
 	},
 	cardImg: {
 		flex: 1,
 		height: 70,
 		marginRight: 10,
 		maxWidth: 40,
+	},
+	editQuoteContainer: {
+		flex: 1,
 	},
 });
 

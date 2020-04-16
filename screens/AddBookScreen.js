@@ -156,13 +156,17 @@ const AddBookScreen = (props) => {
 						<Item>
 							<Input
 								placeholder="Cover URL"
+								style={styles.coverInput}
 								onChangeText={(value) => setForm({...form, cover: value})}
 								value={form.cover}
 							/>
+							<Button
+								style={styles.coverButton}
+								onPress={() => getPermissionAsync()}
+							>
+								<Text>Choose img</Text>
+							</Button>
 						</Item>
-						<Button style={styles.button} onPress={() => getPermissionAsync()}>
-							<Text>Choose cover image...</Text>
-						</Button>
 					</View>
 					<Text note>Categories</Text>
 					<View style={styles.categories}>
@@ -221,6 +225,13 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		padding: 10,
+	},
+	coverButton: {
+		flex: 1,
+		margin: 5,
+	},
+	coverInput: {
+		flex: 2,
 	},
 	formItem: {
 		marginBottom: 15,
