@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useState, useRef} from "react";
 import {Platform, StatusBar, StyleSheet, View} from "react-native";
 import {SplashScreen} from "expo";
 import * as Font from "expo-font";
@@ -13,15 +13,19 @@ import useLinking from "./navigation/useLinking";
 import BookDetailsScreen from "./screens/BookDetailsScreen";
 import configureStore from "./store/store";
 import EditQuoteScreen from "./screens/EditQuoteScreen";
-import {Root} from "native-base";
+import {Root, Container} from "native-base";
+import AuthScreen from "./screens/AuthScreen";
 
 const Stack = createStackNavigator();
 const store = configureStore();
 
+console.ignoredYellowBox = ["Setting a timer"];
+
 export default function App(props) {
-	const [isLoadingComplete, setLoadingComplete] = React.useState(false);
-	const [initialNavigationState, setInitialNavigationState] = React.useState();
-	const containerRef = React.useRef();
+	const [isLoadingComplete, setLoadingComplete] = useState(false);
+	const [initialNavigationState, setInitialNavigationState] = useState();
+	const [user, setUser] = useState(null);
+	const containerRef = useRef();
 	const {getInitialState} = useLinking(containerRef);
 
 	React.useEffect(() => {
@@ -52,31 +56,31 @@ export default function App(props) {
 	return !isLoadingComplete && !props.skipLoadingScreen ? null : (
 		<Provider store={store}>
 			<Root>
-				<View style={styles.container}>
+				<Container>
 					{Platform.OS === "ios" && <StatusBar barStyle="default" />}
-					<NavigationContainer
-						ref={containerRef}
-						initialState={initialNavigationState}
-						initialRouteName="Books"
-					>
-						<Stack.Navigator>
-							<Stack.Screen name="Books" component={BottomTabNavigator} />
-							<Stack.Screen name="BookDetails" component={BookDetailsScreen} />
-							<Stack.Screen name="EditQuote" component={EditQuoteScreen} />
-						</Stack.Navigator>
-					</NavigationContainer>
-				</View>
+					{user ? (
+						<NavigationContainer
+							ref={containerRef}
+							initialState={initialNavigationState}
+							initialRouteName="Books"
+						>
+							<Stack.Navigator>
+								<Stack.Screen name="Books" component={BottomTabNavigator} />
+								<Stack.Screen
+									name="BookDetails"
+									component={BookDetailsScreen}
+								/>
+								<Stack.Screen name="EditQuote" component={EditQuoteScreen} />
+							</Stack.Navigator>
+						</NavigationContainer>
+					) : (
+						<AuthScreen />
+					)}
+				</Container>
 			</Root>
 		</Provider>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		backgroundColor: "#fff",
-		flex: 1,
-	},
-});
 
 App.propTypes = {
 	skipLoadingScreen: PropTypes.bool,
