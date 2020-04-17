@@ -1,22 +1,17 @@
-import React, {useState, useRef} from "react";
-import {Platform, StatusBar, StyleSheet, View} from "react-native";
+import React, {useState, useRef, useEffect} from "react";
+import {Platform, StatusBar} from "react-native";
 import {SplashScreen} from "expo";
 import * as Font from "expo-font";
 import {Ionicons} from "@expo/vector-icons";
 import PropTypes from "prop-types";
 import {NavigationContainer} from "@react-navigation/native";
-import {createStackNavigator} from "@react-navigation/stack";
 import {Provider} from "react-redux";
 
-import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import useLinking from "./navigation/useLinking";
-import BookDetailsScreen from "./screens/BookDetailsScreen";
 import configureStore from "./store/store";
-import EditQuoteScreen from "./screens/EditQuoteScreen";
 import {Root, Container} from "native-base";
-import AuthScreen from "./screens/AuthScreen";
+import HomeScreen from "./screens/HomeScreen";
 
-const Stack = createStackNavigator();
 const store = configureStore();
 
 console.ignoredYellowBox = ["Setting a timer"];
@@ -24,11 +19,10 @@ console.ignoredYellowBox = ["Setting a timer"];
 export default function App(props) {
 	const [isLoadingComplete, setLoadingComplete] = useState(false);
 	const [initialNavigationState, setInitialNavigationState] = useState();
-	const [user, setUser] = useState(null);
 	const containerRef = useRef();
 	const {getInitialState} = useLinking(containerRef);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		async function loadResourcesAndDataAsync() {
 			try {
 				SplashScreen.preventAutoHide();
@@ -58,24 +52,13 @@ export default function App(props) {
 			<Root>
 				<Container>
 					{Platform.OS === "ios" && <StatusBar barStyle="default" />}
-					{user ? (
-						<NavigationContainer
-							ref={containerRef}
-							initialState={initialNavigationState}
-							initialRouteName="Books"
-						>
-							<Stack.Navigator>
-								<Stack.Screen name="Books" component={BottomTabNavigator} />
-								<Stack.Screen
-									name="BookDetails"
-									component={BookDetailsScreen}
-								/>
-								<Stack.Screen name="EditQuote" component={EditQuoteScreen} />
-							</Stack.Navigator>
-						</NavigationContainer>
-					) : (
-						<AuthScreen />
-					)}
+					<NavigationContainer
+						ref={containerRef}
+						initialState={initialNavigationState}
+						initialRouteName="Books"
+					>
+						<HomeScreen />
+					</NavigationContainer>
 				</Container>
 			</Root>
 		</Provider>
