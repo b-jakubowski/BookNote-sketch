@@ -13,13 +13,25 @@ import {
 } from "native-base";
 import {StyleSheet} from "react-native";
 import * as yup from "yup";
+import {connect} from "react-redux";
+import {logInUser} from "../store/actions/auth";
+import {signIn} from "../constants/Firebase";
+
+const showWarnToast = (message) => {
+	Toast.show({
+		text: message,
+		buttonText: "Okay",
+		type: "warning",
+		duration: 10000000,
+	});
+};
 
 const authSchema = yup.object({
 	email: yup.string().email().required(),
 	password: yup.string().required().min(5),
 });
 
-const AuthScreen = () => {
+const AuthScreen = (props) => {
 	const [user, setUser] = useState({
 		email: null,
 		password: null,
@@ -29,15 +41,16 @@ const AuthScreen = () => {
 		authSchema
 			.validate(user, {abortEarly: false})
 			.then(() => {
-				console.log("correct schema", {email, password});
+				signInUser(email, password);
 			})
-			.catch((e) => {
-				Toast.show({
-					text: e.errors.join(",\r\n"),
-					buttonText: "Okay",
-					type: "warning",
-					duration: 10000000,
-				});
+			.catch((e) => showWarnToast(e.errors.join(",\r\n")));
+	};
+
+	const signInUser = (email, password) => {
+		signIn(email, password)
+			.then(({user}) => props.logInUser(user))
+			.catch(({message}) => {
+				showWarnToast(message);
 			});
 	};
 
@@ -50,6 +63,7 @@ const AuthScreen = () => {
 							<Item style={styles.input}>
 								<Input
 									placeholder="Email"
+									autoCapitalize="none"
 									onChangeText={(value) => setUser({...user, email: value})}
 									value={user.email}
 								/>
@@ -69,7 +83,7 @@ const AuthScreen = () => {
 							style={styles.button}
 							onPress={() => handleSubmit(user)}
 						>
-							<Text>Sign up</Text>
+							<Text>Sign in</Text>
 						</Button>
 					</Form>
 				</CardItem>
@@ -97,4 +111,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default AuthScreen;
+export default connect(null, {logInUser})(AuthScreen);

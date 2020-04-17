@@ -26,10 +26,8 @@ const styles = StyleSheet.create({
 
 BookList.propTypes = BooksPropTypes;
 
-const mapStateToProps = (state) => {
-	return {
-		books: state.quoteReducer.books,
-	};
-};
+const mapStateToProps = (state) => ({
+	books: state.quoteReducer.books,
+});
 
 export default connect(mapStateToProps)(BookList);
