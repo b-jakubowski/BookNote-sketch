@@ -15,7 +15,7 @@ import {StyleSheet} from "react-native";
 import * as yup from "yup";
 import {connect} from "react-redux";
 import {logInUser} from "../store/actions/auth";
-import {signIn} from "../constants/Firebase";
+import {signIn, createUser} from "../constants/Firebase";
 
 const showWarnToast = (message) => {
 	Toast.show({
@@ -31,24 +31,36 @@ const authSchema = yup.object({
 	password: yup.string().required().min(5),
 });
 
-const AuthScreen = (props) => {
+const AuthScreen = ({logInUser}) => {
+	const [auth, setAuth] = useState(null);
 	const [user, setUser] = useState({
 		email: null,
 		password: null,
 	});
+	console.log(auth);
 
 	const handleSubmit = ({email, password}) => {
 		authSchema
 			.validate(user, {abortEarly: false})
 			.then(() => {
-				signInUser(email, password);
+				auth === "login"
+					? signInUser(email, password)
+					: createAndSignUser(email, password);
 			})
 			.catch((e) => showWarnToast(e.errors.join(",\r\n")));
 	};
 
 	const signInUser = (email, password) => {
 		signIn(email, password)
-			.then(({user}) => props.logInUser(user))
+			.then(({user}) => logInUser(user))
+			.catch(({message}) => {
+				showWarnToast(message);
+			});
+	};
+
+	const createAndSignUser = (email, password) => {
+		createUser(email, password)
+			.then(({user}) => logInUser(user))
 			.catch(({message}) => {
 				showWarnToast(message);
 			});
@@ -59,32 +71,47 @@ const AuthScreen = (props) => {
 			<Card>
 				<CardItem style={styles.card}>
 					<Form style={styles.form}>
-						<View>
-							<Item style={styles.input}>
-								<Input
-									placeholder="Email"
-									autoCapitalize="none"
-									onChangeText={(value) => setUser({...user, email: value})}
-									value={user.email}
-								/>
-							</Item>
-							<Item style={styles.input}>
-								<Input
-									placeholder="Password"
-									secureTextEntry={true}
-									onChangeText={(value) => setUser({...user, password: value})}
-									value={user.password}
-								/>
-							</Item>
-						</View>
-						<Button
-							info
-							block
-							style={styles.button}
-							onPress={() => handleSubmit(user)}
-						>
-							<Text>Sign in</Text>
-						</Button>
+						{auth ? (
+							<>
+								<View>
+									<Item style={styles.input}>
+										<Input
+											placeholder="Email"
+											autoCapitalize="none"
+											onChangeText={(value) => setUser({...user, email: value})}
+											value={user.email}
+										/>
+									</Item>
+									<Item style={styles.input}>
+										<Input
+											placeholder="Password"
+											secureTextEntry={true}
+											onChangeText={(value) =>
+												setUser({...user, password: value})
+											}
+											value={user.password}
+										/>
+									</Item>
+								</View>
+								<Button
+									info
+									block
+									style={styles.button}
+									onPress={() => handleSubmit(user)}
+								>
+									<Text>{auth === "login" ? "Login" : "Sign in"}</Text>
+								</Button>
+							</>
+						) : (
+							<>
+								<Button onPress={() => setAuth("login")}>
+									<Text>Login</Text>
+								</Button>
+								<Button onPress={() => setAuth("signUp")}>
+									<Text>Sign up</Text>
+								</Button>
+							</>
+						)}
 					</Form>
 				</CardItem>
 			</Card>
