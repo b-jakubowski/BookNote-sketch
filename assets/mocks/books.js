@@ -1,5 +1,11 @@
 import {categoriesMock} from "./categories";
 
+const status = {
+	TO_READ: "To read",
+	READING: "Reading",
+	READ: "Read,",
+};
+
 export const booksMock = [
 	{
 		id: "1",
@@ -7,6 +13,7 @@ export const booksMock = [
 		author: "J.R.R. Tolkien",
 		cover:
 			"https://upload.wikimedia.org/wikipedia/en/a/a1/The_Two_Towers_cover.gif",
+		status: status.TO_READ,
 		quotes: [
 			{
 				id: "1",
@@ -37,6 +44,7 @@ export const booksMock = [
 		author: "F. Scott Fitzgerald",
 		cover:
 			"https://upload.wikimedia.org/wikipedia/commons/a/a0/The_Great_Gatsby_cover_1925_%281%29.jpg",
+		status: status.READ,
 		quotes: [
 			{
 				id: "4",
@@ -54,6 +62,7 @@ export const booksMock = [
 		author: "Cal Newport",
 		cover:
 			"https://images-na.ssl-images-amazon.com/images/I/41QoykqonNL._SX317_BO1,204,203,200_.jpg",
+		status: status.READING,
 		quotes: [
 			{
 				id: "5",
@@ -83,6 +92,7 @@ export const booksMock = [
 		name: "The Shining",
 		author: "Stephen King",
 		cover: "https://upload.wikimedia.org/wikipedia/en/4/4c/Shiningnovel.jpg",
+		status: status.READ,
 		quotes: [
 			{
 				id: "8",
