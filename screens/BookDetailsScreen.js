@@ -14,7 +14,7 @@ import {
 import Quote from "../components/Quote";
 
 export default function BookDetailsScreen({route, ...props}) {
-	const {id, cover, name, author, quotes} = route.params;
+	const {id, cover, name, author, quotes, status} = route.params;
 
 	const navigateToEditQuote = () => {
 		props.navigation.navigate("EditQuote", {id});
@@ -28,6 +28,7 @@ export default function BookDetailsScreen({route, ...props}) {
 					<View style={styles.bookDescription}>
 						<Text>{name}</Text>
 						<Text note>{author}</Text>
+						<Text note>Status: {status}</Text>
 					</View>
 					<View style={styles.editQuoteContainer}>
 						<Button small block onPress={() => console.log("Edit book")}>

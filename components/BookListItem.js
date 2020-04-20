@@ -4,11 +4,25 @@ import {StyleSheet, View, Image} from "react-native";
 import {Text, CardItem, Card} from "native-base";
 import {useNavigation} from "@react-navigation/native";
 
-export default function BookListItem({id, cover, name, author, quotes}) {
+export default function BookListItem({
+	id,
+	cover,
+	name,
+	author,
+	quotes,
+	status,
+}) {
 	const navigation = useNavigation();
 
 	const navigateToBookDetails = () => {
-		navigation.navigate("BookDetails", {id, cover, name, author, quotes});
+		navigation.navigate("BookDetails", {
+			id,
+			cover,
+			name,
+			author,
+			quotes,
+			status,
+		});
 	};
 
 	return (
@@ -58,6 +72,7 @@ BookListItem.propTypes = {
 	cover: PropTypes.string,
 	name: PropTypes.string,
 	author: PropTypes.string,
+	status: PropTypes.string,
 	quotes: PropTypes.arrayOf(
 		PropTypes.shape({
 			id: PropTypes.string,
