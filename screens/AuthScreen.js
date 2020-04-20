@@ -10,8 +10,10 @@ import {
 	Input,
 	View,
 	Toast,
+	Title,
+	Icon,
 } from "native-base";
-import {StyleSheet} from "react-native";
+import {StyleSheet, SafeAreaView} from "react-native";
 import * as yup from "yup";
 import {connect} from "react-redux";
 import {logInUser} from "../store/actions/auth";
@@ -32,12 +34,11 @@ const authSchema = yup.object({
 });
 
 const AuthScreen = ({logInUser}) => {
-	const [auth, setAuth] = useState(null);
+	const [auth, setAuth] = useState("login");
 	const [user, setUser] = useState({
 		email: null,
 		password: null,
 	});
-	console.log(auth);
 
 	const handleSubmit = ({email, password}) => {
 		authSchema
@@ -67,62 +68,77 @@ const AuthScreen = ({logInUser}) => {
 	};
 
 	return (
-		<Content contentContainerStyle={styles.content}>
-			<Card>
-				<CardItem style={styles.card}>
-					<Form style={styles.form}>
-						{auth ? (
-							<>
-								<View>
-									<Item style={styles.input}>
-										<Input
-											placeholder="Email"
-											autoCapitalize="none"
-											onChangeText={(value) => setUser({...user, email: value})}
-											value={user.email}
-										/>
-									</Item>
-									<Item style={styles.input}>
-										<Input
-											placeholder="Password"
-											secureTextEntry={true}
-											onChangeText={(value) =>
-												setUser({...user, password: value})
-											}
-											value={user.password}
-										/>
-									</Item>
+		<>
+			{auth === "signUp" && (
+				<SafeAreaView>
+					<Button
+						iconLeft
+						light
+						style={styles.backButton}
+						onPress={() => setAuth("login")}
+					>
+						<Icon name="arrow-back" />
+						<Text>Back</Text>
+					</Button>
+				</SafeAreaView>
+			)}
+			<Content contentContainerStyle={styles.content}>
+				<Card>
+					<CardItem style={styles.card}>
+						<Form style={styles.form}>
+							<View>
+								<Item style={styles.input}>
+									<Input
+										placeholder="Email"
+										autoCapitalize="none"
+										onChangeText={(value) => setUser({...user, email: value})}
+										value={user.email}
+									/>
+								</Item>
+								<Item style={styles.input}>
+									<Input
+										placeholder="Password"
+										secureTextEntry={true}
+										onChangeText={(value) =>
+											setUser({...user, password: value})
+										}
+										value={user.password}
+									/>
+								</Item>
+							</View>
+							<Button
+								info
+								block
+								style={styles.button}
+								onPress={() => handleSubmit(user)}
+							>
+								<Text>{auth === "login" ? "Login" : "Sign up"}</Text>
+							</Button>
+							{auth === "login" && (
+								<View style={styles.signUpContainer}>
+									<Text>Dont have account?</Text>
+									<Button light block style={styles.signUpButton}>
+										<Title onPress={() => setAuth("signUp")}>
+											Sign up now!
+										</Title>
+									</Button>
 								</View>
-								<Button
-									info
-									block
-									style={styles.button}
-									onPress={() => handleSubmit(user)}
-								>
-									<Text>{auth === "login" ? "Login" : "Sign in"}</Text>
-								</Button>
-							</>
-						) : (
-							<>
-								<Button onPress={() => setAuth("login")}>
-									<Text>Login</Text>
-								</Button>
-								<Button onPress={() => setAuth("signUp")}>
-									<Text>Sign up</Text>
-								</Button>
-							</>
-						)}
-					</Form>
-				</CardItem>
-			</Card>
-		</Content>
+							)}
+						</Form>
+					</CardItem>
+				</Card>
+			</Content>
+		</>
 	);
 };
 
 const styles = StyleSheet.create({
+	backButton: {
+		marginLeft: 10,
+		width: 100,
+	},
 	button: {
 		marginTop: 30,
-		width: 120,
 	},
 	content: {
 		flex: 1,
@@ -135,6 +151,15 @@ const styles = StyleSheet.create({
 	},
 	input: {
 		marginBottom: 10,
+	},
+	signUpButton: {
+		width: 150,
+	},
+	signUpContainer: {
+		alignItems: "center",
+		flexDirection: "row",
+		justifyContent: "space-around",
+		marginTop: 50,
 	},
 });
 
