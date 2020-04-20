@@ -11,6 +11,8 @@ import {
 	Toast,
 	Button,
 	View,
+	Picker,
+	Icon,
 } from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
@@ -63,7 +65,7 @@ const AddBookScreen = (props) => {
 	const navigation = useNavigation();
 	const [form, setForm] = useState(initialForm);
 
-	const handleSubmit = ({name, author, cover, quote, categories}) => {
+	const handleSubmit = ({name, author, cover, quote, categories, status}) => {
 		bookSchema
 			.validate(form, {abortEarly: false})
 			.then(() => {
@@ -72,6 +74,7 @@ const AddBookScreen = (props) => {
 					name,
 					author,
 					cover,
+					status,
 					quotes: [
 						{
 							id: `${Math.random()}`,
@@ -166,6 +169,21 @@ const AddBookScreen = (props) => {
 							>
 								<Text>Choose img</Text>
 							</Button>
+						</Item>
+						<Item picker>
+							<Picker
+								mode="dropdown"
+								iosIcon={<Icon name="arrow-down" />}
+								style={{width: undefined}}
+								placeholder="Reading status"
+								placeholderIconColor="#007aff"
+								selectedValue={form.status}
+								onValueChange={(value) => setForm({...form, status: value})}
+							>
+								<Picker.Item label="To read" value="To read" />
+								<Picker.Item label="Reading" value="Reading" />
+								<Picker.Item label="Read" value="Read" />
+							</Picker>
 						</Item>
 					</View>
 					<Text note>Categories</Text>
