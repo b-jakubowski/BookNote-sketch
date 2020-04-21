@@ -17,7 +17,11 @@ import {StyleSheet, SafeAreaView} from "react-native";
 import * as yup from "yup";
 import {connect} from "react-redux";
 import {logInUser} from "../store/actions/auth";
-import {signIn, createUser} from "../constants/Firebase";
+import {
+	signIn,
+	createUser,
+	createUserProfileDocument,
+} from "../constants/Firebase";
 
 const showWarnToast = (message) => {
 	Toast.show({
@@ -61,7 +65,10 @@ const AuthScreen = ({logInUser}) => {
 
 	const createAndSignUser = (email, password) => {
 		createUser(email, password)
-			.then(({user}) => logInUser(user))
+			.then(({user}) => {
+				createUserProfileDocument(user);
+				logInUser(user);
+			})
 			.catch(({message}) => {
 				showWarnToast(message);
 			});
