@@ -23,6 +23,7 @@ import {connect} from "react-redux";
 import QuoteForm from "../components/QuoteForm";
 import CategoryCheckBox from "../components/CategoryCheckBox";
 import * as yup from "yup";
+import {firestore} from "../constants/Firebase";
 
 const initialForm = {
 	name: "",
@@ -61,29 +62,40 @@ const bookSchema = yup.object({
 const categoriesMapped = (categories) =>
 	Object.keys(categories).filter((category) => categories[category]);
 
-const AddBookScreen = (props) => {
+const AddBookScreen = ({user, addBook}) => {
 	const navigation = useNavigation();
 	const [form, setForm] = useState(initialForm);
 
-	const handleSubmit = ({name, author, cover, quote, categories, status}) => {
+	const handleCreateBook = async (book) => {
+		const docRef = await firestore.collection("books").add(book);
+		const doc = await docRef.get();
+
+		const bookFirestore = {
+			id: doc.id,
+			...doc.data(),
+		};
+
+		addBook(bookFirestore);
+	};
+
+	const handleSubmit = ({quote, categories, ...book}) => {
+		const newBook = {
+			...book,
+			createdAt: new Date(),
+			userId: user.uid,
+			quotes: [
+				{
+					id: `${Math.random()}`,
+					categories: categoriesMapped(categories),
+					quote,
+				},
+			],
+		};
+
 		bookSchema
 			.validate(form, {abortEarly: false})
 			.then(() => {
-				props.addBook({
-					id: `${Math.random()}`,
-					name,
-					author,
-					cover,
-					status,
-					quotes: [
-						{
-							id: `${Math.random()}`,
-							categories: categoriesMapped(categories),
-							quote,
-						},
-					],
-				});
-
+				handleCreateBook(newBook);
 				setForm(initialForm);
 				navigation.navigate("Books");
 			})
@@ -258,6 +270,11 @@ const styles = StyleSheet.create({
 
 AddBookScreen.propTypes = {
 	addBook: PropTypes.func,
+	user: PropTypes.object,
 };
 
-export default connect(null, {addBook})(AddBookScreen);
+const mapStateToProps = (state) => ({
+	user: state.authReducer.user,
+});
+
+export default connect(mapStateToProps, {addBook})(AddBookScreen);
