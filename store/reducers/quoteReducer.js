@@ -9,7 +9,7 @@ export const initialState = {
 	books: booksMock,
 };
 
-const quoteReducer = (state = initialState, action) => {
+const quoteReducer = (state = {books: []}, action) => {
 	switch (action.type) {
 		case ADD_BOOK:
 			return {
