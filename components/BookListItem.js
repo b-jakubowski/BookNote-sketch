@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
 		marginBottom: 15,
 	},
 	bookDetails: {
+		flex: 1,
 		minHeight: 40,
 	},
 	bookTitle: {
