@@ -6,12 +6,38 @@ import BooksScreen from "../screens/BooksScreen";
 import QuotesScreen from "../screens/QuotesScreen";
 import AddBookScreen from "../screens/AddBookScreen";
 import DailyQuoteScreen from "../screens/DailyQuoteScreen";
+import {Button, Text, Icon} from "native-base";
+import {signOut} from "../constants/Firebase";
+import {connect} from "react-redux";
+import {logOutUser} from "../store/actions/auth";
+import {clearBooks} from "../store/actions/quote";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
 
-export default function BottomTabNavigator({navigation, route}) {
-	navigation.setOptions({headerTitle: getHeaderTitle(route)});
+function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
+	navigation.setOptions({
+		headerTitle: getHeaderTitle(route),
+		headerRight: () => (
+			<Button
+				iconRight
+				info
+				transparent
+				style={{marginRight: 15}}
+				onPress={() =>
+					signOut()
+						.then(() => {
+							clearBooks();
+							logOutUser();
+						})
+						.catch()
+				}
+			>
+				<Text warning>logout</Text>
+				<Icon ios="ios-log-out" android="md-exit" />
+			</Button>
+		),
+	});
 
 	return (
 		<BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
@@ -74,3 +100,5 @@ function getHeaderTitle(route) {
 			return "Daily Quote";
 	}
 }
+
+export default connect(null, {logOutUser, clearBooks})(BottomTabNavigator);
