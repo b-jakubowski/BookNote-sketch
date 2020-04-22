@@ -2,6 +2,7 @@ import {
 	ADD_BOOK,
 	DELETE_BOOK,
 	ADD_QUOTE_TO_BOOK,
+	CLEAR_BOOKS,
 } from "../../constants/ActionTypes";
 
 export const addBook = (quote) => ({
@@ -18,4 +19,8 @@ export const addQuoteToBook = (quote, id) => ({
 export const DeleteBook = (id) => ({
 	type: DELETE_BOOK,
 	payload: id,
+});
+
+export const clearBooks = () => ({
+	type: CLEAR_BOOKS,
 });

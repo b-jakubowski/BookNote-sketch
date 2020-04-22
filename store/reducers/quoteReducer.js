@@ -2,12 +2,8 @@ import {
 	ADD_BOOK,
 	DELETE_BOOK,
 	ADD_QUOTE_TO_BOOK,
+	CLEAR_BOOKS,
 } from "../../constants/ActionTypes";
-import {booksMock} from "../../assets/mocks/books";
-
-export const initialState = {
-	books: booksMock,
-};
 
 const quoteReducer = (state = {books: []}, action) => {
 	switch (action.type) {
@@ -30,6 +26,12 @@ const quoteReducer = (state = {books: []}, action) => {
 					return book;
 				}),
 			};
+		case CLEAR_BOOKS: {
+			return {
+				...state,
+				books: [],
+			};
+		}
 		case DELETE_BOOK:
 			return {
 				...state,

@@ -5,6 +5,6 @@ export const logInUser = ({displayName, email, uid}) => ({
 	payload: {displayName, email, uid},
 });
 
-export const DeleteBook = () => ({
+export const logOutUser = () => ({
 	type: LOG_OUT_USER,
 });

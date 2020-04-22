@@ -17,9 +17,13 @@ const BookList = ({uid, books, addBook}) => {
 			.collection("books")
 			.where("userId", "==", uid)
 			.get()
-			.then((books) =>
-				books.docs.forEach((book) => addBook({id: book.id, ...book.data()}))
-			)
+			.then((booksStore) => {
+				if (!books.length) {
+					booksStore.docs.forEach((book) =>
+						addBook({id: book.id, ...book.data()})
+					);
+				}
+			})
 			.catch()
 			.finally(() => setLoading(false));
 	}, []);
