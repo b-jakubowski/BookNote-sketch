@@ -30,7 +30,7 @@ HomeScreen.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-	user: state.authReducer.user,
+	user: state.auth.user,
 });
 
 export default connect(mapStateToProps)(HomeScreen);

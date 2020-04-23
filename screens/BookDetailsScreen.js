@@ -112,7 +112,7 @@ BookDetailsScreen.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-	books: state.quoteReducer.books,
+	books: state.books.books,
 });
 
 export default connect(mapStateToProps)(BookDetailsScreen);
