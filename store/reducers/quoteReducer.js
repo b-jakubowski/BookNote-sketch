@@ -3,6 +3,7 @@ import {
 	DELETE_BOOK,
 	ADD_QUOTE_TO_BOOK,
 	CLEAR_BOOKS,
+	UPDATE_BOOK_DETAILS,
 } from "../../constants/ActionTypes";
 
 const quoteReducer = (state = {books: []}, action) => {
@@ -32,10 +33,25 @@ const quoteReducer = (state = {books: []}, action) => {
 				books: [],
 			};
 		}
+		case UPDATE_BOOK_DETAILS: {
+			return {
+				...state,
+				books: [
+					...state.books.filter((item) => item.id !== action.bookId),
+					{
+						...state.books.filter((item) => item.id === action.bookId)[0],
+						name: action.payload.name,
+						author: action.payload.author,
+						cover: action.payload.cover,
+						status: action.payload.status,
+					},
+				],
+			};
+		}
 		case DELETE_BOOK:
 			return {
 				...state,
-				books: state.books.filter((item) => item.id != action.payload),
+				books: state.books.filter((item) => item.id !== action.bookId),
 			};
 		default:
 			return state;

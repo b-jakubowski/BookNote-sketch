@@ -1,5 +1,6 @@
 export const ADD_BOOK = "ADD_BOOK";
 export const ADD_QUOTE_TO_BOOK = "ADD_QUOTE_TO_BOOK";
+export const UPDATE_BOOK_DETAILS = "UPDATE_BOOK_DETAILS";
 export const DELETE_BOOK = "DELETE_BOOK";
 export const CLEAR_BOOKS = "CLEAR_BOOKS";
 

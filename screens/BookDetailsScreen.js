@@ -10,95 +10,32 @@ import {
 	Content,
 	Fab,
 	Icon,
-	Title,
-	Form,
 } from "native-base";
 import Quote from "../components/Quote";
-import {SafeAreaView} from "react-native-safe-area-context";
-import BookDetailsFields from "../components/BookDetailsFields";
-import {firestore} from "../constants/Firebase";
 import {connect} from "react-redux";
-import {deleteBook} from "../store/actions/quote";
+import EditBookDetailsModal from "../components/EditBookDetailsModal";
+import Colors from "../constants/Colors";
 
-function BookDetailsScreen({route, deleteBook, ...props}) {
-	const {id, cover, name, author, quotes, status} = route.params;
+function BookDetailsScreen({route, books, ...props}) {
 	const [modalVisible, setModalVisible] = useState(false);
-	const [form, setForm] = useState({cover, name, author, status});
+
+	const {id} = route.params;
+	const {cover, name, author, quotes, status} = books.filter(
+		(book) => book.id === id
+	)[0];
 
 	const navigateToEditQuote = () => {
 		props.navigation.navigate("EditQuote", {id});
 	};
 
-	const handleDelete = () => {
-		firestore
-			.collection("books")
-			.doc(id)
-			.delete()
-			.then(() => {
-				deleteBook(id);
-				setModalVisible(false);
-				props.navigation.navigate("Books");
-			})
-			.catch((e) => console.error(e));
-	};
-
-	const handleSubmit = () => {
-		console.log(form);
-	};
-
 	return (
 		<>
-			<Modal animationType="slide" transparent={true} visible={modalVisible}>
-				<SafeAreaView style={styles.modalContainer}>
-					<View style={styles.modalContent}>
-						<View style={{...StyleSheet.absoluteFillObject}}>
-							<View style={styles.closeButtonContainer}>
-								<Button
-									onPress={() => {
-										setModalVisible(false);
-										setForm({name, author, cover, status});
-									}}
-									block
-									rounded
-									transparent
-								>
-									<Icon ios="ios-close-circle-outline" android="md-exit" />
-								</Button>
-							</View>
-						</View>
-						<Title>Edit book details</Title>
-						<Form style={styles.formItem}>
-							<BookDetailsFields
-								name={form.name}
-								author={form.author}
-								cover={form.cover}
-								status={form.status}
-								setForm={setForm}
-								form={form}
-							/>
-						</Form>
-						<View style={styles.buttonsContainer}>
-							<Button
-								title="submit"
-								block
-								style={styles.button}
-								onPress={() => handleSubmit()}
-							>
-								<Text>Change details</Text>
-							</Button>
-							<Button
-								title="submit"
-								block
-								danger
-								style={styles.button}
-								onPress={() => handleDelete()}
-							>
-								<Text>Delete book</Text>
-							</Button>
-						</View>
-					</View>
-				</SafeAreaView>
-			</Modal>
+			<EditBookDetailsModal
+				id={id}
+				initialBookValues={{name, author, cover, status}}
+				modalVisible={modalVisible}
+				setModalVisible={setModalVisible}
+			/>
 			<Container>
 				<Card>
 					<CardItem header bordered>
@@ -129,7 +66,7 @@ function BookDetailsScreen({route, deleteBook, ...props}) {
 				<Fab
 					button
 					position="bottomRight"
-					secondary
+					style={{backgroundColor: Colors.success, margin: 10}}
 					onPress={() => navigateToEditQuote()}
 				>
 					<Icon name="add" />
@@ -155,33 +92,8 @@ const styles = StyleSheet.create({
 		marginRight: 10,
 		maxWidth: 40,
 	},
-	closeButtonContainer: {
-		flexDirection: "row",
-		justifyContent: "flex-end",
-		margin: 10,
-	},
-	coverButton: {
-		margin: 5,
-	},
 	editQuoteContainer: {
 		flex: 1,
-	},
-	formItem: {
-		marginTop: 50,
-		width: "100%",
-	},
-	modalContainer: {
-		alignItems: "center",
-		backgroundColor: "rgba(0, 0, 0, 0.3)",
-		flex: 1,
-		justifyContent: "center",
-	},
-	modalContent: {
-		alignItems: "center",
-		backgroundColor: "white",
-		height: "50%",
-		padding: 20,
-		width: "90%",
 	},
 });
 
@@ -191,6 +103,7 @@ BookDetailsScreen.propTypes = {
 	}),
 	route: PropTypes.object,
 	deleteBook: PropTypes.func,
+	updateBookDetails: PropTypes.func,
 	books: PropTypes.arrayOf(PropTypes.object),
 };
 
@@ -198,4 +111,4 @@ const mapStateToProps = (state) => ({
 	books: state.quoteReducer.books,
 });
 
-export default connect(mapStateToProps, {deleteBook})(BookDetailsScreen);
+export default connect(mapStateToProps)(BookDetailsScreen);
