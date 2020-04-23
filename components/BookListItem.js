@@ -8,7 +8,7 @@ export default function BookListItem({id, cover, name, author, quotes}) {
 	const navigation = useNavigation();
 
 	const navigateToBookDetails = () => {
-		navigation.navigate("BookDetails", {id});
+		navigation.navigate("Book details", {id});
 	};
 
 	return (

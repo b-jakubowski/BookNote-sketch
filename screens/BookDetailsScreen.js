@@ -25,7 +25,7 @@ function BookDetailsScreen({route, books, ...props}) {
 	)[0];
 
 	const navigateToEditQuote = () => {
-		props.navigation.navigate("EditQuote", {id});
+		props.navigation.navigate("Add Quote", {id});
 	};
 
 	return (
