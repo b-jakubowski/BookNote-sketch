@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {SafeAreaView} from "react-native-safe-area-context";
-import {View, Button, Icon, Title, Form, Text} from "native-base";
+import {View, Button, Icon, Title, Form, Text, Toast} from "native-base";
 import {StyleSheet, Modal} from "react-native";
 import BookDetailsFields from "./BookDetailsFields";
 import {firestore} from "../constants/Firebase";
@@ -8,6 +8,8 @@ import {connect} from "react-redux";
 import {deleteBook, updateBookDetails} from "../store/actions/quote";
 import {useNavigation} from "@react-navigation/native";
 import PropTypes from "prop-types";
+import * as yup from "yup";
+import {bookDetailsSchema} from "../constants/Schemas";
 
 function EditBookDetailsModal({
 	id,
@@ -33,6 +35,21 @@ function EditBookDetailsModal({
 	};
 
 	const handleSubmit = () => {
+		yup
+			.object({...bookDetailsSchema})
+			.validate(form, {abortEarly: false})
+			.then(() => submitBookDetails())
+			.catch((e) => {
+				Toast.show({
+					text: e.errors.join(",\r\n"),
+					buttonText: "Okay",
+					type: "warning",
+					duration: 10000000,
+				});
+			});
+	};
+
+	const submitBookDetails = () => {
 		bookRef
 			.update({
 				name: form.name,

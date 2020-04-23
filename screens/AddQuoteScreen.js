@@ -2,12 +2,12 @@ import React, {useState} from "react";
 import PropTypes from "prop-types";
 import {StyleSheet} from "react-native";
 import {Container, Content, Form, Text, Toast, Button, View} from "native-base";
-import {addQuoteToBook} from "../store/actions/quote";
 import {connect} from "react-redux";
+import * as yup from "yup";
+import {addQuoteToBook} from "../store/actions/quote";
+import {useNavigation} from "@react-navigation/native";
 import CategoryCheckBox from "../components/CategoryCheckBox";
 import QuoteForm from "../components/QuoteForm";
-import * as yup from "yup";
-import {useNavigation} from "@react-navigation/native";
 import {firestore} from "../constants/Firebase.js";
 import firebase from "firebase/app";
 

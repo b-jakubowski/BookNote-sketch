@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {ScrollView, StyleSheet, View, Image, Modal} from "react-native";
+import {ScrollView, StyleSheet, View, Image} from "react-native";
 import PropTypes from "prop-types";
 import {
 	Container,
@@ -11,8 +11,8 @@ import {
 	Fab,
 	Icon,
 } from "native-base";
-import Quote from "../components/Quote";
 import {connect} from "react-redux";
+import Quote from "../components/Quote";
 import EditBookDetailsModal from "../components/EditBookDetailsModal";
 import Colors from "../constants/Colors";
 
@@ -66,7 +66,7 @@ function BookDetailsScreen({route, books, ...props}) {
 				<Fab
 					button
 					position="bottomRight"
-					style={{backgroundColor: Colors.success, margin: 10}}
+					style={styles.fabButton}
 					onPress={() => navigateToEditQuote()}
 				>
 					<Icon name="add" />
@@ -94,6 +94,10 @@ const styles = StyleSheet.create({
 	},
 	editQuoteContainer: {
 		flex: 1,
+	},
+	fabButton: {
+		backgroundColor: Colors.success,
+		margin: 10,
 	},
 });
 
