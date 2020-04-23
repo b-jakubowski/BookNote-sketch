@@ -3,8 +3,8 @@ import quoteReducer from "./reducers/quoteReducer";
 import authReducer from "./reducers/authReducer";
 
 const rootReducer = combineReducers({
-	quoteReducer,
-	authReducer,
+	books: quoteReducer,
+	auth: authReducer,
 });
 
 const configureStore = () =>

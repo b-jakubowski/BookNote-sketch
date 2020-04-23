@@ -16,6 +16,7 @@ import {
 import {StyleSheet, SafeAreaView} from "react-native";
 import * as yup from "yup";
 import {connect} from "react-redux";
+import PropTypes from "prop-types";
 import {logInUser} from "../store/actions/auth";
 import {
 	signIn,
@@ -37,7 +38,7 @@ const authSchema = yup.object({
 	password: yup.string().required().min(5),
 });
 
-const AuthScreen = ({logInUser}) => {
+function AuthScreen({logInUser}) {
 	const [auth, setAuth] = useState("login");
 	const [user, setUser] = useState({
 		email: null,
@@ -137,7 +138,7 @@ const AuthScreen = ({logInUser}) => {
 			</Content>
 		</>
 	);
-};
+}
 
 const styles = StyleSheet.create({
 	backButton: {
@@ -169,5 +170,9 @@ const styles = StyleSheet.create({
 		marginTop: 50,
 	},
 });
+
+AuthScreen.propTypes = {
+	logInUser: PropTypes.func,
+};
 
 export default connect(null, {logInUser})(AuthScreen);

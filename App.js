@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from "react";
-import {Platform, StatusBar} from "react-native";
+import {Platform, StatusBar, YellowBox} from "react-native";
 import {SplashScreen} from "expo";
 import * as Font from "expo-font";
 import {Ionicons} from "@expo/vector-icons";
@@ -14,13 +14,13 @@ import HomeScreen from "./screens/HomeScreen";
 
 const store = configureStore();
 
-console.ignoredYellowBox = ["Setting a timer"];
-
 export default function App(props) {
 	const [isLoadingComplete, setLoadingComplete] = useState(false);
 	const [initialNavigationState, setInitialNavigationState] = useState();
 	const containerRef = useRef();
 	const {getInitialState} = useLinking(containerRef);
+
+	YellowBox.ignoreWarnings(["Setting a timer"]);
 
 	useEffect(() => {
 		async function loadResourcesAndDataAsync() {

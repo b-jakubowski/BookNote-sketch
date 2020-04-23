@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {ScrollView, StyleSheet, View, Image} from "react-native";
 import PropTypes from "prop-types";
 import {
@@ -11,58 +11,80 @@ import {
 	Fab,
 	Icon,
 } from "native-base";
+import {connect} from "react-redux";
 import Quote from "../components/Quote";
+import EditBookDetailsModal from "../components/EditBookDetailsModal";
+import Colors from "../constants/Colors";
 
-export default function BookDetailsScreen({route, ...props}) {
-	const {id, cover, name, author, quotes, status} = route.params;
+function BookDetailsScreen({route, books, ...props}) {
+	const [modalVisible, setModalVisible] = useState(false);
+
+	const {id} = route.params;
+	const {cover, name, author, quotes, status} = books.filter(
+		(book) => book.id === id
+	)[0];
 
 	const navigateToEditQuote = () => {
-		props.navigation.navigate("EditQuote", {id});
+		props.navigation.navigate("Add Quote", {id});
 	};
 
 	return (
-		<Container>
-			<Card>
-				<CardItem header bordered>
-					<Image source={{uri: cover}} style={styles.cardImg} />
-					<View style={styles.bookDescription}>
-						<Text>{name}</Text>
-						<Text note>{author}</Text>
-						<Text note>Status: {status}</Text>
-					</View>
-					<View style={styles.editQuoteContainer}>
-						<Button small block onPress={() => console.log("Edit book")}>
-							<Text>Edit book</Text>
-						</Button>
-					</View>
-				</CardItem>
-			</Card>
-			<Content>
+		<>
+			<EditBookDetailsModal
+				id={id}
+				initialBookValues={{name, author, cover, status}}
+				modalVisible={modalVisible}
+				setModalVisible={setModalVisible}
+			/>
+			<Container>
 				<Card>
-					<CardItem>
-						<ScrollView style={styles.scrollContainer}>
-							{quotes.map((quote) => (
-								<Quote key={quote.id} quote={quote} />
-							))}
-						</ScrollView>
+					<CardItem header bordered>
+						<Image source={{uri: cover}} style={styles.cardImg} />
+						<View style={styles.bookDescription}>
+							<Text>{name}</Text>
+							<Text note>{author}</Text>
+							<Text note>Status: {status}</Text>
+						</View>
+						<View style={styles.editQuoteContainer}>
+							<Button small block onPress={() => setModalVisible(true)}>
+								<Text>Edit book</Text>
+							</Button>
+						</View>
 					</CardItem>
 				</Card>
-			</Content>
-			<Fab
-				button
-				position="bottomRight"
-				secondary
-				onPress={() => navigateToEditQuote()}
-			>
-				<Icon name="add" />
-			</Fab>
-		</Container>
+				<Content>
+					<Card>
+						<CardItem>
+							<ScrollView style={styles.scrollContainer}>
+								{quotes.map((quote) => (
+									<Quote key={quote.id} quote={quote} />
+								))}
+							</ScrollView>
+						</CardItem>
+					</Card>
+				</Content>
+				<Fab
+					button
+					position="bottomRight"
+					style={styles.fabButton}
+					onPress={() => navigateToEditQuote()}
+				>
+					<Icon name="add" />
+				</Fab>
+			</Container>
+		</>
 	);
 }
 
 const styles = StyleSheet.create({
 	bookDescription: {
 		flex: 2,
+	},
+	buttonsContainer: {
+		flexDirection: "row",
+		justifyContent: "space-around",
+		marginTop: 15,
+		width: "100%",
 	},
 	cardImg: {
 		flex: 1,
@@ -73,6 +95,10 @@ const styles = StyleSheet.create({
 	editQuoteContainer: {
 		flex: 1,
 	},
+	fabButton: {
+		backgroundColor: Colors.success,
+		margin: 10,
+	},
 });
 
 BookDetailsScreen.propTypes = {
@@ -80,4 +106,13 @@ BookDetailsScreen.propTypes = {
 		navigate: PropTypes.func.isRequired,
 	}),
 	route: PropTypes.object,
+	deleteBook: PropTypes.func,
+	updateBookDetails: PropTypes.func,
+	books: PropTypes.arrayOf(PropTypes.object),
 };
+
+const mapStateToProps = (state) => ({
+	books: state.books.books,
+});
+
+export default connect(mapStateToProps)(BookDetailsScreen);

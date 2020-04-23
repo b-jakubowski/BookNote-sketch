@@ -4,25 +4,11 @@ import {StyleSheet, View, Image} from "react-native";
 import {Text, CardItem, Card} from "native-base";
 import {useNavigation} from "@react-navigation/native";
 
-export default function BookListItem({
-	id,
-	cover,
-	name,
-	author,
-	quotes,
-	status,
-}) {
+export default function BookListItem({id, cover, name, author, quotes}) {
 	const navigation = useNavigation();
 
 	const navigateToBookDetails = () => {
-		navigation.navigate("BookDetails", {
-			id,
-			cover,
-			name,
-			author,
-			quotes,
-			status,
-		});
+		navigation.navigate("Book details", {id});
 	};
 
 	return (

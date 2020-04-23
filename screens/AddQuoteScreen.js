@@ -2,12 +2,14 @@ import React, {useState} from "react";
 import PropTypes from "prop-types";
 import {StyleSheet} from "react-native";
 import {Container, Content, Form, Text, Toast, Button, View} from "native-base";
-import {addQuoteToBook} from "../store/actions/quote";
 import {connect} from "react-redux";
+import * as yup from "yup";
+import {addQuoteToBook} from "../store/actions/quote";
+import {useNavigation} from "@react-navigation/native";
 import CategoryCheckBox from "../components/CategoryCheckBox";
 import QuoteForm from "../components/QuoteForm";
-import * as yup from "yup";
-import {useNavigation} from "@react-navigation/native";
+import {firestore} from "../constants/Firebase.js";
+import firebase from "firebase/app";
 
 const initialForm = {
 	quote: "",
@@ -40,25 +42,20 @@ const quoteSchema = yup.object({
 const categoriesMapped = (categories) =>
 	Object.keys(categories).filter((category) => categories[category]);
 
-const EditQuoteScreen = ({route, addQuoteToBook}) => {
+function AddQuoteScreen({route, addQuoteToBook}) {
 	const [form, setForm] = useState(initialForm);
 	const navigation = useNavigation();
 
 	const handleSubmit = ({quote, categories}) => {
+		const newQuote = {
+			id: `${Math.random()}`,
+			categories: categoriesMapped(categories),
+			quote,
+		};
+
 		quoteSchema
 			.validate(form, {abortEarly: false})
-			.then(() => {
-				addQuoteToBook(
-					{
-						id: `${Math.random()}`,
-						categories: categoriesMapped(categories),
-						quote,
-					},
-					route.params.id
-				);
-
-				navigation.navigate("Books");
-			})
+			.then(() => addQuoteToFirestore(newQuote))
 			.catch((e) => {
 				Toast.show({
 					text: e.errors.join(",\r\n"),
@@ -67,6 +64,21 @@ const EditQuoteScreen = ({route, addQuoteToBook}) => {
 					duration: 10000000,
 				});
 			});
+	};
+
+	const addQuoteToFirestore = (quote) => {
+		firestore
+			.collection("books")
+			.doc(route.params.id)
+			.update({
+				quotes: firebase.firestore.FieldValue.arrayUnion(quote),
+			})
+			.then(() => {
+				addQuoteToBook(quote, route.params.id);
+
+				navigation.goBack();
+			})
+			.catch();
 	};
 
 	const toggleCategory = (category) => {
@@ -125,7 +137,7 @@ const EditQuoteScreen = ({route, addQuoteToBook}) => {
 			</Content>
 		</Container>
 	);
-};
+}
 
 const styles = StyleSheet.create({
 	button: {
@@ -148,8 +160,9 @@ const styles = StyleSheet.create({
 	},
 });
 
-EditQuoteScreen.propTypes = {
+AddQuoteScreen.propTypes = {
 	addQuoteToBook: PropTypes.func,
+	route: PropTypes.object,
 };
 
-export default connect(null, {addQuoteToBook})(EditQuoteScreen);
+export default connect(null, {addQuoteToBook})(AddQuoteScreen);

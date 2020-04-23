@@ -1,14 +1,15 @@
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import * as React from "react";
+import {connect} from "react-redux";
+import {Button, Text, Icon} from "native-base";
+import PropTypes from "prop-types";
 
 import TabBarIcon from "../components/TabBarIcon";
 import BooksScreen from "../screens/BooksScreen";
 import QuotesScreen from "../screens/QuotesScreen";
 import AddBookScreen from "../screens/AddBookScreen";
 import DailyQuoteScreen from "../screens/DailyQuoteScreen";
-import {Button, Text, Icon} from "native-base";
 import {signOut} from "../constants/Firebase";
-import {connect} from "react-redux";
 import {logOutUser} from "../store/actions/auth";
 import {clearBooks} from "../store/actions/quote";
 
@@ -100,5 +101,12 @@ function getHeaderTitle(route) {
 			return "Daily Quote";
 	}
 }
+
+BottomTabNavigator.propTypes = {
+	logOutUser: PropTypes.func,
+	clearBooks: PropTypes.func,
+	navigation: PropTypes.object,
+	route: PropTypes.object,
+};
 
 export default connect(null, {logOutUser, clearBooks})(BottomTabNavigator);
