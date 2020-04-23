@@ -16,8 +16,11 @@ import {
 import Quote from "../components/Quote";
 import {SafeAreaView} from "react-native-safe-area-context";
 import BookDetailsFields from "../components/BookDetailsFields";
+import {firestore} from "../constants/Firebase";
+import {connect} from "react-redux";
+import {deleteBook} from "../store/actions/quote";
 
-export default function BookDetailsScreen({route, ...props}) {
+function BookDetailsScreen({route, deleteBook, ...props}) {
 	const {id, cover, name, author, quotes, status} = route.params;
 	const [modalVisible, setModalVisible] = useState(false);
 	const [form, setForm] = useState({cover, name, author, status});
@@ -26,16 +29,26 @@ export default function BookDetailsScreen({route, ...props}) {
 		props.navigation.navigate("EditQuote", {id});
 	};
 
+	const handleDelete = () => {
+		firestore
+			.collection("books")
+			.doc(id)
+			.delete()
+			.then(() => {
+				deleteBook(id);
+				setModalVisible(false);
+				props.navigation.navigate("Books");
+			})
+			.catch((e) => console.error(e));
+	};
+
+	const handleSubmit = () => {
+		console.log(form);
+	};
+
 	return (
 		<>
-			<Modal
-				animationType="slide"
-				transparent={true}
-				visible={modalVisible}
-				onRequestClose={() => {
-					console.log("Modal has been closed.");
-				}}
-			>
+			<Modal animationType="slide" transparent={true} visible={modalVisible}>
 				<SafeAreaView style={styles.modalContainer}>
 					<View style={styles.modalContent}>
 						<View style={{...StyleSheet.absoluteFillObject}}>
@@ -64,6 +77,25 @@ export default function BookDetailsScreen({route, ...props}) {
 								form={form}
 							/>
 						</Form>
+						<View style={styles.buttonsContainer}>
+							<Button
+								title="submit"
+								block
+								style={styles.button}
+								onPress={() => handleSubmit()}
+							>
+								<Text>Change details</Text>
+							</Button>
+							<Button
+								title="submit"
+								block
+								danger
+								style={styles.button}
+								onPress={() => handleDelete()}
+							>
+								<Text>Delete book</Text>
+							</Button>
+						</View>
 					</View>
 				</SafeAreaView>
 			</Modal>
@@ -111,6 +143,12 @@ const styles = StyleSheet.create({
 	bookDescription: {
 		flex: 2,
 	},
+	buttonsContainer: {
+		flexDirection: "row",
+		justifyContent: "space-around",
+		marginTop: 15,
+		width: "100%",
+	},
 	cardImg: {
 		flex: 1,
 		height: 70,
@@ -130,7 +168,7 @@ const styles = StyleSheet.create({
 	},
 	formItem: {
 		marginTop: 50,
-		minWidth: 320,
+		width: "100%",
 	},
 	modalContainer: {
 		alignItems: "center",
@@ -152,4 +190,12 @@ BookDetailsScreen.propTypes = {
 		navigate: PropTypes.func.isRequired,
 	}),
 	route: PropTypes.object,
+	deleteBook: PropTypes.func,
+	books: PropTypes.arrayOf(PropTypes.object),
 };
+
+const mapStateToProps = (state) => ({
+	books: state.quoteReducer.books,
+});
+
+export default connect(mapStateToProps, {deleteBook})(BookDetailsScreen);

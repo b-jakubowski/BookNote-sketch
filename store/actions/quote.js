@@ -16,7 +16,7 @@ export const addQuoteToBook = (quote, id) => ({
 	payload: quote,
 });
 
-export const DeleteBook = (id) => ({
+export const deleteBook = (id) => ({
 	type: DELETE_BOOK,
 	payload: id,
 });

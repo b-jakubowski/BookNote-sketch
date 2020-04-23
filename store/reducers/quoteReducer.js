@@ -35,7 +35,7 @@ const quoteReducer = (state = {books: []}, action) => {
 		case DELETE_BOOK:
 			return {
 				...state,
-				books: [state.books.filter((item) => item.id !== action.id)],
+				books: state.books.filter((item) => item.id != action.payload),
 			};
 		default:
 			return state;
