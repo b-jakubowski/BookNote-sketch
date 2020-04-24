@@ -28,6 +28,10 @@ function BookDetailsScreen({route, books, ...props}) {
 		props.navigation.navigate("Add Quote", {id});
 	};
 
+	const bookCover = cover.length
+		? {uri: cover}
+		: require("../assets/images/book-cover-placeholder.jpg");
+
 	return (
 		<>
 			<EditBookDetailsModal
@@ -39,7 +43,7 @@ function BookDetailsScreen({route, books, ...props}) {
 			<Container>
 				<Card>
 					<CardItem header bordered>
-						<Image source={{uri: cover}} style={styles.cardImg} />
+						<Image source={bookCover} style={styles.cardImg} />
 						<View style={styles.bookDescription}>
 							<Text>{name}</Text>
 							<Text note>{author}</Text>

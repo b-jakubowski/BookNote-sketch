@@ -79,7 +79,10 @@ function EditBookDetailsModal({
 								rounded
 								transparent
 							>
-								<Icon ios="ios-close-circle-outline" android="md-exit" />
+								<Icon
+									ios="ios-close-circle-outline"
+									android="md-close-circle-outline"
+								/>
 							</Button>
 						</View>
 					</View>
@@ -145,7 +148,7 @@ const styles = StyleSheet.create({
 	modalContent: {
 		alignItems: "center",
 		backgroundColor: "white",
-		height: "50%",
+		height: "60%",
 		padding: 20,
 		width: "90%",
 	},
