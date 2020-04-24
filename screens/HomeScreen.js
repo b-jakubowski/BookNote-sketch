@@ -9,10 +9,10 @@ import AddQuoteScreen from "./AddQuoteScreen";
 
 const Stack = createStackNavigator();
 
-function HomeScreen({user}) {
+function HomeScreen({user, loading}) {
 	return (
 		<>
-			{user ? (
+			{user && !loading ? (
 				<Stack.Navigator>
 					<Stack.Screen name="Books" component={BottomTabNavigator} />
 					<Stack.Screen name="Book details" component={BookDetailsScreen} />
@@ -27,10 +27,12 @@ function HomeScreen({user}) {
 
 HomeScreen.propTypes = {
 	user: PropTypes.object,
+	loading: PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({
 	user: state.auth.user,
+	loading: state.globalLoading.loading,
 });
 
 export default connect(mapStateToProps)(HomeScreen);

@@ -1,11 +1,12 @@
 import React, {useState} from "react";
 import PropTypes from "prop-types";
-import {StyleSheet} from "react-native";
+import {StyleSheet, ActivityIndicator} from "react-native";
 import {Container, Content, Form, Text, Toast, Button, View} from "native-base";
 import {useNavigation} from "@react-navigation/native";
 import {connect} from "react-redux";
 import * as yup from "yup";
 import {addBook} from "../store/actions/quote";
+import {setLoading, setLoadingComplete} from "../store/actions/loading";
 import QuoteForm from "../components/QuoteForm";
 import CategoryCheckBox from "../components/CategoryCheckBox";
 import {firestore} from "../constants/Firebase";
@@ -38,7 +39,13 @@ const bookSchema = yup.object({
 const categoriesMapped = (categories) =>
 	Object.keys(categories).filter((category) => categories[category]);
 
-function AddBookScreen({user, addBook}) {
+function AddBookScreen({
+	user,
+	addBook,
+	loading,
+	setLoading,
+	setLoadingComplete,
+}) {
 	const navigation = useNavigation();
 	const [form, setForm] = useState(initialForm);
 
@@ -68,13 +75,11 @@ function AddBookScreen({user, addBook}) {
 			],
 		};
 
+		setLoading();
+
 		bookSchema
 			.validate(form, {abortEarly: false})
-			.then(() => {
-				handleCreateBook(newBook);
-				setForm(initialForm);
-				navigation.navigate("Books");
-			})
+			.then(() => handleCreateBook(newBook))
 			.catch((e) => {
 				Toast.show({
 					text: e.errors.join(",\r\n"),
@@ -82,6 +87,11 @@ function AddBookScreen({user, addBook}) {
 					type: "warning",
 					duration: 10000000,
 				});
+			})
+			.finally(() => {
+				setLoadingComplete();
+				setForm(initialForm);
+				navigation.navigate("Books");
 			});
 	};
 
@@ -98,52 +108,56 @@ function AddBookScreen({user, addBook}) {
 	return (
 		<Container>
 			<Content style={styles.content}>
-				<Form>
-					<BookDetailsFields
-						name={form.name}
-						author={form.author}
-						cover={form.cover}
-						status={form.status}
-						setForm={setForm}
-						form={form}
-					/>
-					<Text note>Categories</Text>
-					<View style={styles.categories}>
-						{Object.keys(initialForm.categories).map((category, index) => (
-							<View key={index}>
-								<CategoryCheckBox
-									category={category}
-									checked={form.categories[category]}
-									onPress={() => toggleCategory(category)}
-								/>
-							</View>
-						))}
-					</View>
-					<QuoteForm
-						categories={form.categories}
-						quote={form.quote}
-						onChangeText={(value) => setForm({...form, quote: value})}
-					/>
-					<View style={styles.buttonsContainer}>
-						<Button
-							title="submit"
-							block
-							style={styles.button}
-							onPress={() => handleSubmit(form)}
-						>
-							<Text>Add Quote</Text>
-						</Button>
-						<Button
-							title="submit"
-							block
-							danger
-							style={styles.button}
-							onPress={() => setForm(initialForm)}
-						>
-							<Text>Clear Form</Text>
-						</Button>
-					</View>
-				</Form>
+				{loading ? (
+					<ActivityIndicator size="large" />
+				) : (
+					<Form>
+						<BookDetailsFields
+							name={form.name}
+							author={form.author}
+							cover={form.cover}
+							status={form.status}
+							setForm={setForm}
+							form={form}
+						/>
+						<Text note>Categories</Text>
+						<View style={styles.categories}>
+							{Object.keys(initialForm.categories).map((category, index) => (
+								<View key={index}>
+									<CategoryCheckBox
+										category={category}
+										checked={form.categories[category]}
+										onPress={() => toggleCategory(category)}
+									/>
+								</View>
+							))}
+						</View>
+						<QuoteForm
+							categories={form.categories}
+							quote={form.quote}
+							onChangeText={(value) => setForm({...form, quote: value})}
+						/>
+						<View style={styles.buttonsContainer}>
+							<Button
+								title="submit"
+								block
+								style={styles.button}
+								onPress={() => handleSubmit(form)}
+							>
+								<Text>Add Quote</Text>
+							</Button>
+							<Button
+								title="submit"
+								block
+								danger
+								style={styles.button}
+								onPress={() => setForm(initialForm)}
+							>
+								<Text>Clear Form</Text>
+							</Button>
+						</View>
+					</Form>
+				)}
 			</Content>
 		</Container>
 	);
@@ -174,6 +188,11 @@ AddBookScreen.propTypes = {
 
 const mapStateToProps = (state) => ({
 	user: state.auth.user,
+	loading: state.globalLoading.loading,
 });
 
-export default connect(mapStateToProps, {addBook})(AddBookScreen);
+export default connect(mapStateToProps, {
+	addBook,
+	setLoading,
+	setLoadingComplete,
+})(AddBookScreen);
