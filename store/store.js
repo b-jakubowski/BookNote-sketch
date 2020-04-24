@@ -1,10 +1,12 @@
 import {combineReducers, createStore} from "redux";
 import quoteReducer from "./reducers/quoteReducer";
 import authReducer from "./reducers/authReducer";
+import loadingReducer from "./reducers/loadingReducer";
 
 const rootReducer = combineReducers({
 	books: quoteReducer,
 	auth: authReducer,
+	globalLoading: loadingReducer,
 });
 
 const configureStore = () =>
