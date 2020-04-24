@@ -182,6 +182,9 @@ const styles = StyleSheet.create({
 
 AuthScreen.propTypes = {
 	logInUser: PropTypes.func,
+	loading: PropTypes.bool,
+	setLoading: PropTypes.func,
+	setLoadingComplete: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
