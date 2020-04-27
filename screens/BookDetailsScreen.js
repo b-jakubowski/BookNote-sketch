@@ -1,5 +1,11 @@
 import React, {useState} from "react";
-import {ScrollView, StyleSheet, View, Image} from "react-native";
+import {
+	ScrollView,
+	StyleSheet,
+	View,
+	Image,
+	TouchableOpacity,
+} from "react-native";
 import PropTypes from "prop-types";
 import {
 	Container,
@@ -23,8 +29,8 @@ function BookDetailsScreen({route, books, ...props}) {
 	const {cover, name, author, quotes, status} =
 		books.filter((book) => book.id === id)[0] || {};
 
-	const navigateToEditQuote = () => {
-		props.navigation.navigate("Add Quote", {id});
+	const navigateToAddQuote = () => {
+		props.navigation.navigate("Add/Edit Quote", {bookId: id});
 	};
 
 	const bookCover = cover
@@ -61,7 +67,20 @@ function BookDetailsScreen({route, books, ...props}) {
 							<CardItem>
 								<ScrollView style={styles.scrollContainer}>
 									{quotes.map((quote) => (
-										<Quote key={quote.id} quote={quote} />
+										<TouchableOpacity
+											key={quote.id}
+											onLongPress={() =>
+												props.navigation.navigate("Add/Edit Quote", {
+													bookId: id,
+													quoteId: quote.id,
+													quote: quote.quote,
+													categories: quote.categories,
+													isEdit: true,
+												})
+											}
+										>
+											<Quote key={quote.id} quote={quote} />
+										</TouchableOpacity>
 									))}
 								</ScrollView>
 							</CardItem>
@@ -71,7 +90,7 @@ function BookDetailsScreen({route, books, ...props}) {
 						button
 						position="bottomRight"
 						style={styles.fabButton}
-						onPress={() => navigateToEditQuote()}
+						onPress={() => navigateToAddQuote()}
 					>
 						<Icon name="add" />
 					</Fab>

@@ -16,7 +16,7 @@ function HomeScreen({user, loading}) {
 				<Stack.Navigator>
 					<Stack.Screen name="Books" component={BottomTabNavigator} />
 					<Stack.Screen name="Book details" component={BookDetailsScreen} />
-					<Stack.Screen name="Add Quote" component={AddQuoteScreen} />
+					<Stack.Screen name="Add/Edit Quote" component={AddQuoteScreen} />
 				</Stack.Navigator>
 			) : (
 				<AuthScreen />
