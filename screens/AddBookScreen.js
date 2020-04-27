@@ -6,7 +6,6 @@ import {useNavigation} from "@react-navigation/native";
 import {connect} from "react-redux";
 import * as yup from "yup";
 import {addBook} from "../store/actions/quote";
-import {setLoading, setLoadingComplete} from "../store/actions/loading";
 import QuoteForm from "../components/QuoteForm";
 import CategoryCheckBox from "../components/CategoryCheckBox";
 import {firestore} from "../constants/Firebase";
@@ -39,26 +38,29 @@ const bookSchema = yup.object({
 const categoriesMapped = (categories) =>
 	Object.keys(categories).filter((category) => categories[category]);
 
-function AddBookScreen({
-	user,
-	addBook,
-	loading,
-	setLoading,
-	setLoadingComplete,
-}) {
+function AddBookScreen({user, addBook}) {
 	const navigation = useNavigation();
 	const [form, setForm] = useState(initialForm);
+	const [loading, setLoading] = useState(false);
 
 	const handleCreateBook = async (book) => {
-		const docRef = await firestore.collection("books").add(book);
-		const doc = await docRef.get();
+		try {
+			const docRef = await firestore.collection("books").add(book);
+			const doc = await docRef.get();
 
-		const bookFirestore = {
-			id: doc.id,
-			...doc.data(),
-		};
+			const bookFirestore = {
+				id: doc.id,
+				...doc.data(),
+			};
 
-		addBook(bookFirestore);
+			addBook(bookFirestore);
+		} catch (e) {
+			console.error(e);
+		} finally {
+			setForm(initialForm);
+			setLoading(false);
+			navigation.navigate("Books");
+		}
 	};
 
 	const handleSubmit = ({quote, categories, ...book}) => {
@@ -75,7 +77,7 @@ function AddBookScreen({
 			],
 		};
 
-		setLoading();
+		setLoading(true);
 
 		bookSchema
 			.validate(form, {abortEarly: false})
@@ -87,11 +89,6 @@ function AddBookScreen({
 					type: "warning",
 					duration: 10000000,
 				});
-			})
-			.finally(() => {
-				setLoadingComplete();
-				setForm(initialForm);
-				navigation.navigate("Books");
 			});
 	};
 
@@ -188,11 +185,8 @@ AddBookScreen.propTypes = {
 
 const mapStateToProps = (state) => ({
 	user: state.auth.user,
-	loading: state.globalLoading.loading,
 });
 
 export default connect(mapStateToProps, {
 	addBook,
-	setLoading,
-	setLoadingComplete,
 })(AddBookScreen);
