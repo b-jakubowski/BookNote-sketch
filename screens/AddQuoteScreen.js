@@ -4,7 +4,7 @@ import {StyleSheet} from "react-native";
 import {Container, Content, Form, Text, Toast, Button, View} from "native-base";
 import {connect} from "react-redux";
 import * as yup from "yup";
-import {addQuoteToBook} from "../store/actions/quote";
+import {addQuoteToBook, updateQuote, deleteQuote} from "../store/actions/quote";
 import {useNavigation} from "@react-navigation/native";
 import CategoryCheckBox from "../components/CategoryCheckBox";
 import QuoteForm from "../components/QuoteForm";
@@ -42,20 +42,54 @@ const quoteSchema = yup.object({
 const categoriesMapped = (categories) =>
 	Object.keys(categories).filter((category) => categories[category]);
 
-function AddQuoteScreen({route, addQuoteToBook}) {
-	const [form, setForm] = useState(initialForm);
+const setInitialFormEdit = (quote, categories) => {
+	const initialFormEdit = {
+		quote,
+		categories: {
+			...initialForm.categories,
+		},
+	};
+
+	if (categories) {
+		categories.forEach(
+			(category) => (initialFormEdit.categories[category] = true)
+		);
+	}
+
+	return initialFormEdit;
+};
+
+function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
+	const {bookId, quoteId, isEdit} = route.params;
+	const initialFormEdit = setInitialFormEdit(
+		route.params.quote,
+		route.params.categories
+	);
+	const initialQuote = {
+		id: quoteId,
+		categories: categoriesMapped(initialFormEdit.categories),
+		quote: initialFormEdit.quote,
+	};
+	const bookRef = firestore.collection("books").doc(bookId);
+
+	const [form, setForm] = useState(isEdit ? initialFormEdit : initialForm);
 	const navigation = useNavigation();
 
 	const handleSubmit = ({quote, categories}) => {
 		const newQuote = {
-			id: `${Math.random()}`,
 			categories: categoriesMapped(categories),
 			quote,
 		};
 
+		isEdit ? (newQuote.id = quoteId) : (newQuote.id = `${Math.random()}`);
+
 		quoteSchema
 			.validate(form, {abortEarly: false})
-			.then(() => addQuoteToFirestore(newQuote))
+			.then(() => {
+				isEdit
+					? updateQuoteInFirestore(initialQuote, newQuote)
+					: addQuoteToFirestore(newQuote);
+			})
 			.catch((e) => {
 				Toast.show({
 					text: e.errors.join(",\r\n"),
@@ -67,14 +101,37 @@ function AddQuoteScreen({route, addQuoteToBook}) {
 	};
 
 	const addQuoteToFirestore = (quote) => {
-		firestore
-			.collection("books")
-			.doc(route.params.id)
+		bookRef
 			.update({
 				quotes: firebase.firestore.FieldValue.arrayUnion(quote),
 			})
 			.then(() => {
-				addQuoteToBook(quote, route.params.id);
+				addQuoteToBook(quote, bookId);
+
+				navigation.goBack();
+			})
+			.catch();
+	};
+
+	const updateQuoteInFirestore = (oldQuote, newQuote) => {
+		bookRef
+			.update({
+				quotes: firebase.firestore.FieldValue.arrayRemove(oldQuote),
+			})
+			.then(() => {
+				deleteQuote(bookId, quoteId);
+				addQuoteToFirestore(newQuote);
+			})
+			.catch();
+	};
+
+	const deleteQuoteInFirestore = () => {
+		bookRef
+			.update({
+				quotes: firebase.firestore.FieldValue.arrayRemove(initialQuote),
+			})
+			.then(() => {
+				deleteQuote(bookId, quoteId);
 
 				navigation.goBack();
 			})
@@ -118,21 +175,33 @@ function AddQuoteScreen({route, addQuoteToBook}) {
 						<Button
 							title="submit"
 							block
+							success
 							style={styles.button}
 							onPress={() => handleSubmit(form)}
 						>
-							<Text>Add Quote</Text>
+							<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
 						</Button>
 						<Button
 							title="submit"
 							block
-							danger
+							warning
 							style={styles.button}
-							onPress={() => setForm(initialForm)}
+							onPress={() => setForm(isEdit ? initialFormEdit : initialForm)}
 						>
 							<Text>Clear Form</Text>
 						</Button>
 					</View>
+					{isEdit && (
+						<Button
+							title="submit"
+							block
+							danger
+							style={[styles.button, styles.deleteButton]}
+							onPress={() => deleteQuoteInFirestore()}
+						>
+							<Text>Delete quote</Text>
+						</Button>
+					)}
 				</Form>
 			</Content>
 		</Container>
@@ -155,6 +224,9 @@ const styles = StyleSheet.create({
 	content: {
 		padding: 10,
 	},
+	deleteButton: {
+		marginTop: 50,
+	},
 	formItem: {
 		marginBottom: 15,
 	},
@@ -162,7 +234,8 @@ const styles = StyleSheet.create({
 
 AddQuoteScreen.propTypes = {
 	addQuoteToBook: PropTypes.func,
+	deleteQuote: PropTypes.func,
 	route: PropTypes.object,
 };
 
-export default connect(null, {addQuoteToBook})(AddQuoteScreen);
+export default connect(null, {addQuoteToBook, deleteQuote})(AddQuoteScreen);
