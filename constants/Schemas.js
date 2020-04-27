@@ -3,7 +3,6 @@ import * as yup from "yup";
 export const bookDetailsSchema = {
 	name: yup.string().required().min(2),
 	author: yup.string().required().min(2),
-	cover: yup.string().required().min(5),
 };
 
 export const categoriesSchema = yup.object({

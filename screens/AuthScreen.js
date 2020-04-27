@@ -13,11 +13,12 @@ import {
 	Title,
 	Icon,
 } from "native-base";
-import {StyleSheet, SafeAreaView} from "react-native";
+import {StyleSheet, SafeAreaView, ActivityIndicator} from "react-native";
 import * as yup from "yup";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {logInUser} from "../store/actions/auth";
+import {setLoading, setLoadingComplete} from "../store/actions/loading";
 import {
 	signIn,
 	createUser,
@@ -38,7 +39,7 @@ const authSchema = yup.object({
 	password: yup.string().required().min(5),
 });
 
-function AuthScreen({logInUser}) {
+function AuthScreen({logInUser, loading, setLoading, setLoadingComplete}) {
 	const [auth, setAuth] = useState("login");
 	const [user, setUser] = useState({
 		email: null,
@@ -46,6 +47,8 @@ function AuthScreen({logInUser}) {
 	});
 
 	const handleSubmit = ({email, password}) => {
+		setLoading();
+
 		authSchema
 			.validate(user, {abortEarly: false})
 			.then(() => {
@@ -61,7 +64,8 @@ function AuthScreen({logInUser}) {
 			.then(({user}) => logInUser(user))
 			.catch(({message}) => {
 				showWarnToast(message);
-			});
+			})
+			.finally(() => setLoadingComplete());
 	};
 
 	const createAndSignUser = (email, password) => {
@@ -72,7 +76,8 @@ function AuthScreen({logInUser}) {
 			})
 			.catch(({message}) => {
 				showWarnToast(message);
-			});
+			})
+			.finally(() => setLoadingComplete());
 	};
 
 	return (
@@ -91,50 +96,54 @@ function AuthScreen({logInUser}) {
 				</SafeAreaView>
 			)}
 			<Content contentContainerStyle={styles.content}>
-				<Card>
-					<CardItem style={styles.card}>
-						<Form style={styles.form}>
-							<View>
-								<Item style={styles.input}>
-									<Input
-										placeholder="Email"
-										autoCapitalize="none"
-										onChangeText={(value) => setUser({...user, email: value})}
-										value={user.email}
-									/>
-								</Item>
-								<Item style={styles.input}>
-									<Input
-										placeholder="Password"
-										secureTextEntry={true}
-										onChangeText={(value) =>
-											setUser({...user, password: value})
-										}
-										value={user.password}
-									/>
-								</Item>
-							</View>
-							<Button
-								info
-								block
-								style={styles.button}
-								onPress={() => handleSubmit(user)}
-							>
-								<Text>{auth === "login" ? "Login" : "Sign up"}</Text>
-							</Button>
-							{auth === "login" && (
-								<View style={styles.signUpContainer}>
-									<Text>Dont have account?</Text>
-									<Button light block style={styles.signUpButton}>
-										<Title onPress={() => setAuth("signUp")}>
-											Sign up now!
-										</Title>
-									</Button>
+				{loading ? (
+					<ActivityIndicator size="large" />
+				) : (
+					<Card>
+						<CardItem style={styles.card}>
+							<Form style={styles.form}>
+								<View>
+									<Item style={styles.input}>
+										<Input
+											placeholder="Email"
+											autoCapitalize="none"
+											onChangeText={(value) => setUser({...user, email: value})}
+											value={user.email}
+										/>
+									</Item>
+									<Item style={styles.input}>
+										<Input
+											placeholder="Password"
+											secureTextEntry={true}
+											onChangeText={(value) =>
+												setUser({...user, password: value})
+											}
+											value={user.password}
+										/>
+									</Item>
 								</View>
-							)}
-						</Form>
-					</CardItem>
-				</Card>
+								<Button
+									info
+									block
+									style={styles.button}
+									onPress={() => handleSubmit(user)}
+								>
+									<Text>{auth === "login" ? "Login" : "Sign up"}</Text>
+								</Button>
+								{auth === "login" && (
+									<View style={styles.signUpContainer}>
+										<Text>Dont have account?</Text>
+										<Button light block style={styles.signUpButton}>
+											<Title onPress={() => setAuth("signUp")}>
+												Sign up now!
+											</Title>
+										</Button>
+									</View>
+								)}
+							</Form>
+						</CardItem>
+					</Card>
+				)}
 			</Content>
 		</>
 	);
@@ -173,6 +182,17 @@ const styles = StyleSheet.create({
 
 AuthScreen.propTypes = {
 	logInUser: PropTypes.func,
+	loading: PropTypes.bool,
+	setLoading: PropTypes.func,
+	setLoadingComplete: PropTypes.func,
 };
 
-export default connect(null, {logInUser})(AuthScreen);
+const mapStateToProps = (state) => ({
+	loading: state.globalLoading.loading,
+});
+
+export default connect(mapStateToProps, {
+	logInUser,
+	setLoading,
+	setLoadingComplete,
+})(AuthScreen);

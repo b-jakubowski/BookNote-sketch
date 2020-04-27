@@ -1,5 +1,11 @@
 import React, {useState} from "react";
-import {ScrollView, StyleSheet, View, Image} from "react-native";
+import {
+	ScrollView,
+	StyleSheet,
+	View,
+	Image,
+	TouchableOpacity,
+} from "react-native";
 import PropTypes from "prop-types";
 import {
 	Container,
@@ -20,13 +26,16 @@ function BookDetailsScreen({route, books, ...props}) {
 	const [modalVisible, setModalVisible] = useState(false);
 
 	const {id} = route.params;
-	const {cover, name, author, quotes, status} = books.filter(
-		(book) => book.id === id
-	)[0];
+	const {cover, name, author, quotes, status} =
+		books.filter((book) => book.id === id)[0] || {};
 
-	const navigateToEditQuote = () => {
-		props.navigation.navigate("Add Quote", {id});
+	const navigateToAddQuote = () => {
+		props.navigation.navigate("Add/Edit Quote", {bookId: id});
 	};
+
+	const bookCover = cover
+		? {uri: cover}
+		: require("../assets/images/book-cover-placeholder.jpg");
 
 	return (
 		<>
@@ -36,42 +45,57 @@ function BookDetailsScreen({route, books, ...props}) {
 				modalVisible={modalVisible}
 				setModalVisible={setModalVisible}
 			/>
-			<Container>
-				<Card>
-					<CardItem header bordered>
-						<Image source={{uri: cover}} style={styles.cardImg} />
-						<View style={styles.bookDescription}>
-							<Text>{name}</Text>
-							<Text note>{author}</Text>
-							<Text note>Status: {status}</Text>
-						</View>
-						<View style={styles.editQuoteContainer}>
-							<Button small block onPress={() => setModalVisible(true)}>
-								<Text>Edit book</Text>
-							</Button>
-						</View>
-					</CardItem>
-				</Card>
-				<Content>
+			{name && (
+				<Container>
 					<Card>
-						<CardItem>
-							<ScrollView style={styles.scrollContainer}>
-								{quotes.map((quote) => (
-									<Quote key={quote.id} quote={quote} />
-								))}
-							</ScrollView>
+						<CardItem header bordered>
+							<Image source={bookCover} style={styles.cardImg} />
+							<View style={styles.bookDescription}>
+								<Text>{name}</Text>
+								<Text note>{author}</Text>
+								<Text note>Status: {status}</Text>
+							</View>
+							<View style={styles.editQuoteContainer}>
+								<Button small block onPress={() => setModalVisible(true)}>
+									<Text>Edit book</Text>
+								</Button>
+							</View>
 						</CardItem>
 					</Card>
-				</Content>
-				<Fab
-					button
-					position="bottomRight"
-					style={styles.fabButton}
-					onPress={() => navigateToEditQuote()}
-				>
-					<Icon name="add" />
-				</Fab>
-			</Container>
+					<Content>
+						<Card>
+							<CardItem>
+								<ScrollView style={styles.scrollContainer}>
+									{quotes.map((quote) => (
+										<TouchableOpacity
+											key={quote.id}
+											onLongPress={() =>
+												props.navigation.navigate("Add/Edit Quote", {
+													bookId: id,
+													quoteId: quote.id,
+													quote: quote.quote,
+													categories: quote.categories,
+													isEdit: true,
+												})
+											}
+										>
+											<Quote key={quote.id} quote={quote} />
+										</TouchableOpacity>
+									))}
+								</ScrollView>
+							</CardItem>
+						</Card>
+					</Content>
+					<Fab
+						button
+						position="bottomRight"
+						style={styles.fabButton}
+						onPress={() => navigateToAddQuote()}
+					>
+						<Icon name="add" />
+					</Fab>
+				</Container>
+			)}
 		</>
 	);
 }

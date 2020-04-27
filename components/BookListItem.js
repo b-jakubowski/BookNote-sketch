@@ -11,10 +11,14 @@ export default function BookListItem({id, cover, name, author, quotes}) {
 		navigation.navigate("Book details", {id});
 	};
 
+	const bookCover = cover.length
+		? {uri: cover}
+		: require("../assets/images/book-cover-placeholder.jpg");
+
 	return (
 		<Card style={styles.card}>
 			<CardItem button onPress={() => navigateToBookDetails()}>
-				<Image source={{uri: cover}} style={styles.cardImg} />
+				<Image source={bookCover} style={styles.cardImg} />
 				<View style={styles.bookDetails}>
 					<Text style={styles.bookTitle}>{name}</Text>
 					<Text note style={styles.bookAuthor}>

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {View, Button, Icon, Title, Form, Text, Toast} from "native-base";
-import {StyleSheet, Modal} from "react-native";
+import {StyleSheet, Modal, ActivityIndicator} from "react-native";
 import BookDetailsFields from "./BookDetailsFields";
 import {firestore} from "../constants/Firebase";
 import {connect} from "react-redux";
@@ -20,21 +20,36 @@ function EditBookDetailsModal({
 	updateBookDetails,
 }) {
 	const [form, setForm] = useState(initialBookValues);
+	const [loading, setLoading] = useState(false);
 	const navigation = useNavigation();
 	const bookRef = firestore.collection("books").doc(id);
 
 	const handleDelete = () => {
+		setLoading(true);
+
 		bookRef
 			.delete()
 			.then(() => {
 				deleteBook(id);
+			})
+			.catch((e) => {
+				Toast.show({
+					text: e.errors,
+					buttonText: "Okay",
+					type: "warning",
+					duration: 10000000,
+				});
+			})
+			.finally(() => {
+				setLoading(false);
 				setModalVisible(false);
 				navigation.navigate("Books");
-			})
-			.catch();
+			});
 	};
 
 	const handleSubmit = () => {
+		setLoading(true);
+
 		yup
 			.object({...bookDetailsSchema})
 			.validate(form, {abortEarly: false})
@@ -57,11 +72,12 @@ function EditBookDetailsModal({
 				cover: form.cover,
 				status: form.status,
 			})
-			.then(() => {
+			.catch()
+			.finally(() => {
+				setLoading(false);
 				setModalVisible(false);
 				updateBookDetails(id, form);
-			})
-			.catch();
+			});
 	};
 
 	return (
@@ -79,41 +95,52 @@ function EditBookDetailsModal({
 								rounded
 								transparent
 							>
-								<Icon ios="ios-close-circle-outline" android="md-exit" />
+								<Icon
+									ios="ios-close-circle-outline"
+									android="md-close-circle-outline"
+								/>
 							</Button>
 						</View>
 					</View>
 					<Title>Edit book details</Title>
-					<Form style={styles.formItem}>
-						<BookDetailsFields
-							name={form.name}
-							author={form.author}
-							cover={form.cover}
-							status={form.status}
-							setForm={setForm}
-							form={form}
-						/>
-					</Form>
-					<View style={styles.buttonsContainer}>
-						<Button
-							title="submit"
-							block
-							success
-							style={styles.button}
-							onPress={() => handleSubmit()}
-						>
-							<Text>Change book details</Text>
-						</Button>
-						<Button
-							title="submit"
-							block
-							danger
-							style={styles.button}
-							onPress={() => handleDelete()}
-						>
-							<Text>Delete book</Text>
-						</Button>
-					</View>
+					{loading ? (
+						<View style={styles.activityIndicatorContainer}>
+							<ActivityIndicator size="large" />
+						</View>
+					) : (
+						<>
+							<Form style={styles.formItem}>
+								<BookDetailsFields
+									name={form.name}
+									author={form.author}
+									cover={form.cover}
+									status={form.status}
+									setForm={setForm}
+									form={form}
+								/>
+							</Form>
+							<View style={styles.buttonsContainer}>
+								<Button
+									title="submit"
+									block
+									success
+									style={styles.button}
+									onPress={() => handleSubmit()}
+								>
+									<Text>Change book details</Text>
+								</Button>
+								<Button
+									title="submit"
+									block
+									danger
+									style={styles.button}
+									onPress={() => handleDelete()}
+								>
+									<Text>Delete book</Text>
+								</Button>
+							</View>
+						</>
+					)}
 				</View>
 			</SafeAreaView>
 		</Modal>
@@ -121,6 +148,10 @@ function EditBookDetailsModal({
 }
 
 const styles = StyleSheet.create({
+	activityIndicatorContainer: {
+		flex: 1,
+		justifyContent: "center",
+	},
 	buttonsContainer: {
 		flexDirection: "row",
 		justifyContent: "space-around",
@@ -145,7 +176,7 @@ const styles = StyleSheet.create({
 	modalContent: {
 		alignItems: "center",
 		backgroundColor: "white",
-		height: "50%",
+		height: "60%",
 		padding: 20,
 		width: "90%",
 	},
