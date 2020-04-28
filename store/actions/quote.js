@@ -8,9 +8,9 @@ import {
 	DELETE_QUOTE,
 } from "../../constants/ActionTypes";
 
-export const addBook = (quote) => ({
+export const addBook = (book) => ({
 	type: ADD_BOOK,
-	payload: quote,
+	payload: book,
 });
 
 export const addQuoteToBook = (quote, bookId) => ({
