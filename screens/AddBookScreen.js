@@ -137,17 +137,18 @@ function AddBookScreen({user, addBook}) {
 						<View style={styles.buttonsContainer}>
 							<Button
 								title="submit"
+								success
 								block
-								style={styles.button}
+								style={styles.addButton}
 								onPress={() => handleSubmit(form)}
 							>
 								<Text>Add Quote</Text>
 							</Button>
 							<Button
-								title="submit"
+								title="clear"
 								block
-								danger
-								style={styles.button}
+								warning
+								style={styles.clearButton}
 								onPress={() => setForm(initialForm)}
 							>
 								<Text>Clear Form</Text>
@@ -161,8 +162,8 @@ function AddBookScreen({user, addBook}) {
 }
 
 const styles = StyleSheet.create({
-	button: {
-		flex: 1,
+	addButton: {
+		flex: 2,
 		margin: 5,
 	},
 	buttonsContainer: {
@@ -172,6 +173,10 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		flexWrap: "wrap",
 		justifyContent: "center",
+	},
+	clearButton: {
+		flex: 1,
+		margin: 5,
 	},
 	content: {
 		padding: 10,

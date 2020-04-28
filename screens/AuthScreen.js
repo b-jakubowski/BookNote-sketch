@@ -10,7 +10,6 @@ import {
 	Input,
 	View,
 	Toast,
-	Title,
 	Icon,
 } from "native-base";
 import {

@@ -12,5 +12,6 @@ export default {
 	noticeBackground: tintColor,
 	noticeText: "#fff",
 	accentOrange: "#FEBA52",
+	darkOrange: "#EE8A2A",
 	success: "#4DAD4A",
 };

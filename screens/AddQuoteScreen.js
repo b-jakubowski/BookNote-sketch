@@ -176,7 +176,7 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 							title="submit"
 							block
 							success
-							style={styles.button}
+							style={styles.addButton}
 							onPress={() => handleSubmit(form)}
 						>
 							<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
@@ -185,7 +185,7 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 							title="submit"
 							block
 							warning
-							style={styles.button}
+							style={styles.clearButton}
 							onPress={() => setForm(isEdit ? initialFormEdit : initialForm)}
 						>
 							<Text>Clear Form</Text>
@@ -209,7 +209,11 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 }
 
 const styles = StyleSheet.create({
-	button: {
+	addButton: {
+		flex: 2,
+		margin: 5,
+	},
+	clearButton: {
 		flex: 1,
 		margin: 5,
 	},

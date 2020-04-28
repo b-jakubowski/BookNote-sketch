@@ -73,6 +73,7 @@ export default function BookDetailsFields({
 				<Button
 					style={styles.coverButton}
 					small
+					info
 					onPress={() => getPermissionAsync()}
 				>
 					<Text>Choose img</Text>
