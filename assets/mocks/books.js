@@ -1,6 +1,6 @@
 import {categoriesMock} from "./categories";
 
-const status = {
+export const status = {
 	TO_READ: "To read",
 	READING: "Reading",
 	READ: "Read,",
