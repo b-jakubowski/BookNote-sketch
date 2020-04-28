@@ -13,7 +13,12 @@ import {
 	Title,
 	Icon,
 } from "native-base";
-import {StyleSheet, SafeAreaView, ActivityIndicator} from "react-native";
+import {
+	StyleSheet,
+	SafeAreaView,
+	ActivityIndicator,
+	ImageBackground,
+} from "react-native";
 import * as yup from "yup";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
@@ -81,7 +86,10 @@ function AuthScreen({logInUser, loading, setLoading, setLoadingComplete}) {
 	};
 
 	return (
-		<>
+		<ImageBackground
+			source={require("../assets/images/books-background.jpg")}
+			style={styles.image}
+		>
 			{auth === "signUp" && (
 				<SafeAreaView>
 					<Button
@@ -134,9 +142,9 @@ function AuthScreen({logInUser, loading, setLoading, setLoadingComplete}) {
 									<View style={styles.signUpContainer}>
 										<Text>Dont have account?</Text>
 										<Button light block style={styles.signUpButton}>
-											<Title onPress={() => setAuth("signUp")}>
+											<Text onPress={() => setAuth("signUp")}>
 												Sign up now!
-											</Title>
+											</Text>
 										</Button>
 									</View>
 								)}
@@ -145,7 +153,7 @@ function AuthScreen({logInUser, loading, setLoading, setLoadingComplete}) {
 					</Card>
 				)}
 			</Content>
-		</>
+		</ImageBackground>
 	);
 }
 
@@ -165,6 +173,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 		paddingHorizontal: 15,
 		paddingVertical: 30,
+	},
+	image: {
+		flex: 1,
+		justifyContent: "center",
+		resizeMode: "cover",
 	},
 	input: {
 		marginBottom: 10,
