@@ -55,7 +55,7 @@ BookList.propTypes = BooksPropTypes;
 
 const mapStateToProps = (state) => ({
 	books: state.books.books,
-	uid: state.auth.user.uid,
+	uid: state.auth.uid,
 });
 
 export default connect(mapStateToProps, {addBook})(BookList);

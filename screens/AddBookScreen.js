@@ -189,7 +189,7 @@ AddBookScreen.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-	user: state.auth.user,
+	user: state.auth,
 });
 
 export default connect(mapStateToProps, {
