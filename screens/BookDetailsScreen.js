@@ -56,7 +56,13 @@ function BookDetailsScreen({route, books, ...props}) {
 								<Text note>Status: {status}</Text>
 							</View>
 							<View style={styles.editQuoteContainer}>
-								<Button small block onPress={() => setModalVisible(true)}>
+								<Button
+									small
+									block
+									light
+									style={styles.editBookButton}
+									onPress={() => setModalVisible(true)}
+								>
 									<Text>Edit book</Text>
 								</Button>
 							</View>
@@ -115,6 +121,9 @@ const styles = StyleSheet.create({
 		height: 70,
 		marginRight: 10,
 		maxWidth: 40,
+	},
+	editBookButton: {
+		margin: -5,
 	},
 	editQuoteContainer: {
 		flex: 1,

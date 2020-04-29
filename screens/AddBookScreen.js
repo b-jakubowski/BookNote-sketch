@@ -163,7 +163,7 @@ function AddBookScreen({user, addBook}) {
 
 const styles = StyleSheet.create({
 	addButton: {
-		flex: 2,
+		flex: 1.5,
 		margin: 5,
 	},
 	buttonsContainer: {

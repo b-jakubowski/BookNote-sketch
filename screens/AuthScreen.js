@@ -21,6 +21,7 @@ import {
 import * as yup from "yup";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
+import Constants from "expo-constants";
 import {logInUser} from "../store/actions/auth";
 import {setLoading, setLoadingComplete} from "../store/actions/loading";
 import {
@@ -90,7 +91,7 @@ function AuthScreen({logInUser, loading, setLoading, setLoadingComplete}) {
 			style={styles.image}
 		>
 			{auth === "signUp" && (
-				<SafeAreaView>
+				<SafeAreaView style={styles.safeArea}>
 					<Button
 						iconLeft
 						light
@@ -180,6 +181,9 @@ const styles = StyleSheet.create({
 	},
 	input: {
 		marginBottom: 10,
+	},
+	safeArea: {
+		paddingTop: Constants.platform.android ? 25 : 0,
 	},
 	signUpButton: {
 		width: 150,
