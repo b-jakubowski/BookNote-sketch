@@ -1,5 +1,14 @@
 import React from "react";
-import {View, Text, Item, Input, Button, Picker, Icon} from "native-base";
+import {
+	View,
+	Text,
+	Item,
+	Input,
+	Button,
+	Picker,
+	Icon,
+	ActionSheet,
+} from "native-base";
 import {StyleSheet} from "react-native";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
@@ -14,7 +23,7 @@ export default function BookDetailsFields({
 	form,
 	setForm,
 }) {
-	const getPermissionAsync = async () => {
+	const getPermissionAndPickImage = async () => {
 		if (Constants.platform.ios) {
 			const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
@@ -41,6 +50,21 @@ export default function BookDetailsFields({
 		} catch (E) {
 			console.log(E);
 		}
+	};
+
+	const chooseImgSource = () => {
+		ActionSheet.show(
+			{
+				options: ["Choose image from files", "Take a photo", "Cancel"],
+				cancelButtonIndex: 2,
+				title: "Choose image",
+			},
+			(buttonIndex) => {
+				if (buttonIndex === 0) {
+					getPermissionAndPickImage();
+				}
+			}
+		);
 	};
 
 	return (
@@ -74,7 +98,7 @@ export default function BookDetailsFields({
 					style={styles.coverButton}
 					small
 					info
-					onPress={() => getPermissionAsync()}
+					onPress={() => chooseImgSource()}
 				>
 					<Text>Choose img</Text>
 				</Button>
