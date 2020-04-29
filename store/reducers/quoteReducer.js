@@ -8,18 +8,14 @@ import {
 	DELETE_QUOTE,
 } from "../../constants/ActionTypes";
 
-const quoteReducer = (state = {books: []}, action) => {
+const quoteReducer = (state = [], action) => {
 	switch (action.type) {
 		case ADD_BOOK:
-			return {
-				...state,
-				books: [...state.books, action.payload],
-			};
+			return [...state, action.payload];
 
 		case ADD_QUOTE_TO_BOOK:
-			return {
-				...state,
-				books: state.books.map((book) => {
+			return [
+				...state.map((book) => {
 					if (book.id === action.bookId) {
 						return {
 							...book,
@@ -29,39 +25,28 @@ const quoteReducer = (state = {books: []}, action) => {
 
 					return book;
 				}),
-			};
+			];
 
 		case CLEAR_BOOKS:
-			return {
-				...state,
-				books: [],
-			};
+			return [];
 
 		case UPDATE_BOOK_DETAILS:
-			return {
-				...state,
-				books: [
-					...state.books.filter((item) => item.id !== action.bookId),
-					{
-						...state.books.filter((item) => item.id === action.bookId)[0],
-						name: action.payload.name,
-						author: action.payload.author,
-						cover: action.payload.cover,
-						status: action.payload.status,
-					},
-				],
-			};
+			return [
+				...state.filter((item) => item.id !== action.bookId),
+				{
+					...state.filter((item) => item.id === action.bookId)[0],
+					name: action.payload.name,
+					author: action.payload.author,
+					cover: action.payload.cover,
+					status: action.payload.status,
+				},
+			];
 
 		case DELETE_BOOK:
-			return {
-				...state,
-				books: state.books.filter((item) => item.id !== action.bookId),
-			};
+			return [...state.filter((item) => item.id !== action.bookId)];
 
 		case UPDATE_QUOTE: {
-			const bookRef = state.books.filter(
-				(book) => book.id === action.bookId
-			)[0];
+			const bookRef = state.filter((book) => book.id === action.bookId)[0];
 			const quoteIndex = bookRef.quotes.findIndex(
 				(quote) => quote.id === action.quoteId
 			);
@@ -73,35 +58,27 @@ const quoteReducer = (state = {books: []}, action) => {
 
 			bookRef.quotes.splice(quoteIndex, 1);
 
-			return {
-				...state,
-				books: [
-					...state.books.filter((item) => item.id !== action.bookId),
-					{
-						...bookRef,
-						quotes: [...bookRef.quotes, quoteUpdated],
-					},
-				],
-			};
+			return [
+				...state.filter((item) => item.id !== action.bookId),
+				{
+					...bookRef,
+					quotes: [...bookRef.quotes, quoteUpdated],
+				},
+			];
 		}
 
 		case DELETE_QUOTE: {
-			const bookRef = state.books.filter(
-				(book) => book.id === action.bookId
-			)[0];
+			const bookRef = state.filter((book) => book.id === action.bookId)[0];
 
-			return {
-				...state,
-				books: [
-					...state.books.filter((item) => item.id !== action.bookId),
-					{
-						...bookRef,
-						quotes: [
-							...bookRef.quotes.filter((quote) => quote.id !== action.quoteId),
-						],
-					},
-				],
-			};
+			return [
+				...state.filter((item) => item.id !== action.bookId),
+				{
+					...bookRef,
+					quotes: [
+						...bookRef.quotes.filter((quote) => quote.id !== action.quoteId),
+					],
+				},
+			];
 		}
 
 		default:

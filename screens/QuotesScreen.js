@@ -27,7 +27,7 @@ QuotesScreen.propTypes = BooksPropTypes;
 
 const mapStateToProps = (state) => {
 	return {
-		books: state.books.books,
+		books: state.books,
 	};
 };
 

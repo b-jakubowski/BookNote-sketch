@@ -145,7 +145,7 @@ BookDetailsScreen.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-	books: state.books.books,
+	books: state.books,
 });
 
 export default connect(mapStateToProps)(BookDetailsScreen);
