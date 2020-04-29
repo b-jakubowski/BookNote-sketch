@@ -1,10 +1,19 @@
 import React, {useState} from "react";
 import PropTypes from "prop-types";
 import {StyleSheet} from "react-native";
-import {Container, Content, Form, Text, Toast, Button, View} from "native-base";
+import {
+	Container,
+	Content,
+	Form,
+	Text,
+	Toast,
+	Button,
+	View,
+	ActionSheet,
+} from "native-base";
 import {connect} from "react-redux";
 import * as yup from "yup";
-import {addQuoteToBook, updateQuote, deleteQuote} from "../store/actions/quote";
+import {addQuoteToBook, deleteQuote} from "../store/actions/quote";
 import {useNavigation} from "@react-navigation/native";
 import CategoryCheckBox from "../components/CategoryCheckBox";
 import QuoteForm from "../components/QuoteForm";
@@ -148,6 +157,22 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 		});
 	};
 
+	const confirmDelete = () => {
+		ActionSheet.show(
+			{
+				options: ["Yes", "No"],
+				cancelButtonIndex: 1,
+				destructiveButtonIndex: 0,
+				title: "Are you sure to delete this quote ?",
+			},
+			(buttonIndex) => {
+				if (buttonIndex === 0) {
+					deleteQuoteInFirestore();
+				}
+			}
+		);
+	};
+
 	return (
 		<Container>
 			<Content style={styles.content}>
@@ -171,18 +196,18 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 						quote={form.quote}
 						onChangeText={(value) => setForm({...form, quote: value})}
 					/>
+					<Button
+						title="submit"
+						block
+						success
+						style={styles.addButton}
+						onPress={() => handleSubmit(form)}
+					>
+						<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
+					</Button>
 					<View style={styles.buttonsContainer}>
 						<Button
-							title="submit"
-							block
-							success
-							style={styles.addButton}
-							onPress={() => handleSubmit(form)}
-						>
-							<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
-						</Button>
-						<Button
-							title="submit"
+							title="clear"
 							block
 							warning
 							style={styles.clearButton}
@@ -190,18 +215,18 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 						>
 							<Text>Clear Form</Text>
 						</Button>
+						{isEdit && (
+							<Button
+								title="delete"
+								block
+								danger
+								style={styles.clearButton}
+								onPress={() => confirmDelete()}
+							>
+								<Text>Delete quote</Text>
+							</Button>
+						)}
 					</View>
-					{isEdit && (
-						<Button
-							title="submit"
-							block
-							danger
-							style={[styles.button, styles.deleteButton]}
-							onPress={() => deleteQuoteInFirestore()}
-						>
-							<Text>Delete quote</Text>
-						</Button>
-					)}
 				</Form>
 			</Content>
 		</Container>
@@ -210,26 +235,24 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 
 const styles = StyleSheet.create({
 	addButton: {
-		flex: 2,
-		margin: 5,
-	},
-	clearButton: {
-		flex: 1,
+		flex: 1.5,
 		margin: 5,
 	},
 	buttonsContainer: {
 		flexDirection: "row",
+		marginTop: 30,
 	},
 	categories: {
 		flexDirection: "row",
 		flexWrap: "wrap",
 		justifyContent: "center",
 	},
+	clearButton: {
+		flex: 1,
+		margin: 5,
+	},
 	content: {
 		padding: 10,
-	},
-	deleteButton: {
-		marginTop: 50,
 	},
 	formItem: {
 		marginBottom: 15,
