@@ -34,139 +34,125 @@ const mockBookDetails = {
 
 describe("quote reducer", () => {
 	it("should handle initial state", () => {
-		expect(quoteReducer(undefined, {})).toEqual({books: []});
+		expect(quoteReducer(undefined, [])).toEqual([]);
 	});
 
 	it("should handle ADD_BOOK", () => {
-		expect(
-			quoteReducer({books: []}, {type: "ADD_BOOK", payload: mockBook})
-		).toEqual({
-			books: [mockBook],
-		});
+		expect(quoteReducer([], {type: "ADD_BOOK", payload: mockBook})).toEqual([
+			mockBook,
+		]);
 	});
 
 	it("should handle ADD_QUOTE_TO_BOOK", () => {
 		expect(
-			quoteReducer(
-				{books: [mockBook]},
-				{type: "ADD_QUOTE_TO_BOOK", bookId: "1", payload: mockQuote}
-			)
-		).toEqual({
-			books: [
-				{
-					id: "1",
-					name: "The Great Gatsby",
-					author: "F. Scott Fitzgerald",
-					cover:
-						"https://upload.wikimedia.org/wikipedia/commons/a/a0/The_Great_Gatsby_cover_1925_%281%29.jpg",
-					status: status.READ,
-					quotes: [
-						{
-							id: "1",
-							categories: [categoriesMock[5]],
-							quote:
-								"And I like large parties. They’re so intimate. At small parties there isn’t any privacy.",
-						},
-						mockQuote,
-					],
-				},
-			],
-		});
+			quoteReducer([mockBook], {
+				type: "ADD_QUOTE_TO_BOOK",
+				bookId: "1",
+				payload: mockQuote,
+			})
+		).toEqual([
+			{
+				id: "1",
+				name: "The Great Gatsby",
+				author: "F. Scott Fitzgerald",
+				cover:
+					"https://upload.wikimedia.org/wikipedia/commons/a/a0/The_Great_Gatsby_cover_1925_%281%29.jpg",
+				status: status.READ,
+				quotes: [
+					{
+						id: "1",
+						categories: [categoriesMock[5]],
+						quote:
+							"And I like large parties. They’re so intimate. At small parties there isn’t any privacy.",
+					},
+					mockQuote,
+				],
+			},
+		]);
 	});
 
 	it("should handle DELETE_BOOK", () => {
 		expect(
-			quoteReducer({books: [mockBook]}, {type: "DELETE_BOOK", bookId: "1"})
-		).toEqual({
-			books: [],
-		});
+			quoteReducer([mockBook], {type: "DELETE_BOOK", bookId: "1"})
+		).toEqual([]);
 	});
 
 	it("should handle UPDATE_BOOK_DETAILS", () => {
 		expect(
-			quoteReducer(
-				{books: [mockBook]},
-				{type: "UPDATE_BOOK_DETAILS", bookId: "1", payload: mockBookDetails}
-			)
-		).toEqual({
-			books: [
-				{
-					id: "1",
-					name: "The Great Gatsby 2: Return of the Great",
-					author: "F. Scott Fitzgerald",
-					cover: "test cover",
-					status: status.TO_READ,
-					quotes: [
-						{
-							id: "1",
-							categories: [categoriesMock[5]],
-							quote:
-								"And I like large parties. They’re so intimate. At small parties there isn’t any privacy.",
-						},
-					],
-				},
-			],
-		});
+			quoteReducer([mockBook], {
+				type: "UPDATE_BOOK_DETAILS",
+				bookId: "1",
+				payload: mockBookDetails,
+			})
+		).toEqual([
+			{
+				id: "1",
+				name: "The Great Gatsby 2: Return of the Great",
+				author: "F. Scott Fitzgerald",
+				cover: "test cover",
+				status: status.TO_READ,
+				quotes: [
+					{
+						id: "1",
+						categories: [categoriesMock[5]],
+						quote:
+							"And I like large parties. They’re so intimate. At small parties there isn’t any privacy.",
+					},
+				],
+			},
+		]);
 	});
 
 	it("should handle CLEAR_BOOKS", () => {
-		expect(
-			quoteReducer({books: [mockBook, mockBook]}, {type: "CLEAR_BOOKS"})
-		).toEqual({
-			books: [],
-		});
+		expect(quoteReducer([mockBook, mockBook], {type: "CLEAR_BOOKS"})).toEqual(
+			[]
+		);
 	});
 
 	it("should handle UPDATE_QUOTE", () => {
 		expect(
-			quoteReducer(
-				{books: [mockBook]},
-				{
-					type: "UPDATE_QUOTE",
-					bookId: "1",
-					quoteId: "1",
-					payload: {categories: [categoriesMock[1]], quote: "Updated quote"},
-				}
-			)
-		).toEqual({
-			books: [
-				{
-					id: "1",
-					name: "The Great Gatsby",
-					author: "F. Scott Fitzgerald",
-					cover:
-						"https://upload.wikimedia.org/wikipedia/commons/a/a0/The_Great_Gatsby_cover_1925_%281%29.jpg",
-					status: status.READ,
-					quotes: [
-						{
-							id: "1",
-							categories: [categoriesMock[1]],
-							quote: "Updated quote",
-						},
-					],
-				},
-			],
-		});
+			quoteReducer([mockBook], {
+				type: "UPDATE_QUOTE",
+				bookId: "1",
+				quoteId: "1",
+				payload: {categories: [categoriesMock[1]], quote: "Updated quote"},
+			})
+		).toEqual([
+			{
+				id: "1",
+				name: "The Great Gatsby",
+				author: "F. Scott Fitzgerald",
+				cover:
+					"https://upload.wikimedia.org/wikipedia/commons/a/a0/The_Great_Gatsby_cover_1925_%281%29.jpg",
+				status: status.READ,
+				quotes: [
+					{
+						id: "1",
+						categories: [categoriesMock[1]],
+						quote: "Updated quote",
+					},
+				],
+			},
+		]);
 	});
 
 	it("should handle DELETE_QUOTE", () => {
 		expect(
-			quoteReducer(
-				{books: [mockBook]},
-				{type: "DELETE_QUOTE", bookId: "1", quoteId: "1"}
-			)
-		).toEqual({
-			books: [
-				{
-					id: "1",
-					name: "The Great Gatsby",
-					author: "F. Scott Fitzgerald",
-					cover:
-						"https://upload.wikimedia.org/wikipedia/commons/a/a0/The_Great_Gatsby_cover_1925_%281%29.jpg",
-					status: status.READ,
-					quotes: [],
-				},
-			],
-		});
+			quoteReducer([mockBook], {
+				type: "DELETE_QUOTE",
+				bookId: "1",
+				quoteId: "1",
+			})
+		).toEqual([
+			{
+				id: "1",
+				name: "The Great Gatsby",
+				author: "F. Scott Fitzgerald",
+				cover:
+					"https://upload.wikimedia.org/wikipedia/commons/a/a0/The_Great_Gatsby_cover_1925_%281%29.jpg",
+				status: status.READ,
+				quotes: [],
+			},
+		]);
 	});
 });

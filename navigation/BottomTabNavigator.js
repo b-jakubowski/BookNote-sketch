@@ -1,7 +1,7 @@
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import * as React from "react";
 import {connect} from "react-redux";
-import {Button, Text, Icon} from "native-base";
+import {Button, Icon} from "native-base";
 import PropTypes from "prop-types";
 
 import TabBarIcon from "../components/TabBarIcon";
@@ -12,19 +12,20 @@ import DailyQuoteScreen from "../screens/DailyQuoteScreen";
 import {signOut} from "../constants/Firebase";
 import {logOutUser} from "../store/actions/auth";
 import {clearBooks} from "../store/actions/quote";
+import Colors from "../constants/Colors";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
 
 function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 	navigation.setOptions({
-		headerTitle: getHeaderTitle(route),
+		headerTitle:
+			route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME,
 		headerRight: () => (
 			<Button
-				iconRight
-				info
+				warning
 				transparent
-				style={{marginRight: 15}}
+				style={{flex: 1, marginRight: 10}}
 				onPress={() =>
 					signOut()
 						.then(() => {
@@ -34,19 +35,21 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 						.catch()
 				}
 			>
-				<Text warning>logout</Text>
 				<Icon ios="ios-log-out" android="md-exit" />
 			</Button>
 		),
 	});
 
 	return (
-		<BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
+		<BottomTab.Navigator
+			initialRouteName={INITIAL_ROUTE_NAME}
+			tabBarOptions={{activeTintColor: Colors.darkOrange}}
+		>
 			<BottomTab.Screen
 				name="Books"
 				component={BooksScreen}
 				options={{
-					title: "Books",
+					tabBarLabel: "Books",
 					tabBarIcon: ({focused}) => (
 						<TabBarIcon focused={focused} name="md-book" />
 					),
@@ -57,6 +60,9 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 				component={DailyQuoteScreen}
 				options={{
 					title: "Daily Quote",
+					tabBarOptions: {
+						activeBackgroundColor: "red",
+					},
 					tabBarIcon: ({focused}) => (
 						<TabBarIcon focused={focused} name="md-shuffle" />
 					),
@@ -64,9 +70,14 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 			/>
 			<BottomTab.Screen
 				name="Quotes"
+				title="Quotes"
 				component={QuotesScreen}
 				options={{
-					title: "Quotes",
+					// title: "Quotes",
+					tabBarOptions: {
+						activeBackgroundColor: "red",
+						activeTintColor: "red",
+					},
 					tabBarIcon: ({focused}) => (
 						<TabBarIcon focused={focused} name="md-quote" />
 					),
@@ -77,6 +88,10 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 				component={AddBookScreen}
 				options={{
 					title: "Add Book",
+					tabBarOptions: {
+						activeBackgroundColor: "green",
+						inactiveTintColor: "red",
+					},
 					tabBarIcon: ({focused}) => (
 						<TabBarIcon focused={focused} name="md-add-circle-outline" />
 					),

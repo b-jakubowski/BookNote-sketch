@@ -54,8 +54,8 @@ const styles = StyleSheet.create({
 BookList.propTypes = BooksPropTypes;
 
 const mapStateToProps = (state) => ({
-	books: state.books.books,
-	uid: state.auth.user.uid,
+	books: state.books,
+	uid: state.auth.uid,
 });
 
 export default connect(mapStateToProps, {addBook})(BookList);

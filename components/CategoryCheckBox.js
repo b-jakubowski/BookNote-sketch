@@ -6,9 +6,10 @@ import {StyleSheet} from "react-native";
 export default function CategoryCheckBox({category, onPress, checked}) {
 	return (
 		<View>
-			<Button small style={styles.categoryButton} onPress={onPress}>
+			<Button light small style={styles.categoryButton} onPress={onPress}>
 				<CheckBox
 					name={category}
+					color={"black"}
 					value={category}
 					checked={checked}
 					onPress={onPress}

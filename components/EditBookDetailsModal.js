@@ -1,6 +1,15 @@
 import React, {useState} from "react";
 import {SafeAreaView} from "react-native-safe-area-context";
-import {View, Button, Icon, Title, Form, Text, Toast} from "native-base";
+import {
+	View,
+	Button,
+	Icon,
+	Title,
+	Form,
+	Text,
+	Toast,
+	ActionSheet,
+} from "native-base";
 import {StyleSheet, Modal, ActivityIndicator} from "react-native";
 import BookDetailsFields from "./BookDetailsFields";
 import {firestore} from "../constants/Firebase";
@@ -80,6 +89,22 @@ function EditBookDetailsModal({
 			});
 	};
 
+	const confirmDelete = () => {
+		ActionSheet.show(
+			{
+				options: ["Yes", "No"],
+				cancelButtonIndex: 1,
+				destructiveButtonIndex: 0,
+				title: "Are you sure to delete this quote ?",
+			},
+			(buttonIndex) => {
+				if (buttonIndex === 0) {
+					handleDelete();
+				}
+			}
+		);
+	};
+
 	return (
 		<Modal animationType="slide" transparent={true} visible={modalVisible}>
 			<SafeAreaView style={styles.modalContainer}>
@@ -134,7 +159,8 @@ function EditBookDetailsModal({
 									block
 									danger
 									style={styles.button}
-									onPress={() => handleDelete()}
+									// onPress={() => handleDelete()}
+									onPress={() => confirmDelete()}
 								>
 									<Text>Delete book</Text>
 								</Button>

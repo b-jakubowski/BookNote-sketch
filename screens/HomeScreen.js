@@ -12,7 +12,7 @@ const Stack = createStackNavigator();
 function HomeScreen({user, loading}) {
 	return (
 		<>
-			{user && !loading ? (
+			{user.uid && !loading ? (
 				<Stack.Navigator>
 					<Stack.Screen name="Books" component={BottomTabNavigator} />
 					<Stack.Screen name="Book details" component={BookDetailsScreen} />
@@ -31,7 +31,7 @@ HomeScreen.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-	user: state.auth.user,
+	user: state.auth,
 	loading: state.globalLoading.loading,
 });
 

@@ -8,18 +8,16 @@ const mockUser = {
 
 describe("auth reducer", () => {
 	it("should handle initial state", () => {
-		expect(authReducer(undefined, {})).toEqual({user: null});
+		expect(authReducer(undefined, {})).toEqual({});
 	});
 
 	it("should handle LOG_IN_USER", () => {
-		expect(
-			authReducer({user: null}, {type: "LOG_IN_USER", payload: mockUser})
-		).toEqual({user: mockUser});
+		expect(authReducer({}, {type: "LOG_IN_USER", payload: mockUser})).toEqual(
+			mockUser
+		);
 	});
 
 	it("should handle LOG_OUT_USER", () => {
-		expect(authReducer({user: mockUser}, {type: "LOG_OUT_USER"})).toEqual({
-			user: null,
-		});
+		expect(authReducer(mockUser, {type: "LOG_OUT_USER"})).toEqual({});
 	});
 });
