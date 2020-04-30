@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {CardItem, Body, Badge, Text} from "native-base";
+import {Body, Badge, Text} from "native-base";
 import {StyledText} from "./StyledText";
 import {View, StyleSheet} from "react-native";
 import Colors from "../constants/Colors";

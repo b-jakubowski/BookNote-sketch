@@ -14,4 +14,5 @@ export default {
 	accentOrange: "#FEBA52",
 	darkOrange: "#EE8A2A",
 	success: "#4DAD4A",
+	lightGrey: "#F1F1F1",
 };
