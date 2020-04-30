@@ -1,11 +1,5 @@
 import React, {useState} from "react";
-import {
-	ScrollView,
-	StyleSheet,
-	View,
-	Image,
-	TouchableOpacity,
-} from "react-native";
+import {StyleSheet, View, Image} from "react-native";
 import PropTypes from "prop-types";
 import {
 	Container,
@@ -16,6 +10,8 @@ import {
 	Content,
 	Fab,
 	Icon,
+	List,
+	ListItem,
 } from "native-base";
 import {connect} from "react-redux";
 import Quote from "../components/Quote";
@@ -69,28 +65,24 @@ function BookDetailsScreen({route, books, ...props}) {
 						</CardItem>
 					</Card>
 					<Content>
-						<Card>
-							<CardItem>
-								<ScrollView style={styles.scrollContainer}>
-									{quotes.map((quote) => (
-										<TouchableOpacity
-											key={quote.id}
-											onLongPress={() =>
-												props.navigation.navigate("Add/Edit Quote", {
-													bookId: id,
-													quoteId: quote.id,
-													quote: quote.quote,
-													categories: quote.categories,
-													isEdit: true,
-												})
-											}
-										>
-											<Quote key={quote.id} quote={quote} />
-										</TouchableOpacity>
-									))}
-								</ScrollView>
-							</CardItem>
-						</Card>
+						<List>
+							{quotes.map((quote) => (
+								<ListItem
+									key={quote.id}
+									onLongPress={() =>
+										props.navigation.navigate("Add/Edit Quote", {
+											bookId: id,
+											quoteId: quote.id,
+											quote: quote.quote,
+											categories: quote.categories,
+											isEdit: true,
+										})
+									}
+								>
+									<Quote key={quote.id} quote={quote} />
+								</ListItem>
+							))}
+						</List>
 					</Content>
 					<Fab
 						button
