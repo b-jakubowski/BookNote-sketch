@@ -1,82 +1,94 @@
 import React, {useState} from "react";
-import Quote from "../components/Quote";
 import {BooksPropTypes} from "../constants/PropTypes";
 import {connect} from "react-redux";
-import {
-	Container,
-	Content,
-	List,
-	ListItem,
-	Segment,
-	Button,
-	Text,
-	Body,
-} from "native-base";
+import {Container, ListItem, Text, Body, Tabs, Tab} from "native-base";
 import Colors from "../constants/Colors";
-
-const setSegmentButtonColor = (activePage, page) => ({
-	backgroundColor: activePage === page ? Colors.darkOrange : undefined,
-	borderColor: Colors.darkOrange,
-});
-
-const setSegmentButtonText = (activePage, page) => ({
-	color: activePage === page ? "white" : Colors.darkOrange,
-});
+import {StyleSheet} from "react-native";
 
 function ReadingListScreen({books}) {
 	const [activePage, setActivePage] = useState("To read");
+	const statusCount = {
+		"To read": 0,
+		Reading: 0,
+		Read: 0,
+	};
+
+	books.forEach((book) => statusCount[book.status]++);
+
+	const ActivePageBookList = ({status}) => (
+		<>
+			<Text style={styles.amountText}>Amount: {statusCount[status]}</Text>
+			{books.map((book) => {
+				if (activePage === book.status) {
+					return (
+						<ListItem key={book.id}>
+							<Body>
+								<Text>{book.name}</Text>
+								<Text note>{book.author}</Text>
+							</Body>
+						</ListItem>
+					);
+				}
+			})}
+		</>
+	);
+
 	return (
 		<Container>
-			<Segment>
-				<Button
-					first
-					style={setSegmentButtonColor(activePage, "To read")}
-					active={activePage === "To read"}
-					onPress={() => setActivePage("To read")}
+			<Tabs
+				onChangeTab={(active) => setActivePage(active.ref.props.heading)}
+				tabBarUnderlineStyle={styles.tabUnderline}
+			>
+				<Tab
+					heading="To read"
+					activeTabStyle={styles.activeTab}
+					activeTextStyle={styles.activeText}
+					tabStyle={styles.tab}
 				>
-					<Text style={setSegmentButtonText(activePage, "To read")}>
-						To read
-					</Text>
-				</Button>
-				<Button
-					style={setSegmentButtonColor(activePage, "Reading")}
-					active={activePage === "Reading"}
-					onPress={() => setActivePage("Reading")}
+					<ActivePageBookList status="To read" />
+				</Tab>
+				<Tab
+					heading="Reading"
+					activeTabStyle={styles.activeTab}
+					tabStyle={styles.tab}
+					activeTextStyle={styles.activeText}
 				>
-					<Text style={setSegmentButtonText(activePage, "Reading")}>
-						Reading
-					</Text>
-				</Button>
-				<Button
-					last
-					style={setSegmentButtonColor(activePage, "Read")}
-					active={activePage === "Read"}
-					onPress={() => setActivePage("Read")}
+					<ActivePageBookList status="Reading" />
+				</Tab>
+				<Tab
+					heading="Read"
+					activeTabStyle={styles.activeTab}
+					tabStyle={styles.tab}
+					activeTextStyle={styles.activeText}
 				>
-					<Text style={setSegmentButtonText(activePage, "Read")}>Read</Text>
-				</Button>
-			</Segment>
-			<Content>
-				<List>
-					{books.map((book) => {
-						if (book.status === activePage) {
-							return (
-								<ListItem key={book.id}>
-									<Body>
-										<Text>{book.name}</Text>
-										<Text note>{book.author}</Text>
-									</Body>
-								</ListItem>
-							);
-						}
-					})}
-				</List>
-			</Content>
+					<ActivePageBookList status="Read" />
+				</Tab>
+			</Tabs>
 		</Container>
 	);
 }
 
 ReadingListScreen.propTypes = BooksPropTypes;
+
+const styles = StyleSheet.create({
+	activeTab: {
+		backgroundColor: Colors.lightGrey,
+	},
+	activeText: {
+		color: Colors.darkOrange,
+	},
+	amountText: {
+		color: "grey",
+		marginLeft: 25,
+		paddingVertical: 10,
+	},
+	tab: {
+		backgroundColor: "white",
+	},
+	tabUnderline: {
+		backgroundColor: Colors.darkOrange,
+	},
+});
 
 const mapStateToProps = (state) => {
 	return {
