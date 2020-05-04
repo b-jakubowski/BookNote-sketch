@@ -159,7 +159,6 @@ function EditBookDetailsModal({
 									block
 									danger
 									style={styles.button}
-									// onPress={() => handleDelete()}
 									onPress={() => confirmDelete()}
 								>
 									<Text>Delete book</Text>

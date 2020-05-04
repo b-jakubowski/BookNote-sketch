@@ -97,7 +97,7 @@ export default function BookDetailsFields({
 				<Button
 					style={styles.coverButton}
 					small
-					info
+					light
 					onPress={() => chooseImgSource()}
 				>
 					<Text>Choose img</Text>

@@ -13,6 +13,7 @@ import {signOut} from "../constants/Firebase";
 import {logOutUser} from "../store/actions/auth";
 import {clearBooks} from "../store/actions/quote";
 import Colors from "../constants/Colors";
+import ReadingListScreen from "../screens/ReadingListScreen";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
@@ -49,7 +50,6 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 				name="Books"
 				component={BooksScreen}
 				options={{
-					tabBarLabel: "Books",
 					tabBarIcon: ({focused}) => (
 						<TabBarIcon focused={focused} name="md-book" />
 					),
@@ -59,25 +59,24 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 				name="Daily Quote"
 				component={DailyQuoteScreen}
 				options={{
-					title: "Daily Quote",
-					tabBarOptions: {
-						activeBackgroundColor: "red",
-					},
 					tabBarIcon: ({focused}) => (
 						<TabBarIcon focused={focused} name="md-shuffle" />
 					),
 				}}
 			/>
 			<BottomTab.Screen
+				name="Reading list"
+				component={ReadingListScreen}
+				options={{
+					tabBarIcon: ({focused}) => (
+						<TabBarIcon focused={focused} name="md-list" />
+					),
+				}}
+			/>
+			<BottomTab.Screen
 				name="Quotes"
-				title="Quotes"
 				component={QuotesScreen}
 				options={{
-					// title: "Quotes",
-					tabBarOptions: {
-						activeBackgroundColor: "red",
-						activeTintColor: "red",
-					},
 					tabBarIcon: ({focused}) => (
 						<TabBarIcon focused={focused} name="md-quote" />
 					),
@@ -87,11 +86,6 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 				name="Add Book"
 				component={AddBookScreen}
 				options={{
-					title: "Add Book",
-					tabBarOptions: {
-						activeBackgroundColor: "green",
-						inactiveTintColor: "red",
-					},
 					tabBarIcon: ({focused}) => (
 						<TabBarIcon focused={focused} name="md-add-circle-outline" />
 					),
@@ -99,22 +93,6 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 			/>
 		</BottomTab.Navigator>
 	);
-}
-
-function getHeaderTitle(route) {
-	const routeName =
-		route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
-
-	switch (routeName) {
-		case "Books":
-			return "Books";
-		case "Quotes":
-			return "Quotes";
-		case "Add Book":
-			return "Add Book";
-		case "Daily Quote":
-			return "Daily Quote";
-	}
 }
 
 BottomTabNavigator.propTypes = {
