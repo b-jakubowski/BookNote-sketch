@@ -21,6 +21,7 @@ export default function BookDetailsFields({
 	author,
 	cover,
 	status,
+	isEdit,
 	form,
 	setForm,
 }) {
@@ -66,9 +67,8 @@ export default function BookDetailsFields({
 				if (buttonIndex === 0) {
 					getPermissionAndPickImage();
 				}
-
 				if (buttonIndex === 1) {
-					navigation.navigate("Camera");
+					navigation.navigate("Camera", {isEdit});
 				}
 			}
 		);
@@ -134,6 +134,7 @@ BookDetailsFields.propTypes = {
 	author: PropTypes.string,
 	cover: PropTypes.string,
 	status: PropTypes.string,
+	isEdit: PropTypes.bool,
 	form: PropTypes.object,
 	setForm: PropTypes.func,
 };
