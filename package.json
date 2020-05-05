@@ -24,6 +24,7 @@
 		"expo-constants": "~9.0.0",
 		"expo-font": "~8.1.0",
 		"expo-image-picker": "~8.1.0",
+		"expo-media-library": "~8.1.0",
 		"expo-web-browser": "~8.1.0",
 		"firebase": "7.9.0",
 		"firebase-admin": "^8.10.0",
