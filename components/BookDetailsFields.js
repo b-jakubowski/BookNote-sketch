@@ -14,6 +14,7 @@ import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import PropTypes from "prop-types";
+import {useNavigation} from "@react-navigation/native";
 
 export default function BookDetailsFields({
 	name,
@@ -23,6 +24,8 @@ export default function BookDetailsFields({
 	form,
 	setForm,
 }) {
+	const navigation = useNavigation();
+
 	const getPermissionAndPickImage = async () => {
 		if (Constants.platform.ios) {
 			const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -62,6 +65,10 @@ export default function BookDetailsFields({
 			(buttonIndex) => {
 				if (buttonIndex === 0) {
 					getPermissionAndPickImage();
+				}
+
+				if (buttonIndex === 1) {
+					navigation.navigate("Photo camera");
 				}
 			}
 		);
