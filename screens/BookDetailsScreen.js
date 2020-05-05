@@ -14,19 +14,16 @@ import {
 } from "native-base";
 import {connect} from "react-redux";
 import Quote from "../components/Quote";
-import EditBookDetailsModal from "../components/EditBookDetailsModal";
 import Colors from "../constants/Colors";
 import {TouchableOpacity} from "react-native-gesture-handler";
 
-function BookDetailsScreen({route, books, ...props}) {
-	const [modalVisible, setModalVisible] = useState(false);
-
+function BookDetailsScreen({route, books, navigation}) {
 	const {id} = route.params;
 	const {cover, name, author, quotes, status} =
 		books.filter((book) => book.id === id)[0] || {};
 
 	const navigateToAddQuote = () => {
-		props.navigation.navigate("Add/Edit Quote", {bookId: id});
+		navigation.navigate("Add/Edit Quote", {bookId: id});
 	};
 
 	const bookCover = cover
@@ -35,12 +32,6 @@ function BookDetailsScreen({route, books, ...props}) {
 
 	return (
 		<>
-			<EditBookDetailsModal
-				id={id}
-				initialBookValues={{name, author, cover, status}}
-				modalVisible={modalVisible}
-				setModalVisible={setModalVisible}
-			/>
 			{name && (
 				<Container>
 					<Card>
@@ -57,7 +48,12 @@ function BookDetailsScreen({route, books, ...props}) {
 									block
 									light
 									style={styles.editBookButton}
-									onPress={() => setModalVisible(true)}
+									onPress={() =>
+										navigation.navigate("Edit Book details", {
+											id,
+											initialBookValues: {name, author, cover, status},
+										})
+									}
 								>
 									<Text>Edit book</Text>
 								</Button>
@@ -81,7 +77,7 @@ function BookDetailsScreen({route, books, ...props}) {
 								<TouchableOpacity
 									style={styles.hiddenButton}
 									onPress={() =>
-										props.navigation.navigate("Add/Edit Quote", {
+										navigation.navigate("Add/Edit Quote", {
 											bookId: id,
 											quoteId: item.id,
 											quote: item.quote,

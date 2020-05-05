@@ -6,6 +6,8 @@ import AuthScreen from "./AuthScreen";
 import BottomTabNavigator from "../navigation/BottomTabNavigator";
 import BookDetailsScreen from "./BookDetailsScreen";
 import AddQuoteScreen from "./AddQuoteScreen";
+import CameraScreen from "./CameraScreen";
+import EditBookDetailsScreen from "./EditBookDetailsScreen";
 
 const Stack = createStackNavigator();
 
@@ -17,6 +19,11 @@ function HomeScreen({user, loading}) {
 					<Stack.Screen name="Books" component={BottomTabNavigator} />
 					<Stack.Screen name="Book details" component={BookDetailsScreen} />
 					<Stack.Screen name="Add/Edit Quote" component={AddQuoteScreen} />
+					<Stack.Screen name="Camera" component={CameraScreen} />
+					<Stack.Screen
+						name="Edit Book details"
+						component={EditBookDetailsScreen}
+					/>
 				</Stack.Navigator>
 			) : (
 				<AuthScreen />

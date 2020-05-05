@@ -14,15 +14,19 @@ import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import PropTypes from "prop-types";
+import {useNavigation} from "@react-navigation/native";
 
 export default function BookDetailsFields({
 	name,
 	author,
 	cover,
 	status,
+	isEdit,
 	form,
 	setForm,
 }) {
+	const navigation = useNavigation();
+
 	const getPermissionAndPickImage = async () => {
 		if (Constants.platform.ios) {
 			const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -57,11 +61,14 @@ export default function BookDetailsFields({
 			{
 				options: ["Choose image from files", "Take a photo", "Cancel"],
 				cancelButtonIndex: 2,
-				title: "Choose image",
+				title: "",
 			},
 			(buttonIndex) => {
 				if (buttonIndex === 0) {
 					getPermissionAndPickImage();
+				}
+				if (buttonIndex === 1) {
+					navigation.navigate("Camera", {isEdit});
 				}
 			}
 		);
@@ -107,7 +114,7 @@ export default function BookDetailsFields({
 				<Picker
 					mode="dropdown"
 					iosIcon={<Icon name="arrow-down" />}
-					style={{width: undefined}}
+					style={styles.picker}
 					placeholder="Reading status"
 					placeholderIconColor="#007aff"
 					selectedValue={status}
@@ -127,6 +134,7 @@ BookDetailsFields.propTypes = {
 	author: PropTypes.string,
 	cover: PropTypes.string,
 	status: PropTypes.string,
+	isEdit: PropTypes.bool,
 	form: PropTypes.object,
 	setForm: PropTypes.func,
 };
@@ -140,5 +148,8 @@ const styles = StyleSheet.create({
 	},
 	formItem: {
 		marginBottom: 15,
+	},
+	picker: {
+		width: undefined,
 	},
 });
