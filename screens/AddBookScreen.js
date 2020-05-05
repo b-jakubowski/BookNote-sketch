@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import PropTypes from "prop-types";
 import {StyleSheet, ActivityIndicator} from "react-native";
 import {Container, Content, Form, Text, Toast, Button, View} from "native-base";
@@ -38,10 +38,16 @@ const bookSchema = yup.object({
 const categoriesMapped = (categories) =>
 	Object.keys(categories).filter((category) => categories[category]);
 
-function AddBookScreen({user, addBook}) {
+function AddBookScreen({user, addBook, route}) {
 	const navigation = useNavigation();
 	const [form, setForm] = useState(initialForm);
 	const [loading, setLoading] = useState(false);
+
+	useEffect(() => {
+		if (route.params && route.params.uri) {
+			setForm({...form, cover: route.params.uri});
+		}
+	}, [route.params]);
 
 	const handleCreateBook = async (book) => {
 		try {
@@ -186,6 +192,7 @@ const styles = StyleSheet.create({
 AddBookScreen.propTypes = {
 	addBook: PropTypes.func,
 	user: PropTypes.object,
+	route: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
