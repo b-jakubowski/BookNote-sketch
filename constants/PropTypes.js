@@ -7,8 +7,7 @@ export const BooksPropTypes = {
 			name: PropTypes.string,
 			author: PropTypes.string,
 			cover: PropTypes.string,
-			startedReading: PropTypes.number,
-			endedReading: PropTypes.number,
+			status: PropTypes.string,
 			quotes: PropTypes.arrayOf(
 				PropTypes.shape({
 					id: PropTypes.string,
