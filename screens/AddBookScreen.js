@@ -89,6 +89,7 @@ function AddBookScreen({user, addBook, route}) {
 			.validate(form, {abortEarly: false})
 			.then(() => handleCreateBook(newBook))
 			.catch((e) => {
+				setLoading(false);
 				Toast.show({
 					text: e.errors.join(",\r\n"),
 					buttonText: "Okay",
@@ -120,6 +121,7 @@ function AddBookScreen({user, addBook, route}) {
 							author={form.author}
 							cover={form.cover}
 							status={form.status}
+							isEdit={false}
 							setForm={setForm}
 							form={form}
 						/>
