@@ -14,6 +14,7 @@ import {logOutUser} from "../store/actions/auth";
 import {clearBooks} from "../store/actions/quote";
 import Colors from "../constants/Colors";
 import ReadingListScreen from "../screens/ReadingListScreen";
+import {StyleSheet} from "react-native";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
@@ -26,7 +27,7 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 			<Button
 				warning
 				transparent
-				style={{flex: 1, marginRight: 10}}
+				style={styles.logoutButton}
 				onPress={() =>
 					signOut()
 						.then(() => {
@@ -36,7 +37,7 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 						.catch()
 				}
 			>
-				<Icon ios="ios-log-out" android="md-exit" />
+				<Icon type="Ionicons" name="md-exit" />
 			</Button>
 		),
 	});
@@ -100,6 +101,14 @@ BottomTabNavigator.propTypes = {
 	clearBooks: PropTypes.func,
 	navigation: PropTypes.object,
 	route: PropTypes.object,
+	focused: PropTypes.bool,
 };
+
+const styles = StyleSheet.create({
+	logoutButton: {
+		flex: 1,
+		marginRight: 10,
+	},
+});
 
 export default connect(null, {logOutUser, clearBooks})(BottomTabNavigator);

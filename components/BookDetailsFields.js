@@ -60,7 +60,7 @@ export default function BookDetailsFields({
 			{
 				options: ["Choose image from files", "Take a photo", "Cancel"],
 				cancelButtonIndex: 2,
-				title: "Choose image",
+				title: "",
 			},
 			(buttonIndex) => {
 				if (buttonIndex === 0) {
@@ -68,7 +68,7 @@ export default function BookDetailsFields({
 				}
 
 				if (buttonIndex === 1) {
-					navigation.navigate("Photo camera");
+					navigation.navigate("Camera");
 				}
 			}
 		);
@@ -114,7 +114,7 @@ export default function BookDetailsFields({
 				<Picker
 					mode="dropdown"
 					iosIcon={<Icon name="arrow-down" />}
-					style={{width: undefined}}
+					style={styles.picker}
 					placeholder="Reading status"
 					placeholderIconColor="#007aff"
 					selectedValue={status}
@@ -147,5 +147,8 @@ const styles = StyleSheet.create({
 	},
 	formItem: {
 		marginBottom: 15,
+	},
+	picker: {
+		width: undefined,
 	},
 });
