@@ -1,18 +1,15 @@
 import React, {useState, useEffect} from "react";
+import PropTypes from "prop-types";
 import {Camera} from "expo-camera";
 import {View, StyleSheet} from "react-native";
-import {Text, Icon, Button} from "native-base";
+import {Text, Icon, Button, Toast} from "native-base";
 import * as MediaLibrary from "expo-media-library";
-import {useNavigation} from "@react-navigation/native";
 
-export default function CameraScreen(props) {
+export default function CameraScreen({navigation, route}) {
 	const [hasCameraPermission, setHasCameraPermission] = useState(null);
 	const [hasMediaPermission, setHasMediaPermission] = useState(null);
 	const [cameraRef, setCameraRef] = useState(null);
 	const [isCameraReady, setCameraReady] = useState(null);
-	const navigation = useNavigation();
-
-	console.log(props);
 
 	useEffect(() => {
 		(async () => {
@@ -27,10 +24,22 @@ export default function CameraScreen(props) {
 
 	const takePicture = async () => {
 		if (isCameraReady) {
-			const {uri} = await cameraRef.takePictureAsync();
-			const asset = await MediaLibrary.createAssetAsync(uri);
-
-			navigation.navigate("Add Book", {uri: asset.uri});
+			let asset;
+			try {
+				const {uri} = await cameraRef.takePictureAsync();
+				asset = await MediaLibrary.createAssetAsync(uri);
+			} catch (e) {
+				Toast.show({
+					text: e.errors,
+					buttonText: "Okay",
+					type: "warning",
+					duration: 10000000,
+				});
+			} finally {
+				route.params.isEdit
+					? navigation.goBack()
+					: navigation.navigate("Add Book", {uri: asset.uri});
+			}
 		}
 	};
 
@@ -89,3 +98,8 @@ const styles = StyleSheet.create({
 		width: "100%",
 	},
 });
+
+CameraScreen.propTypes = {
+	navigation: PropTypes.object,
+	route: PropTypes.object,
+};
