@@ -25,7 +25,6 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 			route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME,
 		headerRight: () => (
 			<Button
-				warning
 				transparent
 				style={styles.logoutButton}
 				onPress={() =>
@@ -37,7 +36,7 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 						.catch()
 				}
 			>
-				<Icon type="Ionicons" name="md-exit" />
+				<Icon type="Ionicons" name="md-exit" style={styles.logoutIcon} />
 			</Button>
 		),
 	});
@@ -52,7 +51,11 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 				component={BooksScreen}
 				options={{
 					tabBarIcon: ({focused}) => (
-						<TabBarIcon focused={focused} name="md-book" />
+						<TabBarIcon
+							focused={focused}
+							type="FontAwesome5"
+							name="book-open"
+						/>
 					),
 				}}
 			/>
@@ -61,7 +64,7 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 				component={DailyQuoteScreen}
 				options={{
 					tabBarIcon: ({focused}) => (
-						<TabBarIcon focused={focused} name="md-shuffle" />
+						<TabBarIcon focused={focused} type="MaterialIcons" name="today" />
 					),
 				}}
 			/>
@@ -70,7 +73,7 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 				component={ReadingListScreen}
 				options={{
 					tabBarIcon: ({focused}) => (
-						<TabBarIcon focused={focused} name="md-list" />
+						<TabBarIcon focused={focused} type="FontAwesome" name="list" />
 					),
 				}}
 			/>
@@ -79,7 +82,11 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 				component={QuotesScreen}
 				options={{
 					tabBarIcon: ({focused}) => (
-						<TabBarIcon focused={focused} name="md-quote" />
+						<TabBarIcon
+							focused={focused}
+							type="FontAwesome"
+							name="quote-right"
+						/>
 					),
 				}}
 			/>
@@ -88,7 +95,7 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 				component={AddBookScreen}
 				options={{
 					tabBarIcon: ({focused}) => (
-						<TabBarIcon focused={focused} name="md-add-circle-outline" />
+						<TabBarIcon type="AntDesign" focused={focused} name="pluscircle" />
 					),
 				}}
 			/>
@@ -108,6 +115,9 @@ const styles = StyleSheet.create({
 	logoutButton: {
 		flex: 1,
 		marginRight: 10,
+	},
+	logoutIcon: {
+		color: Colors.blackChocolate,
 	},
 });
 
