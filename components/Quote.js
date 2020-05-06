@@ -8,7 +8,7 @@ import Colors from "../constants/Colors";
 export default function Quote({quote, author, title}) {
 	return (
 		<Body>
-			<StyledText>"{quote.quote}"</StyledText>
+			<StyledText style={styles.quoteText}>"{quote.quote}"</StyledText>
 			{author && title && (
 				<Text note style={styles.authorTitle}>
 					{author}, {title}
@@ -36,12 +36,16 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 	},
 	categoryBadge: {
-		backgroundColor: Colors.accentOrange,
-		marginRight: 3,
+		backgroundColor: Colors.lightOrange,
+		marginRight: 5,
 		marginTop: 3,
 	},
 	categoryText: {
+		color: Colors.blackChocolate,
 		fontSize: 12,
+	},
+	quoteText: {
+		fontSize: 16,
 	},
 });
 
