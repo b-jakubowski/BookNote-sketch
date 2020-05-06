@@ -127,7 +127,7 @@ function EditBookDetailsScreen({
 								block
 								success
 								iconLeft
-								style={styles.button}
+								style={styles.changeButton}
 								onPress={() => handleSubmit()}
 							>
 								<Icon type="Entypo" name="edit" />
@@ -136,9 +136,9 @@ function EditBookDetailsScreen({
 							<Button
 								title="submit"
 								block
-								iconLeft
 								danger
-								style={styles.button}
+								iconLeft
+								style={styles.deleteButton}
 								onPress={() => confirmDelete()}
 							>
 								<Icon type="Ionicons" name="md-trash" />
@@ -161,10 +161,16 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-around",
 		marginTop: 40,
-		width: "100%",
+	},
+	changeButton: {
+		flex: 1,
 	},
 	content: {
 		padding: 10,
+	},
+	deleteButton: {
+		flex: 0.7,
+		marginLeft: 15,
 	},
 });
 

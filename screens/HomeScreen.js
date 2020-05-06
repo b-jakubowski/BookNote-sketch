@@ -11,18 +11,40 @@ import EditBookDetailsScreen from "./EditBookDetailsScreen";
 
 const Stack = createStackNavigator();
 
+const stackScreenOptions = {
+	headerBackTitleVisible: false,
+	headerTitleAlign: "center",
+};
+
 function HomeScreen({user, loading}) {
 	return (
 		<>
 			{user.uid && !loading ? (
 				<Stack.Navigator>
-					<Stack.Screen name="Books" component={BottomTabNavigator} />
-					<Stack.Screen name="Book details" component={BookDetailsScreen} />
-					<Stack.Screen name="Add/Edit Quote" component={AddQuoteScreen} />
-					<Stack.Screen name="Camera" component={CameraScreen} />
+					<Stack.Screen
+						name="Books"
+						component={BottomTabNavigator}
+						options={stackScreenOptions}
+					/>
+					<Stack.Screen
+						name="Book details"
+						component={BookDetailsScreen}
+						options={stackScreenOptions}
+					/>
+					<Stack.Screen
+						name="Add/Edit Quote"
+						component={AddQuoteScreen}
+						options={stackScreenOptions}
+					/>
+					<Stack.Screen
+						name="Camera"
+						component={CameraScreen}
+						options={stackScreenOptions}
+					/>
 					<Stack.Screen
 						name="Edit book details"
 						component={EditBookDetailsScreen}
+						options={stackScreenOptions}
 					/>
 				</Stack.Navigator>
 			) : (
