@@ -4,6 +4,8 @@ import {StyleSheet, View, Image} from "react-native";
 import {Text, CardItem, Card} from "native-base";
 import {useNavigation} from "@react-navigation/native";
 
+import Colors from "../constants/Colors";
+
 export default function BookListItem({id, cover, name, author, quotes}) {
 	const navigation = useNavigation();
 
@@ -35,6 +37,7 @@ export default function BookListItem({id, cover, name, author, quotes}) {
 
 const styles = StyleSheet.create({
 	bookAuthor: {
+		fontSize: 15,
 		marginBottom: 15,
 	},
 	bookDetails: {
@@ -42,6 +45,8 @@ const styles = StyleSheet.create({
 		minHeight: 40,
 	},
 	bookTitle: {
+		color: Colors.blackChocolate,
+		fontSize: 20,
 		marginBottom: 5,
 	},
 	card: {
@@ -51,7 +56,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		height: 130,
 		marginRight: 10,
-		maxWidth: 80,
+		maxWidth: 90,
 	},
 });
 
