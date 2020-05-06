@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {StyleSheet, View, Image} from "react-native";
 import {SwipeListView} from "react-native-swipe-list-view";
 import PropTypes from "prop-types";
@@ -38,24 +38,24 @@ function BookDetailsScreen({route, books, navigation}) {
 						<CardItem header bordered>
 							<Image source={bookCover} style={styles.cardImg} />
 							<View style={styles.bookDescription}>
-								<Text>{name}</Text>
+								<Text style={styles.bookTitle}>{name}</Text>
 								<Text note>{author}</Text>
 								<Text note>Status: {status}</Text>
 							</View>
 							<View style={styles.editQuoteContainer}>
 								<Button
-									small
-									block
 									light
+									block
+									transparent
 									style={styles.editBookButton}
 									onPress={() =>
-										navigation.navigate("Edit Book details", {
+										navigation.navigate("Edit book details", {
 											id,
 											initialBookValues: {name, author, cover, status},
 										})
 									}
 								>
-									<Text>Edit book</Text>
+									<Icon type="Entypo" name="edit" style={styles.editIcon} />
 								</Button>
 							</View>
 						</CardItem>
@@ -109,20 +109,26 @@ const styles = StyleSheet.create({
 	bookDescription: {
 		flex: 2,
 	},
+	bookTitle: {
+		color: Colors.blackChocolate,
+		fontSize: 18,
+	},
 	cardImg: {
 		flex: 1,
 		height: 70,
 		marginRight: 10,
-		maxWidth: 40,
+		maxWidth: 50,
 	},
 	editBookButton: {
 		margin: -5,
+		minHeight: 40,
 	},
 	editIcon: {
+		color: Colors.blackChocolate,
 		fontSize: 22,
 	},
 	editQuoteContainer: {
-		flex: 1,
+		flex: 0.4,
 	},
 	fabButton: {
 		backgroundColor: Colors.success,
@@ -130,7 +136,7 @@ const styles = StyleSheet.create({
 	},
 	hiddenButton: {
 		alignItems: "center",
-		backgroundColor: Colors.lightGrey,
+		backgroundColor: Colors.lightOrange,
 		flex: 1,
 		justifyContent: "center",
 		paddingLeft: 25,

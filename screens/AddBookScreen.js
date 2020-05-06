@@ -1,7 +1,16 @@
 import React, {useState, useEffect} from "react";
 import PropTypes from "prop-types";
 import {StyleSheet, ActivityIndicator} from "react-native";
-import {Container, Content, Form, Text, Toast, Button, View} from "native-base";
+import {
+	Container,
+	Content,
+	Form,
+	Text,
+	Toast,
+	Button,
+	View,
+	Icon,
+} from "native-base";
 import {useNavigation} from "@react-navigation/native";
 import {connect} from "react-redux";
 import * as yup from "yup";
@@ -147,15 +156,17 @@ function AddBookScreen({user, addBook, route}) {
 								title="submit"
 								success
 								block
+								iconLeft
 								style={styles.addButton}
 								onPress={() => handleSubmit(form)}
 							>
-								<Text>Add Quote</Text>
+								<Icon type="AntDesign" name="pluscircle" />
+								<Text>Add Book</Text>
 							</Button>
 							<Button
 								title="clear"
 								block
-								warning
+								light
 								style={styles.clearButton}
 								onPress={() => setForm(initialForm)}
 							>

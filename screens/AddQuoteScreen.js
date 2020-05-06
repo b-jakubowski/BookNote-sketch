@@ -10,6 +10,7 @@ import {
 	Button,
 	View,
 	ActionSheet,
+	Icon,
 } from "native-base";
 import {connect} from "react-redux";
 import * as yup from "yup";
@@ -200,16 +201,18 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 						title="submit"
 						block
 						success
+						iconLeft
 						style={styles.addButton}
 						onPress={() => handleSubmit(form)}
 					>
+						<Icon type="Entypo" name="edit" />
 						<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
 					</Button>
 					<View style={styles.buttonsContainer}>
 						<Button
 							title="clear"
 							block
-							warning
+							light
 							style={styles.clearButton}
 							onPress={() => setForm(isEdit ? initialFormEdit : initialForm)}
 						>
@@ -220,9 +223,11 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 								title="delete"
 								block
 								danger
-								style={styles.clearButton}
+								iconLeft
+								style={styles.deleteButton}
 								onPress={() => confirmDelete()}
 							>
+								<Icon type="Ionicons" name="md-trash" />
 								<Text>Delete quote</Text>
 							</Button>
 						)}
@@ -240,7 +245,7 @@ const styles = StyleSheet.create({
 	},
 	buttonsContainer: {
 		flexDirection: "row",
-		marginTop: 30,
+		marginTop: 20,
 	},
 	categories: {
 		flexDirection: "row",
@@ -253,6 +258,10 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		padding: 10,
+	},
+	deleteButton: {
+		flex: 0.8,
+		margin: 5,
 	},
 	formItem: {
 		marginBottom: 15,

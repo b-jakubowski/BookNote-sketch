@@ -21,7 +21,7 @@ function HomeScreen({user, loading}) {
 					<Stack.Screen name="Add/Edit Quote" component={AddQuoteScreen} />
 					<Stack.Screen name="Camera" component={CameraScreen} />
 					<Stack.Screen
-						name="Edit Book details"
+						name="Edit book details"
 						component={EditBookDetailsScreen}
 					/>
 				</Stack.Navigator>

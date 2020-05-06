@@ -7,6 +7,7 @@ import {
 	Toast,
 	Form,
 	Button,
+	Icon,
 } from "native-base";
 import {View, ActivityIndicator, StyleSheet} from "react-native";
 import {connect} from "react-redux";
@@ -125,18 +126,22 @@ function EditBookDetailsScreen({
 								title="submit"
 								block
 								success
+								iconLeft
 								style={styles.button}
 								onPress={() => handleSubmit()}
 							>
+								<Icon type="Entypo" name="edit" />
 								<Text>Change book details</Text>
 							</Button>
 							<Button
 								title="submit"
 								block
+								iconLeft
 								danger
 								style={styles.button}
 								onPress={() => confirmDelete()}
 							>
+								<Icon type="Ionicons" name="md-trash" />
 								<Text>Delete book</Text>
 							</Button>
 						</View>
@@ -155,7 +160,7 @@ const styles = StyleSheet.create({
 	buttonsContainer: {
 		flexDirection: "row",
 		justifyContent: "space-around",
-		marginTop: 15,
+		marginTop: 40,
 		width: "100%",
 	},
 	content: {
