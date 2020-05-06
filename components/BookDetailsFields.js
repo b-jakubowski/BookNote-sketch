@@ -59,7 +59,7 @@ export default function BookDetailsFields({
 	const chooseImgSource = () => {
 		ActionSheet.show(
 			{
-				options: ["Choose image from files", "Take a photo", "Cancel"],
+				options: ["Choose image from a phone", "Take a photo", "Cancel"],
 				cancelButtonIndex: 2,
 				title: "",
 			},
