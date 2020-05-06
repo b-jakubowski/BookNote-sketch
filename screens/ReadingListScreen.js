@@ -68,17 +68,16 @@ function ReadingListScreen({books}) {
 	);
 }
 
-ReadingListScreen.propTypes = BooksPropTypes;
-
 const styles = StyleSheet.create({
 	activeTab: {
-		backgroundColor: Colors.lightGrey,
+		backgroundColor: Colors.lightOrange,
 	},
 	activeText: {
-		color: Colors.darkOrange,
+		color: Colors.blackChocolate,
+		fontWeight: "normal",
 	},
 	amountText: {
-		color: "grey",
+		color: Colors.brownOrange,
 		marginLeft: 25,
 		paddingVertical: 10,
 	},
@@ -86,9 +85,11 @@ const styles = StyleSheet.create({
 		backgroundColor: "white",
 	},
 	tabUnderline: {
-		backgroundColor: Colors.darkOrange,
+		backgroundColor: Colors.accentOrange,
 	},
 });
+
+ReadingListScreen.propTypes = BooksPropTypes;
 
 const mapStateToProps = (state) => {
 	return {
