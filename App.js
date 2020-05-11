@@ -1,15 +1,15 @@
-import React, {useState, useRef, useEffect} from "react";
-import {Platform, StatusBar, YellowBox} from "react-native";
-import {SplashScreen} from "expo";
+import React, { useState, useRef, useEffect } from "react";
+import { Platform, StatusBar, YellowBox } from "react-native";
+import { SplashScreen } from "expo";
 import * as Font from "expo-font";
-import {Ionicons} from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import PropTypes from "prop-types";
-import {NavigationContainer} from "@react-navigation/native";
-import {Provider} from "react-redux";
+import { NavigationContainer } from "@react-navigation/native";
+import { Provider } from "react-redux";
 
 import useLinking from "./navigation/useLinking";
 import configureStore from "./store/store";
-import {Root, Container} from "native-base";
+import { Root, Container } from "native-base";
 import HomeScreen from "./screens/HomeScreen";
 
 const store = configureStore();
@@ -18,7 +18,7 @@ export default function App(props) {
 	const [isLoadingComplete, setLoadingComplete] = useState(false);
 	const [initialNavigationState, setInitialNavigationState] = useState();
 	const containerRef = useRef();
-	const {getInitialState} = useLinking(containerRef);
+	const { getInitialState } = useLinking(containerRef);
 
 	YellowBox.ignoreWarnings(["Setting a timer"]);
 
