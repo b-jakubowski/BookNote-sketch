@@ -67,7 +67,7 @@
 	"private": true,
 	"eslintConfig": {
 		"root": true,
-		"parser": "babel-eslint",
+		"parser": "@typescript-eslint/parser",
 		"extends": [
 			"eslint:recommended",
 			"prettier/react",
@@ -86,7 +86,9 @@
 				{
 					"extensions": [
 						".js",
-						".jsx"
+						".jsx",
+						".tsx",
+						".ts"
 					]
 				}
 			],
@@ -108,6 +110,16 @@
 		"settings": {
 			"react": {
 				"version": "detect"
+			},
+			"import/resolver": {
+				"node": {
+					"extensions": [
+						".js",
+						".jsx",
+						".ts",
+						".tsx"
+					]
+				}
 			}
 		}
 	}
