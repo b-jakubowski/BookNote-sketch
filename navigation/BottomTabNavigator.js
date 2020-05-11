@@ -11,9 +11,9 @@ import AddBookScreen from "../screens/AddBookScreen";
 import DailyQuoteScreen from "../screens/DailyQuoteScreen";
 import { signOut } from "../constants/Firebase";
 import { logOutUser } from "../store/actions/auth";
-import { clearBooks } from "../store/actions/quote";
+import { clearBooks } from "../store/actions/book";
 import Colors from "../constants/Colors";
-import ReadingListScreen from "../screens/ReadingListScreen.tsx";
+import ReadingListScreen from "../screens/ReadingListScreen";
 import { StyleSheet } from "react-native";
 
 const BottomTab = createBottomTabNavigator();

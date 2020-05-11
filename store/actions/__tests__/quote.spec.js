@@ -6,9 +6,9 @@ import {
 	clearBooks,
 	updateQuote,
 	deleteQuote,
-} from "../quote";
-import {categoriesMock} from "../../../assets/mocks/categories";
-import {status} from "../../../assets/mocks/books";
+} from "../book";
+import { categoriesMock } from "../../../assets/mocks/categories";
+import { status } from "../../../assets/mocks/books";
 
 const mockBook = {
 	id: "1",

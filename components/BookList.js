@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from "react";
-import {ScrollView, StyleSheet, ActivityIndicator} from "react-native";
-import {connect} from "react-redux";
+import React, { useState, useEffect } from "react";
+import { ScrollView, StyleSheet, ActivityIndicator } from "react-native";
+import { connect } from "react-redux";
 import BookListItem from "./BookListItem";
-import {BooksPropTypes} from "../constants/PropTypes";
-import {firestore} from "../constants/Firebase";
-import {addBook} from "../store/actions/quote";
-import {Text} from "native-base";
+import { BooksPropTypes } from "../constants/PropTypes";
+import { firestore } from "../constants/Firebase";
+import { addBook } from "../store/actions/book";
+import { Text } from "native-base";
 
-const BookList = ({uid, books, addBook}) => {
+const BookList = ({ uid, books, addBook }) => {
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
@@ -20,7 +20,7 @@ const BookList = ({uid, books, addBook}) => {
 			.then((booksStore) => {
 				if (!books.length) {
 					booksStore.docs.forEach((book) =>
-						addBook({id: book.id, ...book.data()})
+						addBook({ id: book.id, ...book.data() })
 					);
 				}
 			})
@@ -58,4 +58,4 @@ const mapStateToProps = (state) => ({
 	uid: state.auth.uid,
 });
 
-export default connect(mapStateToProps, {addBook})(BookList);
+export default connect(mapStateToProps, { addBook })(BookList);

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
 	Container,
 	Content,
@@ -9,14 +9,14 @@ import {
 	Button,
 	Icon,
 } from "native-base";
-import {View, ActivityIndicator, StyleSheet} from "react-native";
-import {connect} from "react-redux";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
+import { connect } from "react-redux";
 import * as yup from "yup";
 import PropTypes from "prop-types";
 
-import {deleteBook, updateBookDetails} from "../store/actions/quote";
-import {firestore} from "../constants/Firebase";
-import {bookDetailsSchema} from "../constants/Schemas";
+import { deleteBook, updateBookDetails } from "../store/actions/book";
+import { firestore } from "../constants/Firebase";
+import { bookDetailsSchema } from "../constants/Schemas";
 import BookDetailsFields from "../components/BookDetailsFields";
 
 function EditBookDetailsScreen({
@@ -25,7 +25,7 @@ function EditBookDetailsScreen({
 	navigation,
 	route,
 }) {
-	const {id, initialBookValues} = route.params;
+	const { id, initialBookValues } = route.params;
 	const [form, setForm] = useState(initialBookValues);
 	const [loading, setLoading] = useState(false);
 	const bookRef = firestore.collection("books").doc(id);
@@ -56,8 +56,8 @@ function EditBookDetailsScreen({
 		setLoading(true);
 
 		yup
-			.object({...bookDetailsSchema})
-			.validate(form, {abortEarly: false})
+			.object({ ...bookDetailsSchema })
+			.validate(form, { abortEarly: false })
 			.then(() => submitBookDetails())
 			.catch((e) => {
 				Toast.show({
@@ -181,6 +181,6 @@ EditBookDetailsScreen.propTypes = {
 	updateBookDetails: PropTypes.func,
 };
 
-export default connect(null, {deleteBook, updateBookDetails})(
+export default connect(null, { deleteBook, updateBookDetails })(
 	EditBookDetailsScreen
 );

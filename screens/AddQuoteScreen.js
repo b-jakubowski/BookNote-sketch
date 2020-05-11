@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import {StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
 import {
 	Container,
 	Content,
@@ -12,13 +12,13 @@ import {
 	ActionSheet,
 	Icon,
 } from "native-base";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import * as yup from "yup";
-import {addQuoteToBook, deleteQuote} from "../store/actions/quote";
-import {useNavigation} from "@react-navigation/native";
+import { addQuoteToBook, deleteQuote } from "../store/actions/book";
+import { useNavigation } from "@react-navigation/native";
 import CategoryCheckBox from "../components/CategoryCheckBox";
 import QuoteForm from "../components/QuoteForm";
-import {firestore} from "../constants/Firebase.js";
+import { firestore } from "../constants/Firebase.js";
 import firebase from "firebase/app";
 
 const initialForm = {
@@ -69,8 +69,8 @@ const setInitialFormEdit = (quote, categories) => {
 	return initialFormEdit;
 };
 
-function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
-	const {bookId, quoteId, isEdit} = route.params;
+function AddQuoteScreen({ route, addQuoteToBook, deleteQuote }) {
+	const { bookId, quoteId, isEdit } = route.params;
 	const initialFormEdit = setInitialFormEdit(
 		route.params.quote,
 		route.params.categories
@@ -85,7 +85,7 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 	const [form, setForm] = useState(isEdit ? initialFormEdit : initialForm);
 	const navigation = useNavigation();
 
-	const handleSubmit = ({quote, categories}) => {
+	const handleSubmit = ({ quote, categories }) => {
 		const newQuote = {
 			categories: categoriesMapped(categories),
 			quote,
@@ -94,7 +94,7 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 		isEdit ? (newQuote.id = quoteId) : (newQuote.id = `${Math.random()}`);
 
 		quoteSchema
-			.validate(form, {abortEarly: false})
+			.validate(form, { abortEarly: false })
 			.then(() => {
 				isEdit
 					? updateQuoteInFirestore(initialQuote, newQuote)
@@ -195,7 +195,7 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 					<QuoteForm
 						categories={form.categories}
 						quote={form.quote}
-						onChangeText={(value) => setForm({...form, quote: value})}
+						onChangeText={(value) => setForm({ ...form, quote: value })}
 					/>
 					<Button
 						title="submit"
@@ -274,4 +274,4 @@ AddQuoteScreen.propTypes = {
 	route: PropTypes.object,
 };
 
-export default connect(null, {addQuoteToBook, deleteQuote})(AddQuoteScreen);
+export default connect(null, { addQuoteToBook, deleteQuote })(AddQuoteScreen);

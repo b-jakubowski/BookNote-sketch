@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import {StyleSheet, ActivityIndicator} from "react-native";
+import { StyleSheet, ActivityIndicator } from "react-native";
 import {
 	Container,
 	Content,
@@ -11,15 +11,15 @@ import {
 	View,
 	Icon,
 } from "native-base";
-import {useNavigation} from "@react-navigation/native";
-import {connect} from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { connect } from "react-redux";
 import * as yup from "yup";
-import {addBook} from "../store/actions/quote";
+import { addBook } from "../store/actions/book";
 import QuoteForm from "../components/QuoteForm";
 import CategoryCheckBox from "../components/CategoryCheckBox";
-import {firestore} from "../constants/Firebase";
+import { firestore } from "../constants/Firebase";
 import BookDetailsFields from "../components/BookDetailsFields";
-import {bookDetailsSchema, categoriesSchema} from "../constants/Schemas";
+import { bookDetailsSchema, categoriesSchema } from "../constants/Schemas";
 
 const initialForm = {
 	name: "",
@@ -47,14 +47,14 @@ const bookSchema = yup.object({
 const categoriesMapped = (categories) =>
 	Object.keys(categories).filter((category) => categories[category]);
 
-function AddBookScreen({user, addBook, route}) {
+function AddBookScreen({ user, addBook, route }) {
 	const navigation = useNavigation();
 	const [form, setForm] = useState(initialForm);
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		if (route.params && route.params.uri) {
-			setForm({...form, cover: route.params.uri});
+			setForm({ ...form, cover: route.params.uri });
 		}
 	}, [route.params]);
 
@@ -78,7 +78,7 @@ function AddBookScreen({user, addBook, route}) {
 		}
 	};
 
-	const handleSubmit = ({quote, categories, ...book}) => {
+	const handleSubmit = ({ quote, categories, ...book }) => {
 		const newBook = {
 			...book,
 			createdAt: new Date(),
@@ -95,7 +95,7 @@ function AddBookScreen({user, addBook, route}) {
 		setLoading(true);
 
 		bookSchema
-			.validate(form, {abortEarly: false})
+			.validate(form, { abortEarly: false })
 			.then(() => handleCreateBook(newBook))
 			.catch((e) => {
 				setLoading(false);
@@ -149,7 +149,7 @@ function AddBookScreen({user, addBook, route}) {
 						<QuoteForm
 							categories={form.categories}
 							quote={form.quote}
-							onChangeText={(value) => setForm({...form, quote: value})}
+							onChangeText={(value) => setForm({ ...form, quote: value })}
 						/>
 						<View style={styles.buttonsContainer}>
 							<Button

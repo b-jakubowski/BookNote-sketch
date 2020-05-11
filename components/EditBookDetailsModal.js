@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {SafeAreaView} from "react-native-safe-area-context";
+import React, { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
 	View,
 	Button,
@@ -10,15 +10,15 @@ import {
 	Toast,
 	ActionSheet,
 } from "native-base";
-import {StyleSheet, Modal, ActivityIndicator} from "react-native";
+import { StyleSheet, Modal, ActivityIndicator } from "react-native";
 import BookDetailsFields from "./BookDetailsFields";
-import {firestore} from "../constants/Firebase";
-import {connect} from "react-redux";
-import {deleteBook, updateBookDetails} from "../store/actions/quote";
-import {useNavigation} from "@react-navigation/native";
+import { firestore } from "../constants/Firebase";
+import { connect } from "react-redux";
+import { deleteBook, updateBookDetails } from "../store/actions/book";
+import { useNavigation } from "@react-navigation/native";
 import PropTypes from "prop-types";
 import * as yup from "yup";
-import {bookDetailsSchema} from "../constants/Schemas";
+import { bookDetailsSchema } from "../constants/Schemas";
 
 function EditBookDetailsModal({
 	id,
@@ -60,8 +60,8 @@ function EditBookDetailsModal({
 		setLoading(true);
 
 		yup
-			.object({...bookDetailsSchema})
-			.validate(form, {abortEarly: false})
+			.object({ ...bookDetailsSchema })
+			.validate(form, { abortEarly: false })
 			.then(() => submitBookDetails())
 			.catch((e) => {
 				Toast.show({
@@ -109,7 +109,7 @@ function EditBookDetailsModal({
 		<Modal animationType="slide" transparent={true} visible={modalVisible}>
 			<SafeAreaView style={styles.modalContainer}>
 				<View style={styles.modalContent}>
-					<View style={{...StyleSheet.absoluteFillObject}}>
+					<View style={{ ...StyleSheet.absoluteFillObject }}>
 						<View style={styles.closeButtonContainer}>
 							<Button
 								onPress={() => {
@@ -216,6 +216,6 @@ EditBookDetailsModal.propTypes = {
 	updateBookDetails: PropTypes.func,
 };
 
-export default connect(null, {deleteBook, updateBookDetails})(
+export default connect(null, { deleteBook, updateBookDetails })(
 	EditBookDetailsModal
 );
