@@ -5,8 +5,8 @@ import Colors from "../constants/Colors";
 import { StyleSheet } from "react-native";
 import { Book, Status } from "../interfaces/book.interface";
 
-export const ReadingListScreen: React.FC<{ books: Book[] }> = ({ books }) => {
-	const [activePage, setActivePage] = useState("To read");
+const ReadingListScreen: React.FC<{ books: Book[] }> = ({ books }) => {
+	const [activePage, setActivePage] = useState<Status>(Status.TO_READ);
 	const statusCount = {
 		[Status.TO_READ]: 0,
 		[Status.READING]: 0,
@@ -89,10 +89,6 @@ const styles = StyleSheet.create({
 	},
 });
 
-const mapStateToProps = (state: { books: Book[] }) => {
-	return {
-		books: state.books,
-	};
-};
+const mapStateToProps = ({ books }: { books: Book[] }) => ({ books });
 
 export default connect(mapStateToProps)(ReadingListScreen);
