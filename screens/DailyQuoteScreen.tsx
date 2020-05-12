@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { Container, Text } from "native-base";
 
-type RandomQuote = {
+interface RandomQuote {
 	content: string;
 	author: string;
-};
+}
 
 const DailyQuoteScreen: React.FC = () => {
 	const [quote, setQuote] = useState<RandomQuote>({ content: "", author: "" });

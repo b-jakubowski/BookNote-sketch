@@ -27,17 +27,17 @@ export type StackParamList = {
 	};
 };
 
-type Props = {
+interface Props {
 	user: User;
 	loading: boolean;
-};
+}
 
-type StateProps = {
+interface StateProps {
 	auth: User;
 	globalLoading: {
 		loading: boolean;
 	};
-};
+}
 
 const Stack = createStackNavigator<StackParamList>();
 
