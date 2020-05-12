@@ -1,6 +1,6 @@
 import React from "react";
-import {StyleSheet, View, Image} from "react-native";
-import {SwipeListView} from "react-native-swipe-list-view";
+import { StyleSheet, View, Image } from "react-native";
+import { SwipeListView } from "react-native-swipe-list-view";
 import PropTypes from "prop-types";
 import {
 	Container,
@@ -12,22 +12,22 @@ import {
 	Icon,
 	ListItem,
 } from "native-base";
-import {connect} from "react-redux";
-import Quote from "../components/Quote";
+import { connect } from "react-redux";
+import QuoteItem from "../components/QuoteItem";
 import Colors from "../constants/Colors";
-import {TouchableOpacity} from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-function BookDetailsScreen({route, books, navigation}) {
-	const {id} = route.params;
-	const {cover, name, author, quotes, status} =
+function BookDetailsScreen({ route, books, navigation }) {
+	const { id } = route.params;
+	const { cover, name, author, quotes, status } =
 		books.filter((book) => book.id === id)[0] || {};
 
 	const navigateToAddQuote = () => {
-		navigation.navigate("Add/Edit Quote", {bookId: id});
+		navigation.navigate("Add/Edit Quote", { bookId: id });
 	};
 
 	const bookCover = cover
-		? {uri: cover}
+		? { uri: cover }
 		: require("../assets/images/book-cover-placeholder.jpg");
 
 	return (
@@ -51,7 +51,7 @@ function BookDetailsScreen({route, books, navigation}) {
 									onPress={() =>
 										navigation.navigate("Edit book details", {
 											id,
-											initialBookValues: {name, author, cover, status},
+											initialBookValues: { name, author, cover, status },
 										})
 									}
 								>
@@ -67,12 +67,12 @@ function BookDetailsScreen({route, books, navigation}) {
 						friction={20}
 						keyExtractor={(quote) => quote.id}
 						data={quotes}
-						renderItem={({item}) => (
+						renderItem={({ item }) => (
 							<ListItem style={styles.rowFront}>
-								<Quote quote={item} />
+								<QuoteItem quote={item} />
 							</ListItem>
 						)}
-						renderHiddenItem={({item}) => (
+						renderHiddenItem={({ item }) => (
 							<View style={styles.rowBack}>
 								<TouchableOpacity
 									style={styles.hiddenButton}
