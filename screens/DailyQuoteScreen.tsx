@@ -1,16 +1,22 @@
-import React, {useState, useEffect} from "react";
-import {View, StyleSheet, ActivityIndicator} from "react-native";
-import {Container, Text} from "native-base";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { Container, Text } from "native-base";
 
-export default function DailyQuoteScreen() {
-	const [quote, setQuote] = useState("");
-	const [loading, setLoading] = useState(false);
+interface RandomQuote {
+	content: string;
+	author: string;
+}
+
+const DailyQuoteScreen: React.FC = () => {
+	const [quote, setQuote] = useState<RandomQuote>({ content: "", author: "" });
+	const [loading, setLoading] = useState<boolean>(false);
 
 	useEffect(() => {
 		setLoading(true);
+
 		fetch("https://api.quotable.io/random")
 			.then((res) => res.json())
-			.then((res) => {
+			.then((res: RandomQuote) => {
 				setQuote(res);
 				setLoading(false);
 			})
@@ -35,7 +41,7 @@ export default function DailyQuoteScreen() {
 			<View style={styles.fillSpace}></View>
 		</Container>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	author: {
@@ -53,3 +59,5 @@ const styles = StyleSheet.create({
 		padding: 20,
 	},
 });
+
+export default DailyQuoteScreen;

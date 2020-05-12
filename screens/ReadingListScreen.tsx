@@ -1,21 +1,25 @@
-import React, {useState} from "react";
-import {BooksPropTypes} from "../constants/PropTypes";
-import {connect} from "react-redux";
-import {Container, ListItem, Text, Body, Tabs, Tab} from "native-base";
+import React, { useState } from "react";
+import { connect } from "react-redux";
+import { Container, ListItem, Text, Body, Tabs, Tab } from "native-base";
 import Colors from "../constants/Colors";
-import {StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
+import { Book, Status } from "../interfaces/book.interface";
 
-function ReadingListScreen({books}) {
-	const [activePage, setActivePage] = useState("To read");
+type Props = {
+	books: Book[];
+};
+
+const ReadingListScreen: React.FC<Props> = ({ books }) => {
+	const [activePage, setActivePage] = useState<Status>(Status.TO_READ);
 	const statusCount = {
-		"To read": 0,
-		Reading: 0,
-		Read: 0,
+		[Status.TO_READ]: 0,
+		[Status.READING]: 0,
+		[Status.READ]: 0,
 	};
 
 	books.forEach((book) => statusCount[book.status]++);
 
-	const ActivePageBookList = ({status}) => (
+	const ActivePageBookList: React.FC<{ status: Status }> = ({ status }) => (
 		<>
 			<Text style={styles.amountText}>Amount: {statusCount[status]}</Text>
 			{books.map((book) => {
@@ -36,37 +40,37 @@ function ReadingListScreen({books}) {
 	return (
 		<Container>
 			<Tabs
-				onChangeTab={(active) => setActivePage(active.ref.props.heading)}
+				onChangeTab={(active: any) => setActivePage(active.ref.props.heading)}
 				tabBarUnderlineStyle={styles.tabUnderline}
 			>
 				<Tab
-					heading="To read"
+					heading={Status.TO_READ}
 					activeTabStyle={styles.activeTab}
 					activeTextStyle={styles.activeText}
 					tabStyle={styles.tab}
 				>
-					<ActivePageBookList status="To read" />
+					<ActivePageBookList status={Status.TO_READ} />
 				</Tab>
 				<Tab
-					heading="Reading"
+					heading={Status.READING}
 					activeTabStyle={styles.activeTab}
 					tabStyle={styles.tab}
 					activeTextStyle={styles.activeText}
 				>
-					<ActivePageBookList status="Reading" />
+					<ActivePageBookList status={Status.READING} />
 				</Tab>
 				<Tab
-					heading="Read"
+					heading={Status.READ}
 					activeTabStyle={styles.activeTab}
 					tabStyle={styles.tab}
 					activeTextStyle={styles.activeText}
 				>
-					<ActivePageBookList status="Read" />
+					<ActivePageBookList status={Status.READ} />
 				</Tab>
 			</Tabs>
 		</Container>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	activeTab: {
@@ -89,12 +93,6 @@ const styles = StyleSheet.create({
 	},
 });
 
-ReadingListScreen.propTypes = BooksPropTypes;
-
-const mapStateToProps = (state) => {
-	return {
-		books: state.books,
-	};
-};
+const mapStateToProps = ({ books }: Props) => ({ books });
 
 export default connect(mapStateToProps)(ReadingListScreen);

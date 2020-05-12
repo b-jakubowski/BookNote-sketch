@@ -1,6 +1,6 @@
-import quoteReducer from "../quoteReducer";
-import {status} from "../../../assets/mocks/books";
-import {categoriesMock} from "../../../assets/mocks/categories";
+import bookReducer from "../bookReducer";
+import { status } from "../../../assets/mocks/books";
+import { categoriesMock } from "../../../assets/mocks/categories";
 
 const mockBook = {
 	id: "1",
@@ -34,18 +34,18 @@ const mockBookDetails = {
 
 describe("quote reducer", () => {
 	it("should handle initial state", () => {
-		expect(quoteReducer(undefined, [])).toEqual([]);
+		expect(bookReducer(undefined, [])).toEqual([]);
 	});
 
 	it("should handle ADD_BOOK", () => {
-		expect(quoteReducer([], {type: "ADD_BOOK", payload: mockBook})).toEqual([
+		expect(bookReducer([], { type: "ADD_BOOK", payload: mockBook })).toEqual([
 			mockBook,
 		]);
 	});
 
 	it("should handle ADD_QUOTE_TO_BOOK", () => {
 		expect(
-			quoteReducer([mockBook], {
+			bookReducer([mockBook], {
 				type: "ADD_QUOTE_TO_BOOK",
 				bookId: "1",
 				payload: mockQuote,
@@ -73,13 +73,13 @@ describe("quote reducer", () => {
 
 	it("should handle DELETE_BOOK", () => {
 		expect(
-			quoteReducer([mockBook], {type: "DELETE_BOOK", bookId: "1"})
+			bookReducer([mockBook], { type: "DELETE_BOOK", bookId: "1" })
 		).toEqual([]);
 	});
 
 	it("should handle UPDATE_BOOK_DETAILS", () => {
 		expect(
-			quoteReducer([mockBook], {
+			bookReducer([mockBook], {
 				type: "UPDATE_BOOK_DETAILS",
 				bookId: "1",
 				payload: mockBookDetails,
@@ -104,18 +104,18 @@ describe("quote reducer", () => {
 	});
 
 	it("should handle CLEAR_BOOKS", () => {
-		expect(quoteReducer([mockBook, mockBook], {type: "CLEAR_BOOKS"})).toEqual(
+		expect(bookReducer([mockBook, mockBook], { type: "CLEAR_BOOKS" })).toEqual(
 			[]
 		);
 	});
 
 	it("should handle UPDATE_QUOTE", () => {
 		expect(
-			quoteReducer([mockBook], {
+			bookReducer([mockBook], {
 				type: "UPDATE_QUOTE",
 				bookId: "1",
 				quoteId: "1",
-				payload: {categories: [categoriesMock[1]], quote: "Updated quote"},
+				payload: { categories: [categoriesMock[1]], quote: "Updated quote" },
 			})
 		).toEqual([
 			{
@@ -138,7 +138,7 @@ describe("quote reducer", () => {
 
 	it("should handle DELETE_QUOTE", () => {
 		expect(
-			quoteReducer([mockBook], {
+			bookReducer([mockBook], {
 				type: "DELETE_QUOTE",
 				bookId: "1",
 				quoteId: "1",

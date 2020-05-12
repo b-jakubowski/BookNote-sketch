@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Body, Badge, Text} from "native-base";
-import {StyledText} from "./StyledText";
-import {View, StyleSheet} from "react-native";
+import { Body, Badge, Text } from "native-base";
+import { StyledText } from "./StyledText";
+import { View, StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 
-export default function Quote({quote, author, title}) {
+export default function QuoteItem({ quote, author, title }) {
 	return (
 		<Body>
 			<StyledText style={styles.quoteText}>"{quote.quote}"</StyledText>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 	},
 });
 
-Quote.propTypes = {
+QuoteItem.propTypes = {
 	quote: PropTypes.shape({
 		quote: PropTypes.string,
 		categories: PropTypes.arrayOf(PropTypes.string),

@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import {StyleSheet} from "react-native";
+import { StyleSheet, ActivityIndicator } from "react-native";
 import {
 	Container,
 	Content,
@@ -12,13 +12,13 @@ import {
 	ActionSheet,
 	Icon,
 } from "native-base";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import * as yup from "yup";
-import {addQuoteToBook, deleteQuote} from "../store/actions/quote";
-import {useNavigation} from "@react-navigation/native";
+import { addQuoteToBook, deleteQuote } from "../store/actions/book";
+import { useNavigation } from "@react-navigation/native";
 import CategoryCheckBox from "../components/CategoryCheckBox";
 import QuoteForm from "../components/QuoteForm";
-import {firestore} from "../constants/Firebase.js";
+import { firestore } from "../constants/Firebase.js";
 import firebase from "firebase/app";
 
 const initialForm = {
@@ -69,8 +69,9 @@ const setInitialFormEdit = (quote, categories) => {
 	return initialFormEdit;
 };
 
-function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
-	const {bookId, quoteId, isEdit} = route.params;
+function AddQuoteScreen({ route, addQuoteToBook, deleteQuote }) {
+	const { bookId, quoteId, isEdit } = route.params;
+	const [loading, setLoading] = useState(false);
 	const initialFormEdit = setInitialFormEdit(
 		route.params.quote,
 		route.params.categories
@@ -85,7 +86,7 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 	const [form, setForm] = useState(isEdit ? initialFormEdit : initialForm);
 	const navigation = useNavigation();
 
-	const handleSubmit = ({quote, categories}) => {
+	const handleSubmit = ({ quote, categories }) => {
 		const newQuote = {
 			categories: categoriesMapped(categories),
 			quote,
@@ -94,7 +95,7 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 		isEdit ? (newQuote.id = quoteId) : (newQuote.id = `${Math.random()}`);
 
 		quoteSchema
-			.validate(form, {abortEarly: false})
+			.validate(form, { abortEarly: false })
 			.then(() => {
 				isEdit
 					? updateQuoteInFirestore(initialQuote, newQuote)
@@ -111,16 +112,18 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 	};
 
 	const addQuoteToFirestore = (quote) => {
+		setLoading(true);
+
 		bookRef
 			.update({
 				quotes: firebase.firestore.FieldValue.arrayUnion(quote),
 			})
-			.then(() => {
-				addQuoteToBook(quote, bookId);
-
+			.then(() => addQuoteToBook(quote, bookId))
+			.catch()
+			.finally(() => {
+				setLoading(false);
 				navigation.goBack();
-			})
-			.catch();
+			});
 	};
 
 	const updateQuoteInFirestore = (oldQuote, newQuote) => {
@@ -136,16 +139,18 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 	};
 
 	const deleteQuoteInFirestore = () => {
+		setLoading(true);
+
 		bookRef
 			.update({
 				quotes: firebase.firestore.FieldValue.arrayRemove(initialQuote),
 			})
-			.then(() => {
-				deleteQuote(bookId, quoteId);
-
+			.then(() => deleteQuote(bookId, quoteId))
+			.catch()
+			.finally(() => {
+				setLoading(false);
 				navigation.goBack();
-			})
-			.catch();
+			});
 	};
 
 	const toggleCategory = (category) => {
@@ -177,62 +182,66 @@ function AddQuoteScreen({route, addQuoteToBook, deleteQuote}) {
 	return (
 		<Container>
 			<Content style={styles.content}>
-				<Form>
-					<View style={styles.formItem}>
-						<Text note>Categories</Text>
-						<View style={styles.categories}>
-							{Object.keys(initialForm.categories).map((category, index) => (
-								<View key={index}>
-									<CategoryCheckBox
-										category={category}
-										checked={form.categories[category]}
-										onPress={() => toggleCategory(category)}
-									/>
-								</View>
-							))}
+				{loading ? (
+					<ActivityIndicator size="large" />
+				) : (
+					<Form>
+						<View style={styles.formItem}>
+							<Text note>Categories</Text>
+							<View style={styles.categories}>
+								{Object.keys(initialForm.categories).map((category, index) => (
+									<View key={index}>
+										<CategoryCheckBox
+											category={category}
+											checked={form.categories[category]}
+											onPress={() => toggleCategory(category)}
+										/>
+									</View>
+								))}
+							</View>
 						</View>
-					</View>
-					<QuoteForm
-						categories={form.categories}
-						quote={form.quote}
-						onChangeText={(value) => setForm({...form, quote: value})}
-					/>
-					<Button
-						title="submit"
-						block
-						success
-						iconLeft
-						style={styles.addButton}
-						onPress={() => handleSubmit(form)}
-					>
-						<Icon type="Entypo" name="edit" />
-						<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
-					</Button>
-					<View style={styles.buttonsContainer}>
+						<QuoteForm
+							categories={form.categories}
+							quote={form.quote}
+							onChangeText={(value) => setForm({ ...form, quote: value })}
+						/>
 						<Button
-							title="clear"
+							title="submit"
 							block
-							light
-							style={styles.clearButton}
-							onPress={() => setForm(isEdit ? initialFormEdit : initialForm)}
+							success
+							iconLeft
+							style={styles.addButton}
+							onPress={() => handleSubmit(form)}
 						>
-							<Text>Clear Form</Text>
+							<Icon type="Entypo" name="edit" />
+							<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
 						</Button>
-						{isEdit && (
+						<View style={styles.buttonsContainer}>
 							<Button
-								title="delete"
+								title="clear"
 								block
-								danger
-								iconLeft
-								style={styles.deleteButton}
-								onPress={() => confirmDelete()}
+								light
+								style={styles.clearButton}
+								onPress={() => setForm(isEdit ? initialFormEdit : initialForm)}
 							>
-								<Icon type="Ionicons" name="md-trash" />
-								<Text>Delete quote</Text>
+								<Text>Clear Form</Text>
 							</Button>
-						)}
-					</View>
-				</Form>
+							{isEdit && (
+								<Button
+									title="delete"
+									block
+									danger
+									iconLeft
+									style={styles.deleteButton}
+									onPress={() => confirmDelete()}
+								>
+									<Icon type="Ionicons" name="md-trash" />
+									<Text>Delete quote</Text>
+								</Button>
+							)}
+						</View>
+					</Form>
+				)}
 			</Content>
 		</Container>
 	);
@@ -274,4 +283,4 @@ AddQuoteScreen.propTypes = {
 	route: PropTypes.object,
 };
 
-export default connect(null, {addQuoteToBook, deleteQuote})(AddQuoteScreen);
+export default connect(null, { addQuoteToBook, deleteQuote })(AddQuoteScreen);

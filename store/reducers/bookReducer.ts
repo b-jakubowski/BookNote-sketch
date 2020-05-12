@@ -7,15 +7,17 @@ import {
 	UPDATE_QUOTE,
 	DELETE_QUOTE,
 } from "../../constants/ActionTypes";
+import { Book } from "../../interfaces/book.interface";
+import { BookActionTypes } from "../interfaces/bookActions";
 
-const quoteReducer = (state = [], action) => {
+const bookReducer = (state: Book[] = [], action: BookActionTypes): Book[] => {
 	switch (action.type) {
 		case ADD_BOOK:
 			return [...state, action.payload];
 
 		case ADD_QUOTE_TO_BOOK:
 			return [
-				...state.map((book) => {
+				...state.map((book: Book) => {
 					if (book.id === action.bookId) {
 						return {
 							...book,
@@ -32,9 +34,9 @@ const quoteReducer = (state = [], action) => {
 
 		case UPDATE_BOOK_DETAILS:
 			return [
-				...state.filter((item) => item.id !== action.bookId),
+				...state.filter((book: Book) => book.id !== action.bookId),
 				{
-					...state.filter((item) => item.id === action.bookId)[0],
+					...state.filter((book: Book) => book.id === action.bookId)[0],
 					name: action.payload.name,
 					author: action.payload.author,
 					cover: action.payload.cover,
@@ -43,7 +45,7 @@ const quoteReducer = (state = [], action) => {
 			];
 
 		case DELETE_BOOK:
-			return [...state.filter((item) => item.id !== action.bookId)];
+			return [...state.filter((book) => book.id !== action.bookId)];
 
 		case UPDATE_QUOTE: {
 			const bookRef = state.filter((book) => book.id === action.bookId)[0];
@@ -59,7 +61,7 @@ const quoteReducer = (state = [], action) => {
 			bookRef.quotes.splice(quoteIndex, 1);
 
 			return [
-				...state.filter((item) => item.id !== action.bookId),
+				...state.filter((book) => book.id !== action.bookId),
 				{
 					...bookRef,
 					quotes: [...bookRef.quotes, quoteUpdated],
@@ -71,7 +73,7 @@ const quoteReducer = (state = [], action) => {
 			const bookRef = state.filter((book) => book.id === action.bookId)[0];
 
 			return [
-				...state.filter((item) => item.id !== action.bookId),
+				...state.filter((book) => book.id !== action.bookId),
 				{
 					...bookRef,
 					quotes: [
@@ -86,4 +88,4 @@ const quoteReducer = (state = [], action) => {
 	}
 };
 
-export default quoteReducer;
+export default bookReducer;

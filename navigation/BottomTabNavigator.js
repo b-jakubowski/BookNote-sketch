@@ -1,7 +1,7 @@
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as React from "react";
-import {connect} from "react-redux";
-import {Button, Icon} from "native-base";
+import { connect } from "react-redux";
+import { Button, Icon } from "native-base";
 import PropTypes from "prop-types";
 
 import TabBarIcon from "../components/TabBarIcon";
@@ -9,17 +9,17 @@ import BooksScreen from "../screens/BooksScreen";
 import QuotesScreen from "../screens/QuotesScreen";
 import AddBookScreen from "../screens/AddBookScreen";
 import DailyQuoteScreen from "../screens/DailyQuoteScreen";
-import {signOut} from "../constants/Firebase";
-import {logOutUser} from "../store/actions/auth";
-import {clearBooks} from "../store/actions/quote";
+import { signOut } from "../constants/Firebase";
+import { logOutUser } from "../store/actions/auth";
+import { clearBooks } from "../store/actions/book";
 import Colors from "../constants/Colors";
 import ReadingListScreen from "../screens/ReadingListScreen";
-import {StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
 
-function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
+function BottomTabNavigator({ logOutUser, clearBooks, navigation, route }) {
 	navigation.setOptions({
 		headerTitle:
 			route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME,
@@ -44,13 +44,13 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 	return (
 		<BottomTab.Navigator
 			initialRouteName={INITIAL_ROUTE_NAME}
-			tabBarOptions={{activeTintColor: Colors.darkOrange}}
+			tabBarOptions={{ activeTintColor: Colors.darkOrange }}
 		>
 			<BottomTab.Screen
 				name="Books"
 				component={BooksScreen}
 				options={{
-					tabBarIcon: ({focused}) => (
+					tabBarIcon: ({ focused }) => (
 						<TabBarIcon
 							focused={focused}
 							type="FontAwesome5"
@@ -63,7 +63,7 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 				name="Daily Quote"
 				component={DailyQuoteScreen}
 				options={{
-					tabBarIcon: ({focused}) => (
+					tabBarIcon: ({ focused }) => (
 						<TabBarIcon focused={focused} type="MaterialIcons" name="today" />
 					),
 				}}
@@ -72,7 +72,7 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 				name="Reading list"
 				component={ReadingListScreen}
 				options={{
-					tabBarIcon: ({focused}) => (
+					tabBarIcon: ({ focused }) => (
 						<TabBarIcon focused={focused} type="FontAwesome" name="list" />
 					),
 				}}
@@ -81,7 +81,7 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 				name="Quotes"
 				component={QuotesScreen}
 				options={{
-					tabBarIcon: ({focused}) => (
+					tabBarIcon: ({ focused }) => (
 						<TabBarIcon
 							focused={focused}
 							type="FontAwesome"
@@ -94,7 +94,7 @@ function BottomTabNavigator({logOutUser, clearBooks, navigation, route}) {
 				name="Add Book"
 				component={AddBookScreen}
 				options={{
-					tabBarIcon: ({focused}) => (
+					tabBarIcon: ({ focused }) => (
 						<TabBarIcon type="AntDesign" focused={focused} name="pluscircle" />
 					),
 				}}
@@ -121,4 +121,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default connect(null, {logOutUser, clearBooks})(BottomTabNavigator);
+export default connect(null, { logOutUser, clearBooks })(BottomTabNavigator);
