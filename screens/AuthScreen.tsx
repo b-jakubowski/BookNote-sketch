@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
 	Content,
 	Card,
@@ -9,7 +9,6 @@ import {
 	Item,
 	Input,
 	View,
-	Toast,
 	Icon,
 } from "native-base";
 import {
@@ -19,43 +18,56 @@ import {
 	ImageBackground,
 } from "react-native";
 import * as yup from "yup";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Constants from "expo-constants";
-import {logInUser} from "../store/actions/auth";
-import {setLoading, setLoadingComplete} from "../store/actions/loading";
+
+import { logInUser } from "../store/actions/auth";
+import { setLoading, setLoadingComplete } from "../store/actions/loading";
 import {
 	signIn,
 	createUser,
 	createUserProfileDocument,
 } from "../constants/Firebase";
+import { showWarnToast } from "../helpers/Toast";
+import { User, UserCredentials } from "../interfaces/user.interface";
+import { Store } from "../store/store";
 
-const showWarnToast = (message) => {
-	Toast.show({
-		text: message,
-		buttonText: "Okay",
-		type: "warning",
-		duration: 10000000,
-	});
-};
+interface Props {
+	logInUser: (user: User) => void;
+	setLoading: () => void;
+	setLoadingComplete: () => void;
+	loading: boolean;
+}
 
 const authSchema = yup.object({
 	email: yup.string().email().required(),
 	password: yup.string().required().min(5),
 });
 
-function AuthScreen({logInUser, loading, setLoading, setLoadingComplete}) {
+const AuthScreen: React.FC<Props> = ({
+	logInUser,
+	loading,
+	setLoading,
+	setLoadingComplete,
+}) => {
 	const [auth, setAuth] = useState("login");
-	const [user, setUser] = useState({
-		email: null,
-		password: null,
+	const [user, setUser] = useState<UserCredentials>({
+		email: "",
+		password: "",
 	});
 
-	const handleSubmit = ({email, password}) => {
+	const handleSubmit = ({
+		email,
+		password,
+	}: {
+		email: string;
+		password: string;
+	}) => {
 		setLoading();
 
 		authSchema
-			.validate(user, {abortEarly: false})
+			.validate(user, { abortEarly: false })
 			.then(() => {
 				auth === "login"
 					? signInUser(email, password)
@@ -64,22 +76,22 @@ function AuthScreen({logInUser, loading, setLoading, setLoadingComplete}) {
 			.catch((e) => showWarnToast(e.errors.join(",\r\n")));
 	};
 
-	const signInUser = (email, password) => {
+	const signInUser = (email: string, password: string) => {
 		signIn(email, password)
-			.then(({user}) => logInUser(user))
-			.catch(({message}) => {
+			.then(({ user }) => logInUser(user as User))
+			.catch(({ message }) => {
 				showWarnToast(message);
 			})
 			.finally(() => setLoadingComplete());
 	};
 
-	const createAndSignUser = (email, password) => {
+	const createAndSignUser = (email: string, password: string) => {
 		createUser(email, password)
-			.then(({user}) => {
+			.then(({ user }) => {
 				createUserProfileDocument(user);
-				logInUser(user);
+				logInUser(user as User);
 			})
-			.catch(({message}) => {
+			.catch(({ message }) => {
 				showWarnToast(message);
 			})
 			.finally(() => setLoadingComplete());
@@ -115,7 +127,9 @@ function AuthScreen({logInUser, loading, setLoading, setLoadingComplete}) {
 										<Input
 											placeholder="Email"
 											autoCapitalize="none"
-											onChangeText={(value) => setUser({...user, email: value})}
+											onChangeText={(value) =>
+												setUser({ ...user, email: value })
+											}
 											value={user.email}
 										/>
 									</Item>
@@ -124,7 +138,7 @@ function AuthScreen({logInUser, loading, setLoading, setLoadingComplete}) {
 											placeholder="Password"
 											secureTextEntry={true}
 											onChangeText={(value) =>
-												setUser({...user, password: value})
+												setUser({ ...user, password: value })
 											}
 											value={user.password}
 										/>
@@ -155,7 +169,7 @@ function AuthScreen({logInUser, loading, setLoading, setLoadingComplete}) {
 			</Content>
 		</ImageBackground>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	backButton: {
@@ -196,14 +210,7 @@ const styles = StyleSheet.create({
 	},
 });
 
-AuthScreen.propTypes = {
-	logInUser: PropTypes.func,
-	loading: PropTypes.bool,
-	setLoading: PropTypes.func,
-	setLoadingComplete: PropTypes.func,
-};
-
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: Store) => ({
 	loading: state.globalLoading.loading,
 });
 
