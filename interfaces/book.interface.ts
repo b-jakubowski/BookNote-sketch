@@ -1,10 +1,13 @@
-export interface Book {
+export interface Book extends BookDetails {
 	id: string | number;
+	quotes: Quote[];
+}
+
+export interface BookDetails {
 	name: string;
 	author: string;
 	cover: string;
 	status: Status;
-	quotes: Quote[];
 }
 
 export enum Status {

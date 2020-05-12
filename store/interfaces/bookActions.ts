@@ -7,7 +7,7 @@ import {
 	UPDATE_QUOTE,
 	DELETE_QUOTE,
 } from "../../constants/ActionTypes";
-import { Book, Quote } from "../../interfaces/book.interface";
+import { Book, Quote, BookDetails } from "../../interfaces/book.interface";
 
 export interface AddBookAction {
 	type: typeof ADD_BOOK;
@@ -28,7 +28,7 @@ export interface DeleteBookAction {
 export interface UpdateBookDetailsAction {
 	type: typeof UPDATE_BOOK_DETAILS;
 	bookId: string;
-	payload: Book;
+	payload: BookDetails;
 }
 
 export interface ClearBooksAction {

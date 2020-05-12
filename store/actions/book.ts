@@ -7,7 +7,7 @@ import {
 	UPDATE_QUOTE,
 	DELETE_QUOTE,
 } from "../../constants/ActionTypes";
-import { Book, Quote } from "../../interfaces/book.interface";
+import { Book, Quote, BookDetails } from "../../interfaces/book.interface";
 import {
 	AddBookAction,
 	AddQuoteToBookAction,
@@ -39,7 +39,7 @@ export const deleteBook = (bookId: string): DeleteBookAction => ({
 
 export const updateBookDetails = (
 	bookId: string,
-	details: Book
+	details: BookDetails
 ): UpdateBookDetailsAction => ({
 	type: UPDATE_BOOK_DETAILS,
 	bookId,
