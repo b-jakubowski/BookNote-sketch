@@ -13,11 +13,23 @@ import {
 	ListItem,
 } from "native-base";
 import { connect } from "react-redux";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
+
 import QuoteItem from "../components/QuoteItem";
 import Colors from "../constants/Colors";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { StackParamList } from "./HomeScreen";
+import { Book } from "../interfaces/book.interface";
+import { Store } from "../store/store";
 
-function BookDetailsScreen({ route, books, navigation }) {
+interface Props {
+	navigation: StackNavigationHelpers;
+	route: RouteProp<StackParamList, "Book details">;
+	books: Book[];
+}
+
+const BookDetailsScreen: React.FC<Props> = ({ route, books, navigation }) => {
 	const { id } = route.params;
 	const { cover, name, author, quotes, status } =
 		books.filter((book) => book.id === id)[0] || {};
@@ -103,7 +115,7 @@ function BookDetailsScreen({ route, books, navigation }) {
 			)}
 		</>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	bookDescription: {
@@ -154,17 +166,7 @@ const styles = StyleSheet.create({
 	},
 });
 
-BookDetailsScreen.propTypes = {
-	navigation: PropTypes.shape({
-		navigate: PropTypes.func.isRequired,
-	}),
-	route: PropTypes.object,
-	deleteBook: PropTypes.func,
-	updateBookDetails: PropTypes.func,
-	books: PropTypes.arrayOf(PropTypes.object),
-};
-
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: Store): { books: Book[] } => ({
 	books: state.books,
 });
 

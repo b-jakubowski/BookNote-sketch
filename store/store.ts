@@ -2,6 +2,16 @@ import { combineReducers, createStore } from "redux";
 import bookReducer from "./reducers/bookReducer";
 import authReducer from "./reducers/authReducer";
 import loadingReducer from "./reducers/loadingReducer";
+import { Book } from "../interfaces/book.interface";
+import { User } from "../interfaces/user.interface";
+
+export interface Store {
+	books: Book[];
+	auth: User;
+	globalLoading: {
+		loading: boolean;
+	};
+}
 
 const rootReducer = combineReducers({
 	books: bookReducer,
