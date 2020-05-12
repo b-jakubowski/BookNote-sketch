@@ -12,19 +12,29 @@ import {
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import * as yup from "yup";
-import PropTypes from "prop-types";
+import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
+import { RouteProp } from "@react-navigation/native";
 
 import { deleteBook, updateBookDetails } from "../store/actions/book";
 import { firestore } from "../constants/Firebase";
 import { bookDetailsSchema } from "../constants/Schemas";
 import BookDetailsFields from "../components/BookDetailsFields";
+import { BookDetails } from "../interfaces/book.interface";
+import { StackParamList } from "./HomeScreen";
 
-function EditBookDetailsScreen({
+interface Props {
+	deleteBook: (bookId: string) => void;
+	updateBookDetails: (bookId: string, details: BookDetails) => void;
+	navigation: StackNavigationHelpers;
+	route: RouteProp<StackParamList, "Edit book details">;
+}
+
+const EditBookDetailsScreen: React.FC<Props> = ({
 	deleteBook,
 	updateBookDetails,
 	navigation,
 	route,
-}) {
+}) => {
 	const { id, initialBookValues } = route.params;
 	const [form, setForm] = useState(initialBookValues);
 	const [loading, setLoading] = useState(false);
@@ -110,7 +120,7 @@ function EditBookDetailsScreen({
 					</View>
 				) : (
 					<>
-						<Form style={styles.form}>
+						<Form>
 							<BookDetailsFields
 								name={form.name}
 								author={form.author}
@@ -123,7 +133,6 @@ function EditBookDetailsScreen({
 						</Form>
 						<View style={styles.buttonsContainer}>
 							<Button
-								title="submit"
 								block
 								success
 								iconLeft
@@ -134,7 +143,6 @@ function EditBookDetailsScreen({
 								<Text>Change book details</Text>
 							</Button>
 							<Button
-								title="submit"
 								block
 								danger
 								iconLeft
@@ -150,7 +158,7 @@ function EditBookDetailsScreen({
 			</Content>
 		</Container>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	activityIndicatorContainer: {
@@ -173,13 +181,6 @@ const styles = StyleSheet.create({
 		marginLeft: 15,
 	},
 });
-
-EditBookDetailsScreen.propTypes = {
-	route: PropTypes.object,
-	navigation: PropTypes.object,
-	deleteBook: PropTypes.func,
-	updateBookDetails: PropTypes.func,
-};
 
 export default connect(null, { deleteBook, updateBookDetails })(
 	EditBookDetailsScreen
