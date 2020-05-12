@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { StyleSheet } from "react-native";
+import { StyleSheet, ActivityIndicator } from "react-native";
 import {
 	Container,
 	Content,
@@ -71,6 +71,7 @@ const setInitialFormEdit = (quote, categories) => {
 
 function AddQuoteScreen({ route, addQuoteToBook, deleteQuote }) {
 	const { bookId, quoteId, isEdit } = route.params;
+	const [loading, setLoading] = useState(false);
 	const initialFormEdit = setInitialFormEdit(
 		route.params.quote,
 		route.params.categories
@@ -111,16 +112,18 @@ function AddQuoteScreen({ route, addQuoteToBook, deleteQuote }) {
 	};
 
 	const addQuoteToFirestore = (quote) => {
+		setLoading(true);
+
 		bookRef
 			.update({
 				quotes: firebase.firestore.FieldValue.arrayUnion(quote),
 			})
-			.then(() => {
-				addQuoteToBook(quote, bookId);
-
+			.then(() => addQuoteToBook(quote, bookId))
+			.catch()
+			.finally(() => {
+				setLoading(false);
 				navigation.goBack();
-			})
-			.catch();
+			});
 	};
 
 	const updateQuoteInFirestore = (oldQuote, newQuote) => {
@@ -136,16 +139,18 @@ function AddQuoteScreen({ route, addQuoteToBook, deleteQuote }) {
 	};
 
 	const deleteQuoteInFirestore = () => {
+		setLoading(true);
+
 		bookRef
 			.update({
 				quotes: firebase.firestore.FieldValue.arrayRemove(initialQuote),
 			})
-			.then(() => {
-				deleteQuote(bookId, quoteId);
-
+			.then(() => deleteQuote(bookId, quoteId))
+			.catch()
+			.finally(() => {
+				setLoading(false);
 				navigation.goBack();
-			})
-			.catch();
+			});
 	};
 
 	const toggleCategory = (category) => {
@@ -177,62 +182,66 @@ function AddQuoteScreen({ route, addQuoteToBook, deleteQuote }) {
 	return (
 		<Container>
 			<Content style={styles.content}>
-				<Form>
-					<View style={styles.formItem}>
-						<Text note>Categories</Text>
-						<View style={styles.categories}>
-							{Object.keys(initialForm.categories).map((category, index) => (
-								<View key={index}>
-									<CategoryCheckBox
-										category={category}
-										checked={form.categories[category]}
-										onPress={() => toggleCategory(category)}
-									/>
-								</View>
-							))}
+				{loading ? (
+					<ActivityIndicator size="large" />
+				) : (
+					<Form>
+						<View style={styles.formItem}>
+							<Text note>Categories</Text>
+							<View style={styles.categories}>
+								{Object.keys(initialForm.categories).map((category, index) => (
+									<View key={index}>
+										<CategoryCheckBox
+											category={category}
+											checked={form.categories[category]}
+											onPress={() => toggleCategory(category)}
+										/>
+									</View>
+								))}
+							</View>
 						</View>
-					</View>
-					<QuoteForm
-						categories={form.categories}
-						quote={form.quote}
-						onChangeText={(value) => setForm({ ...form, quote: value })}
-					/>
-					<Button
-						title="submit"
-						block
-						success
-						iconLeft
-						style={styles.addButton}
-						onPress={() => handleSubmit(form)}
-					>
-						<Icon type="Entypo" name="edit" />
-						<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
-					</Button>
-					<View style={styles.buttonsContainer}>
+						<QuoteForm
+							categories={form.categories}
+							quote={form.quote}
+							onChangeText={(value) => setForm({ ...form, quote: value })}
+						/>
 						<Button
-							title="clear"
+							title="submit"
 							block
-							light
-							style={styles.clearButton}
-							onPress={() => setForm(isEdit ? initialFormEdit : initialForm)}
+							success
+							iconLeft
+							style={styles.addButton}
+							onPress={() => handleSubmit(form)}
 						>
-							<Text>Clear Form</Text>
+							<Icon type="Entypo" name="edit" />
+							<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
 						</Button>
-						{isEdit && (
+						<View style={styles.buttonsContainer}>
 							<Button
-								title="delete"
+								title="clear"
 								block
-								danger
-								iconLeft
-								style={styles.deleteButton}
-								onPress={() => confirmDelete()}
+								light
+								style={styles.clearButton}
+								onPress={() => setForm(isEdit ? initialFormEdit : initialForm)}
 							>
-								<Icon type="Ionicons" name="md-trash" />
-								<Text>Delete quote</Text>
+								<Text>Clear Form</Text>
 							</Button>
-						)}
-					</View>
-				</Form>
+							{isEdit && (
+								<Button
+									title="delete"
+									block
+									danger
+									iconLeft
+									style={styles.deleteButton}
+									onPress={() => confirmDelete()}
+								>
+									<Icon type="Ionicons" name="md-trash" />
+									<Text>Delete quote</Text>
+								</Button>
+							)}
+						</View>
+					</Form>
+				)}
 			</Content>
 		</Container>
 	);
