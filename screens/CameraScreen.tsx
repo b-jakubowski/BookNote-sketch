@@ -1,19 +1,27 @@
-import React, {useState, useEffect} from "react";
-import PropTypes from "prop-types";
-import {Camera} from "expo-camera";
-import {View, StyleSheet} from "react-native";
-import {Text, Icon, Button, Toast} from "native-base";
+import React, { useState, useEffect } from "react";
+import { Camera } from "expo-camera";
+import { View, StyleSheet } from "react-native";
+import { Text, Icon, Button, Toast } from "native-base";
 import * as MediaLibrary from "expo-media-library";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
-export default function CameraScreen({navigation, route}) {
-	const [hasCameraPermission, setHasCameraPermission] = useState(null);
-	const [hasMediaPermission, setHasMediaPermission] = useState(null);
-	const [cameraRef, setCameraRef] = useState(null);
-	const [isCameraReady, setCameraReady] = useState(null);
+import { StackParamList } from "./HomeScreen";
+
+interface Props {
+	navigation: StackNavigationHelpers;
+	route: RouteProp<StackParamList, "Camera">;
+}
+
+const CameraScreen: React.FC<Props> = ({ navigation, route }) => {
+	const [hasCameraPermission, setHasCameraPermission] = useState(false);
+	const [hasMediaPermission, setHasMediaPermission] = useState(false);
+	const [cameraRef, setCameraRef] = useState<Camera | null>(null);
+	const [isCameraReady, setCameraReady] = useState(false);
 
 	useEffect(() => {
 		(async () => {
-			const {status} = await Camera.requestPermissionsAsync();
+			const { status } = await Camera.requestPermissionsAsync();
 			const mediaPermissions = await MediaLibrary.requestPermissionsAsync();
 			setHasCameraPermission(status === "granted");
 			setHasMediaPermission(mediaPermissions.status === "granted");
@@ -25,8 +33,9 @@ export default function CameraScreen({navigation, route}) {
 	const takePicture = async () => {
 		if (isCameraReady) {
 			let asset;
+
 			try {
-				const {uri} = await cameraRef.takePictureAsync();
+				const { uri } = await (cameraRef as Camera).takePictureAsync();
 				asset = await MediaLibrary.createAssetAsync(uri);
 			} catch (e) {
 				Toast.show({
@@ -36,9 +45,9 @@ export default function CameraScreen({navigation, route}) {
 					duration: 10000000,
 				});
 			} finally {
-				route.params.isEdit
+				route.params.isEdit || !asset
 					? navigation.goBack()
-					: navigation.navigate("Add Book", {uri: asset.uri});
+					: navigation.navigate("Add Book", { uri: asset.uri });
 			}
 		}
 	};
@@ -59,7 +68,7 @@ export default function CameraScreen({navigation, route}) {
 			<Camera
 				style={styles.camera}
 				type={Camera.Constants.Type.back}
-				ref={(ref) => setCameraRef(ref)}
+				ref={(ref: any) => setCameraRef(ref)}
 				ratio="4:3"
 				pictureSize="640x480"
 				onCameraReady={() => setCameraReady(true)}
@@ -77,7 +86,7 @@ export default function CameraScreen({navigation, route}) {
 			</Camera>
 		</View>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	button: {
@@ -99,7 +108,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-CameraScreen.propTypes = {
-	navigation: PropTypes.object,
-	route: PropTypes.object,
-};
+export default CameraScreen;
