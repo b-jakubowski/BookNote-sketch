@@ -1,22 +1,52 @@
 import React from "react";
-import {createStackNavigator} from "@react-navigation/stack";
-import {connect} from "react-redux";
-import PropTypes from "prop-types";
+import { createStackNavigator } from "@react-navigation/stack";
+import { connect } from "react-redux";
 import AuthScreen from "./AuthScreen";
 import BottomTabNavigator from "../navigation/BottomTabNavigator";
 import BookDetailsScreen from "./BookDetailsScreen";
 import AddQuoteScreen from "./AddQuoteScreen";
 import CameraScreen from "./CameraScreen";
 import EditBookDetailsScreen from "./EditBookDetailsScreen";
+import { User } from "../interfaces/user.interface";
+import { BookDetails } from "../interfaces/book.interface";
 
-const Stack = createStackNavigator();
+export type StackParamList = {
+	Books: undefined;
+	"Book details": { id: string };
+	"Add/Edit Quote": {
+		bookId: string;
+		quoteId: string;
+		isEdit: boolean;
+	};
+	Camera: {
+		isEdit: boolean;
+	};
+	"Edit book details": {
+		id: string;
+		initialBookValues: BookDetails;
+	};
+};
+
+type Props = {
+	user: User;
+	loading: boolean;
+};
+
+type StateProps = {
+	auth: User;
+	globalLoading: {
+		loading: boolean;
+	};
+};
+
+const Stack = createStackNavigator<StackParamList>();
 
 const stackScreenOptions = {
 	headerBackTitleVisible: false,
 	headerTitleAlign: "center",
 };
 
-function HomeScreen({user, loading}) {
+const HomeScreen: React.FC<Props> = ({ user, loading }) => {
 	return (
 		<>
 			{user.uid && !loading ? (
@@ -52,14 +82,9 @@ function HomeScreen({user, loading}) {
 			)}
 		</>
 	);
-}
-
-HomeScreen.propTypes = {
-	user: PropTypes.object,
-	loading: PropTypes.bool,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: StateProps) => ({
 	user: state.auth,
 	loading: state.globalLoading.loading,
 });
