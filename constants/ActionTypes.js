@@ -1,4 +1,5 @@
 export const ADD_BOOK = "ADD_BOOK";
+export const ADD_BOOKS = "ADD_BOOKS";
 export const UPDATE_BOOK_DETAILS = "UPDATE_BOOK_DETAILS";
 export const DELETE_BOOK = "DELETE_BOOK";
 export const CLEAR_BOOKS = "CLEAR_BOOKS";
