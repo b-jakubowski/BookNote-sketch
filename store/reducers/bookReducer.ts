@@ -6,6 +6,7 @@ import {
 	UPDATE_BOOK_DETAILS,
 	UPDATE_QUOTE,
 	DELETE_QUOTE,
+	ADD_BOOKS,
 } from "../../constants/ActionTypes";
 import { Book } from "../../interfaces/book.interface";
 import { BookActionTypes } from "../interfaces/bookActions";
@@ -14,6 +15,9 @@ const bookReducer = (state: Book[] = [], action: BookActionTypes): Book[] => {
 	switch (action.type) {
 		case ADD_BOOK:
 			return [...state, action.payload];
+
+		case ADD_BOOKS:
+			return [...state, ...action.payload];
 
 		case ADD_QUOTE_TO_BOOK:
 			return [

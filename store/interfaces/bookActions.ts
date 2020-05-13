@@ -6,12 +6,18 @@ import {
 	CLEAR_BOOKS,
 	UPDATE_QUOTE,
 	DELETE_QUOTE,
+	ADD_BOOKS,
 } from "../../constants/ActionTypes";
 import { Book, Quote, BookDetails } from "../../interfaces/book.interface";
 
 export interface AddBookAction {
 	type: typeof ADD_BOOK;
 	payload: Book;
+}
+
+export interface AddBooksAction {
+	type: typeof ADD_BOOKS;
+	payload: Book[];
 }
 
 export interface AddQuoteToBookAction {
@@ -50,6 +56,7 @@ export interface DeleteQuoteAction {
 
 export type BookActionTypes =
 	| AddBookAction
+	| AddBooksAction
 	| AddQuoteToBookAction
 	| DeleteBookAction
 	| UpdateBookDetailsAction

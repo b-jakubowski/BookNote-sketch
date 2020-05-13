@@ -1,5 +1,6 @@
 import {
 	ADD_BOOK,
+	ADD_BOOKS,
 	DELETE_BOOK,
 	ADD_QUOTE_TO_BOOK,
 	CLEAR_BOOKS,
@@ -16,11 +17,17 @@ import {
 	ClearBooksAction,
 	UpdateQuoteAction,
 	DeleteQuoteAction,
+	AddBooksAction,
 } from "../interfaces/bookActions";
 
 export const addBook = (book: Book): AddBookAction => ({
 	type: ADD_BOOK,
 	payload: book,
+});
+
+export const addBooks = (books: Book[]): AddBooksAction => ({
+	type: ADD_BOOKS,
+	payload: books,
 });
 
 export const addQuoteToBook = (

@@ -43,6 +43,12 @@ describe("quote reducer", () => {
 		]);
 	});
 
+	it("should handle ADD_BOOKS", () => {
+		expect(
+			bookReducer([], { type: "ADD_BOOKS", payload: [mockBook, mockBook] })
+		).toEqual([mockBook, mockBook]);
+	});
+
 	it("should handle ADD_QUOTE_TO_BOOK", () => {
 		expect(
 			bookReducer([mockBook], {
