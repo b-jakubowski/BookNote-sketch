@@ -8,7 +8,7 @@ import AddQuoteScreen from "./AddQuoteScreen";
 import CameraScreen from "./CameraScreen";
 import EditBookDetailsScreen from "./EditBookDetailsScreen";
 import { User } from "../interfaces/user.interface";
-import { BookDetails } from "../interfaces/book.interface";
+import { BookDetails, Quote } from "../interfaces/book.interface";
 
 export type StackParamList = {
 	Books: undefined;
@@ -16,6 +16,8 @@ export type StackParamList = {
 	"Add/Edit Quote": {
 		bookId: string;
 		quoteId: string;
+		quote: string;
+		categories: string[];
 		isEdit: boolean;
 	};
 	Camera: {

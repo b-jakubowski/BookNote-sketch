@@ -1,25 +1,37 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { StyleSheet, ActivityIndicator } from "react-native";
 import {
 	Container,
 	Content,
 	Form,
 	Text,
-	Toast,
 	Button,
 	View,
 	ActionSheet,
 	Icon,
 } from "native-base";
 import { connect } from "react-redux";
-import * as yup from "yup";
-import { addQuoteToBook, deleteQuote } from "../store/actions/book";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, RouteProp } from "@react-navigation/native";
+import firebase from "firebase/app";
+
 import CategoryCheckBox from "../components/CategoryCheckBox";
 import QuoteForm from "../components/QuoteForm";
 import { firestore } from "../constants/Firebase.js";
-import firebase from "firebase/app";
+import { addQuoteToBook, deleteQuote } from "../store/actions/book";
+import { StackParamList } from "./HomeScreen";
+import { Quote } from "../interfaces/book.interface";
+import { quoteSchema } from "../constants/Schemas";
+import { showWarnToast } from "../helpers/Toast";
+
+interface Props {
+	route: RouteProp<StackParamList, "Add/Edit Quote">;
+	addQuoteToBook: (quote: Quote, bookId: number | string) => void;
+	deleteQuote: (bookId: string, quoteId: string) => void;
+}
+
+interface Categories {
+	[key: string]: boolean;
+}
 
 const initialForm = {
 	quote: "",
@@ -35,24 +47,10 @@ const initialForm = {
 	},
 };
 
-const quoteSchema = yup.object({
-	quote: yup.string().required().min(5),
-	categories: yup.object({
-		motivation: yup.boolean(),
-		love: yup.boolean(),
-		wisdom: yup.boolean(),
-		time: yup.boolean(),
-		happiness: yup.boolean(),
-		funny: yup.boolean(),
-		success: yup.boolean(),
-		productivity: yup.boolean(),
-	}),
-});
-
-const categoriesMapped = (categories) =>
+const categoriesMapped = (categories: Categories) =>
 	Object.keys(categories).filter((category) => categories[category]);
 
-const setInitialFormEdit = (quote, categories) => {
+const setInitialFormEdit = (quote: string, categories: string[]) => {
 	const initialFormEdit = {
 		quote,
 		categories: {
@@ -62,14 +60,19 @@ const setInitialFormEdit = (quote, categories) => {
 
 	if (categories) {
 		categories.forEach(
-			(category) => (initialFormEdit.categories[category] = true)
+			(category) =>
+				((initialFormEdit.categories as Categories)[category] = true)
 		);
 	}
 
 	return initialFormEdit;
 };
 
-function AddQuoteScreen({ route, addQuoteToBook, deleteQuote }) {
+const AddQuoteScreen: React.FC<Props> = ({
+	route,
+	addQuoteToBook,
+	deleteQuote,
+}) => {
 	const { bookId, quoteId, isEdit } = route.params;
 	const [loading, setLoading] = useState(false);
 	const initialFormEdit = setInitialFormEdit(
@@ -86,8 +89,15 @@ function AddQuoteScreen({ route, addQuoteToBook, deleteQuote }) {
 	const [form, setForm] = useState(isEdit ? initialFormEdit : initialForm);
 	const navigation = useNavigation();
 
-	const handleSubmit = ({ quote, categories }) => {
-		const newQuote = {
+	const handleSubmit = ({
+		quote,
+		categories,
+	}: {
+		quote: string;
+		categories: Categories;
+	}) => {
+		const newQuote: Quote = {
+			id: "",
 			categories: categoriesMapped(categories),
 			quote,
 		};
@@ -102,16 +112,11 @@ function AddQuoteScreen({ route, addQuoteToBook, deleteQuote }) {
 					: addQuoteToFirestore(newQuote);
 			})
 			.catch((e) => {
-				Toast.show({
-					text: e.errors.join(",\r\n"),
-					buttonText: "Okay",
-					type: "warning",
-					duration: 10000000,
-				});
+				showWarnToast(e.errors.join(",\r\n"));
 			});
 	};
 
-	const addQuoteToFirestore = (quote) => {
+	const addQuoteToFirestore = (quote: Quote) => {
 		setLoading(true);
 
 		bookRef
@@ -126,7 +131,7 @@ function AddQuoteScreen({ route, addQuoteToBook, deleteQuote }) {
 			});
 	};
 
-	const updateQuoteInFirestore = (oldQuote, newQuote) => {
+	const updateQuoteInFirestore = (oldQuote: Quote, newQuote: Quote) => {
 		bookRef
 			.update({
 				quotes: firebase.firestore.FieldValue.arrayRemove(oldQuote),
@@ -206,7 +211,6 @@ function AddQuoteScreen({ route, addQuoteToBook, deleteQuote }) {
 							onChangeText={(value) => setForm({ ...form, quote: value })}
 						/>
 						<Button
-							title="submit"
 							block
 							success
 							iconLeft
@@ -218,7 +222,6 @@ function AddQuoteScreen({ route, addQuoteToBook, deleteQuote }) {
 						</Button>
 						<View style={styles.buttonsContainer}>
 							<Button
-								title="clear"
 								block
 								light
 								style={styles.clearButton}
@@ -228,7 +231,6 @@ function AddQuoteScreen({ route, addQuoteToBook, deleteQuote }) {
 							</Button>
 							{isEdit && (
 								<Button
-									title="delete"
 									block
 									danger
 									iconLeft
@@ -245,7 +247,7 @@ function AddQuoteScreen({ route, addQuoteToBook, deleteQuote }) {
 			</Content>
 		</Container>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	addButton: {
@@ -276,11 +278,5 @@ const styles = StyleSheet.create({
 		marginBottom: 15,
 	},
 });
-
-AddQuoteScreen.propTypes = {
-	addQuoteToBook: PropTypes.func,
-	deleteQuote: PropTypes.func,
-	route: PropTypes.object,
-};
 
 export default connect(null, { addQuoteToBook, deleteQuote })(AddQuoteScreen);
