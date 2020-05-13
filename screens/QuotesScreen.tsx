@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import QuoteItem from "../components/QuoteItem";
 import { connect } from "react-redux";
 import { Container, Content, List, ListItem, View, Icon } from "native-base";
@@ -15,45 +15,49 @@ type Props = {
 };
 
 const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
+	const quotes: Quote[] = [];
+
+	books.forEach((book) => {
+		book.quotes.forEach((quote: Quote) => {
+			quotes.push({ bookId: book.id, ...quote });
+		});
+	});
+
 	return (
 		<Container>
-			<Content>
-				<List>
-					{books.map((book) => (
-						<SwipeListView
-							rightOpenValue={-75}
-							disableRightSwipe={true}
-							tension={-2}
-							friction={20}
-							keyExtractor={(quote, index) => `${quote.id}-${index}`}
-							data={book.quotes}
-							renderItem={({ item }) => (
-								<ListItem style={styles.rowFront}>
-									<QuoteItem quote={item} />
-								</ListItem>
-							)}
-							renderHiddenItem={({ item }) => (
-								<View style={styles.rowBack}>
-									<TouchableOpacity
-										style={styles.hiddenButton}
-										onPress={() =>
-											navigation.navigate("Add/Edit Quote", {
-												bookId: book.id,
-												quoteId: item.id,
-												quote: item.quote,
-												categories: item.categories,
-												isEdit: true,
-											})
-										}
-									>
-										<Icon type="Entypo" name="edit" style={styles.editIcon} />
-									</TouchableOpacity>
-								</View>
-							)}
-						/>
-					))}
-				</List>
-			</Content>
+			<List>
+				<SwipeListView
+					rightOpenValue={-75}
+					disableRightSwipe={true}
+					tension={-2}
+					friction={20}
+					keyExtractor={(quote, index) => `${quote.id}-${index}`}
+					data={quotes}
+					renderItem={({ item }) => (
+						<ListItem style={styles.rowFront}>
+							<QuoteItem quote={item} />
+						</ListItem>
+					)}
+					renderHiddenItem={({ item }) => (
+						<View style={styles.rowBack}>
+							<TouchableOpacity
+								style={styles.hiddenButton}
+								onPress={() =>
+									navigation.navigate("Add/Edit Quote", {
+										bookId: item.bookId,
+										quoteId: item.id,
+										quote: item.quote,
+										categories: item.categories,
+										isEdit: true,
+									})
+								}
+							>
+								<Icon type="Entypo" name="edit" style={styles.editIcon} />
+							</TouchableOpacity>
+						</View>
+					)}
+				/>
+			</List>
 		</Container>
 	);
 };

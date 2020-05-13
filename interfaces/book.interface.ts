@@ -18,6 +18,7 @@ export enum Status {
 
 export interface Quote {
 	id: string;
+	bookId?: string | number;
 	categories: string[];
 	quote: string;
 }
