@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import QuoteItem from "../components/QuoteItem";
 import { connect } from "react-redux";
 import {
 	Container,
@@ -12,12 +11,14 @@ import {
 	Button,
 	Fab,
 } from "native-base";
-import { Book, Quote } from "../interfaces/book.interface";
+import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { TouchableOpacity } from "react-native-gesture-handler";
+
+import QuoteItem from "../components/QuoteItem";
+import { Book, Quote } from "../interfaces/book.interface";
 import { StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
-import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 type Props = {
 	books: Book[];
@@ -26,6 +27,7 @@ type Props = {
 
 const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 	const [searchVisible, setSearchVisible] = useState(false);
+	const [searchVal, setSearchVal] = useState("");
 	const quotes: Quote[] = [];
 
 	books.forEach((book) => {
@@ -34,13 +36,29 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 		});
 	});
 
+	const filteredQuotes = () =>
+		quotes.filter((quote) =>
+			quote.quote.toLowerCase().includes(searchVal.toLowerCase())
+		);
+
 	return (
 		<Container>
 			{searchVisible && (
 				<Item style={styles.searchBar}>
 					<Icon type="Ionicons" name="ios-search" />
-					<Input placeholder="Search" />
-					<Button transparent small onPress={() => setSearchVisible(false)}>
+					<Input
+						placeholder="Search"
+						autoCorrect={false}
+						onChangeText={(val) => setSearchVal(val)}
+					/>
+					<Button
+						transparent
+						small
+						onPress={() => {
+							setSearchVisible(false);
+							setSearchVal("");
+						}}
+					>
 						<Icon
 							type="Ionicons"
 							name="md-close"
@@ -56,7 +74,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 					tension={-2}
 					friction={20}
 					keyExtractor={(quote, index) => `${quote.id}-${index}`}
-					data={quotes}
+					data={searchVal ? filteredQuotes() : quotes}
 					renderItem={({ item }) => (
 						<ListItem style={styles.rowFront}>
 							<QuoteItem quote={item} />
