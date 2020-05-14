@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Item, Textarea } from "native-base";
 import { StyleSheet } from "react-native";
 import CategoryCheckBox from "./CategoryCheckBox";
+import { categoriesButtons } from "../constants/Categories";
 
 interface Props {
 	quote: string;
@@ -10,33 +11,12 @@ interface Props {
 	categoriesCheck: string[];
 }
 
-const categoriesButtons = [
-	"motivation",
-	"love",
-	"wisdom",
-	"time",
-	"happiness",
-	"funny",
-	"success",
-	"productivity",
-];
-
 const QuoteForm: React.FC<Props> = ({
 	quote,
 	onChangeText,
 	onPress,
 	categoriesCheck,
 }) => {
-	// const [categoriesCheck, setCategoriesCheck] = useState<string[]>([]);
-
-	// const toggleCategory = (category: string) => {
-	// 	if (categoriesCheck.includes(category)) {
-	// 		setCategoriesCheck(categoriesCheck.filter((c) => c !== category));
-	// 	} else {
-	// 		setCategoriesCheck([...categoriesCheck, category]);
-	// 	}
-	// };
-
 	return (
 		<View style={styles.formItem}>
 			<Text note>Categories</Text>
@@ -46,7 +26,6 @@ const QuoteForm: React.FC<Props> = ({
 						<CategoryCheckBox
 							category={category}
 							checked={categoriesCheck.includes(category)}
-							// onPress={() => toggleCategory(category)}
 							onPress={() => onPress(category)}
 						/>
 					</View>
@@ -56,6 +35,7 @@ const QuoteForm: React.FC<Props> = ({
 			<Item>
 				<Textarea
 					rowSpan={5}
+					underline={true}
 					bordered
 					style={styles.quoteField}
 					placeholder="Quote"
