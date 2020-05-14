@@ -1,53 +1,56 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { StyleSheet, ActivityIndicator } from "react-native";
 import {
 	Container,
 	Content,
 	Form,
 	Text,
-	Toast,
 	Button,
 	View,
 	Icon,
 } from "native-base";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, RouteProp } from "@react-navigation/native";
 import { connect } from "react-redux";
 import * as yup from "yup";
+
 import { addBook } from "../store/actions/book";
 import QuoteForm from "../components/QuoteForm";
-import CategoryCheckBox from "../components/CategoryCheckBox";
 import { firestore } from "../constants/Firebase";
 import BookDetailsFields from "../components/BookDetailsFields";
-import { bookDetailsSchema, categoriesSchema } from "../constants/Schemas";
+import { bookDetailsSchema } from "../constants/Schemas";
+import { User } from "../interfaces/user.interface";
+import { Book, BookDetails } from "../interfaces/book.interface";
+import { BottomStackParamList } from "../navigation/BottomTabNavigator";
+import { Store } from "../store/store";
+import { showWarnToast } from "../helpers/Toast";
 
-const initialForm = {
+interface Props {
+	user: User;
+	addBook: (book: Book) => void;
+	route: RouteProp<BottomStackParamList, "Add Book">;
+}
+
+interface BookForm extends BookDetails {
+	quote: string;
+	categories: string[];
+}
+
+const initialForm: BookForm = {
 	name: "",
 	author: "",
 	cover: "",
+	status: "",
 	quote: "",
-	categories: {
-		motivation: false,
-		love: false,
-		wisdom: false,
-		time: false,
-		happiness: false,
-		funny: false,
-		success: false,
-		productivity: false,
-	},
+	categories: [],
 };
 
 const bookSchema = yup.object({
 	...bookDetailsSchema,
-	categories: categoriesSchema,
+	categories: yup.array().of(yup.string()),
 	quote: yup.string().required().min(5),
 });
 
-const categoriesMapped = (categories) =>
-	Object.keys(categories).filter((category) => categories[category]);
-
-function AddBookScreen({ user, addBook, route }) {
+const AddBookScreen: React.FC<Props> = ({ user, addBook, route }) => {
 	const navigation = useNavigation();
 	const [form, setForm] = useState(initialForm);
 	const [loading, setLoading] = useState(false);
@@ -58,19 +61,20 @@ function AddBookScreen({ user, addBook, route }) {
 		}
 	}, [route.params]);
 
-	const handleCreateBook = async (book) => {
+	const handleCreateBook = async (book: Book) => {
 		try {
 			const docRef = await firestore.collection("books").add(book);
 			const doc = await docRef.get();
 
-			const bookFirestore = {
-				id: doc.id,
-				...doc.data(),
-			};
+			const bookFirestore =
+				{
+					id: doc.id,
+					...doc.data(),
+				} as Book;
 
 			addBook(bookFirestore);
 		} catch (e) {
-			console.error(e);
+			showWarnToast(e);
 		} finally {
 			setForm(initialForm);
 			setLoading(false);
@@ -78,44 +82,46 @@ function AddBookScreen({ user, addBook, route }) {
 		}
 	};
 
-	const handleSubmit = ({ quote, categories, ...book }) => {
-		const newBook = {
-			...book,
-			createdAt: new Date(),
-			userId: user.uid,
-			quotes: [
-				{
-					id: `${Math.random()}`,
-					categories: categoriesMapped(categories),
-					quote,
-				},
-			],
-		};
+	const handleSubmit = ({ quote, categories, ...book }: BookForm) => {
+		const newBook =
+			{
+				...book,
+				createdAt: new Date(),
+				userId: user.uid,
+				quotes: [
+					{
+						id: `${Math.random()}`,
+						categories,
+						quote,
+					},
+				],
+			} as Book;
 
+		validateFormAndCreateBook(newBook);
+	};
+
+	const validateFormAndCreateBook = (book: Book) => {
 		setLoading(true);
 
 		bookSchema
 			.validate(form, { abortEarly: false })
-			.then(() => handleCreateBook(newBook))
+			.then(() => handleCreateBook(book))
 			.catch((e) => {
 				setLoading(false);
-				Toast.show({
-					text: e.errors.join(",\r\n"),
-					buttonText: "Okay",
-					type: "warning",
-					duration: 10000000,
-				});
+				showWarnToast(e.errors.join(",\r\n"));
 			});
 	};
 
-	const toggleCategory = (category) => {
-		setForm({
-			...form,
-			categories: {
-				...form.categories,
-				[category]: !form.categories[category],
-			},
-		});
+	const toggleCategory = (category: string) => {
+		form.categories.includes(category)
+			? setForm({
+					...form,
+					categories: form.categories.filter((c) => c !== category),
+			  })
+			: setForm({
+					...form,
+					categories: [...form.categories, category],
+			  });
 	};
 
 	return (
@@ -134,26 +140,14 @@ function AddBookScreen({ user, addBook, route }) {
 							setForm={setForm}
 							form={form}
 						/>
-						<Text note>Categories</Text>
-						<View style={styles.categories}>
-							{Object.keys(initialForm.categories).map((category, index) => (
-								<View key={index}>
-									<CategoryCheckBox
-										category={category}
-										checked={form.categories[category]}
-										onPress={() => toggleCategory(category)}
-									/>
-								</View>
-							))}
-						</View>
 						<QuoteForm
-							categories={form.categories}
+							categoriesCheck={form.categories}
+							onPress={(val) => toggleCategory(val)}
 							quote={form.quote}
 							onChangeText={(value) => setForm({ ...form, quote: value })}
 						/>
 						<View style={styles.buttonsContainer}>
 							<Button
-								title="submit"
 								success
 								block
 								iconLeft
@@ -164,7 +158,6 @@ function AddBookScreen({ user, addBook, route }) {
 								<Text>Add Book</Text>
 							</Button>
 							<Button
-								title="clear"
 								block
 								light
 								style={styles.clearButton}
@@ -178,7 +171,7 @@ function AddBookScreen({ user, addBook, route }) {
 			</Content>
 		</Container>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	addButton: {
@@ -202,13 +195,7 @@ const styles = StyleSheet.create({
 	},
 });
 
-AddBookScreen.propTypes = {
-	addBook: PropTypes.func,
-	user: PropTypes.object,
-	route: PropTypes.object,
-};
-
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: Store) => ({
 	user: state.auth,
 });
 
