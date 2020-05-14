@@ -25,14 +25,24 @@ type Props = {
 	navigation: StackNavigationHelpers;
 };
 
+interface QuoteListItem extends Quote {
+	bookAuthor: string;
+	bookName: string;
+}
+
 const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 	const [searchVisible, setSearchVisible] = useState(false);
 	const [searchVal, setSearchVal] = useState("");
-	const quotes: Quote[] = [];
+	const quotes: QuoteListItem[] = [];
 
 	books.forEach((book) => {
 		book.quotes.forEach((quote: Quote) => {
-			quotes.push({ bookId: book.id, ...quote });
+			quotes.push({
+				bookId: book.id,
+				bookAuthor: book.author,
+				bookName: book.name,
+				...quote,
+			});
 		});
 	});
 
@@ -77,7 +87,11 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 					data={searchVal ? filteredQuotes() : quotes}
 					renderItem={({ item }) => (
 						<ListItem style={styles.rowFront}>
-							<QuoteItem quote={item} />
+							<QuoteItem
+								quote={item}
+								author={item.bookAuthor}
+								title={item.bookName}
+							/>
 						</ListItem>
 					)}
 					renderHiddenItem={({ item }) => (
