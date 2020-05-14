@@ -42,8 +42,8 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 					<Input placeholder="Search" />
 					<Button transparent small onPress={() => setSearchVisible(false)}>
 						<Icon
-							type="FontAwesome"
-							name="remove"
+							type="Ionicons"
+							name="md-close"
 							style={{ color: Colors.darkOrange }}
 						/>
 					</Button>
