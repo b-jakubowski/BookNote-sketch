@@ -18,6 +18,7 @@ interface Props {
 const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
 	const [loading, setLoading] = useState(false);
 	const [searchVisible, setSearchVisible] = useState(false);
+	const [searchVal, setSearchVal] = useState("");
 
 	useEffect(() => {
 		setLoading(true);
@@ -37,13 +38,31 @@ const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
 			.finally(() => setLoading(false));
 	}, []);
 
+	const filteredBooks = (): Book[] =>
+		books.filter((book) =>
+			book.name.toLowerCase().includes(searchVal.toLowerCase())
+		);
+
+	const booksSource = searchVal ? filteredBooks() : books;
+
 	return (
 		<>
 			{searchVisible && (
 				<Item style={styles.searchBar}>
 					<Icon type="Ionicons" name="ios-search" />
-					<Input placeholder="Search" />
-					<Button transparent small onPress={() => setSearchVisible(false)}>
+					<Input
+						placeholder="Search"
+						autoCorrect={false}
+						onChangeText={(val) => setSearchVal(val)}
+					/>
+					<Button
+						transparent
+						small
+						onPress={() => {
+							setSearchVal("");
+							setSearchVisible(false);
+						}}
+					>
 						<Icon
 							type="Ionicons"
 							name="md-close"
@@ -56,7 +75,7 @@ const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
 				{loading ? (
 					<ActivityIndicator size="large" />
 				) : books.length ? (
-					books.map((book) => <BookListItem key={book.id} {...book} />)
+					booksSource.map((book) => <BookListItem key={book.id} {...book} />)
 				) : (
 					<Text>No books found</Text>
 				)}
@@ -65,7 +84,9 @@ const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
 				<Fab
 					position="bottomRight"
 					style={styles.fabButton}
-					onPress={() => setSearchVisible(true)}
+					onPress={() => {
+						setSearchVisible(true);
+					}}
 				>
 					<Icon type="FontAwesome" name="search" />
 				</Fab>
