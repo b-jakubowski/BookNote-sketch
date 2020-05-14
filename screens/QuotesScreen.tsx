@@ -1,7 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import QuoteItem from "../components/QuoteItem";
 import { connect } from "react-redux";
-import { Container, Content, List, ListItem, View, Icon } from "native-base";
+import {
+	Container,
+	List,
+	ListItem,
+	View,
+	Icon,
+	Item,
+	Input,
+	Button,
+	Fab,
+} from "native-base";
 import { Book, Quote } from "../interfaces/book.interface";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -15,6 +25,7 @@ type Props = {
 };
 
 const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
+	const [searchVisible, setSearchVisible] = useState(false);
 	const quotes: Quote[] = [];
 
 	books.forEach((book) => {
@@ -25,6 +36,19 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 
 	return (
 		<Container>
+			{searchVisible && (
+				<Item style={styles.searchBar}>
+					<Icon type="Ionicons" name="ios-search" />
+					<Input placeholder="Search" />
+					<Button transparent small onPress={() => setSearchVisible(false)}>
+						<Icon
+							type="FontAwesome"
+							name="remove"
+							style={{ color: Colors.darkOrange }}
+						/>
+					</Button>
+				</Item>
+			)}
 			<List>
 				<SwipeListView
 					rightOpenValue={-75}
@@ -58,6 +82,15 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 					)}
 				/>
 			</List>
+			{!searchVisible && (
+				<Fab
+					position="bottomRight"
+					style={styles.fabButton}
+					onPress={() => setSearchVisible(true)}
+				>
+					<Icon type="FontAwesome" name="search" />
+				</Fab>
+			)}
 		</Container>
 	);
 };
@@ -66,6 +99,10 @@ const styles = StyleSheet.create({
 	editIcon: {
 		color: Colors.blackChocolate,
 		fontSize: 22,
+	},
+	fabButton: {
+		zIndex: 1000,
+		backgroundColor: Colors.greyTransparent,
 	},
 	hiddenButton: {
 		alignItems: "center",
@@ -84,6 +121,11 @@ const styles = StyleSheet.create({
 	rowFront: {
 		backgroundColor: "white",
 		justifyContent: "center",
+	},
+	searchBar: {
+		marginRight: 30,
+		marginLeft: 20,
+		marginBottom: 5,
 	},
 });
 
