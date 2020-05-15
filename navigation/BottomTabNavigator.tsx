@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as React from "react";
-import { connect } from "react-redux";
 import { Button, Icon } from "native-base";
 
 import TabBarIcon from "../components/TabBarIcon";
@@ -8,9 +7,6 @@ import BooksScreen from "../screens/BooksScreen";
 import QuotesScreen from "../screens/QuotesScreen";
 import AddBookScreen from "../screens/AddBookScreen";
 import DailyQuoteScreen from "../screens/DailyQuoteScreen";
-import { signOut } from "../constants/Firebase";
-import { logOutUser } from "../store/actions/auth";
-import { clearBooks } from "../store/actions/book";
 import Colors from "../constants/Colors";
 import ReadingListScreen from "../screens/ReadingListScreen";
 import { StyleSheet } from "react-native";
@@ -25,33 +21,24 @@ export type BottomStackParamList = {
 };
 
 interface Props {
-	logOutUser: () => void;
-	clearBooks: () => void;
 	navigation: StackNavigationHelpers;
 }
 
 const BottomTab = createBottomTabNavigator<BottomStackParamList>();
 
-const BottomTabNavigator: React.FC<Props> = ({
-	logOutUser,
-	clearBooks,
-	navigation,
-}) => {
+const BottomTabNavigator: React.FC<Props> = ({ navigation }) => {
 	navigation.setOptions({
 		headerRight: () => (
 			<Button
 				transparent
 				style={styles.logoutButton}
-				onPress={() =>
-					signOut()
-						.then(() => {
-							clearBooks();
-							logOutUser();
-						})
-						.catch()
-				}
+				onPress={() => navigation.navigate("User details")}
 			>
-				<Icon type="Ionicons" name="md-exit" style={styles.logoutIcon} />
+				<Icon
+					type="FontAwesome"
+					name="user-circle-o"
+					style={styles.logoutIcon}
+				/>
 			</Button>
 		),
 	});
@@ -125,4 +112,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default connect(null, { logOutUser, clearBooks })(BottomTabNavigator);
+export default BottomTabNavigator;
