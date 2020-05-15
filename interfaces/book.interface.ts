@@ -1,13 +1,15 @@
 export interface Book extends BookDetails {
 	id: string | number;
 	quotes: Quote[];
+	createdAt: Date;
+	userId: string;
 }
 
 export interface BookDetails {
 	name: string;
 	author: string;
 	cover: string;
-	status: Status;
+	status: Status | string;
 }
 
 export enum Status {
@@ -17,7 +19,7 @@ export enum Status {
 }
 
 export interface Quote {
-	id: string;
+	id?: string;
 	bookId?: string | number;
 	categories: string[];
 	quote: string;

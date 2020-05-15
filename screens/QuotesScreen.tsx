@@ -1,30 +1,82 @@
-import React, { useEffect } from "react";
-import QuoteItem from "../components/QuoteItem";
+import React, { useState } from "react";
 import { connect } from "react-redux";
-import { Container, Content, List, ListItem, View, Icon } from "native-base";
-import { Book, Quote } from "../interfaces/book.interface";
+import {
+	Container,
+	List,
+	ListItem,
+	View,
+	Icon,
+	Item,
+	Input,
+	Button,
+	Fab,
+} from "native-base";
+import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { TouchableOpacity } from "react-native-gesture-handler";
+
+import QuoteItem from "../components/QuoteItem";
+import { Book, Quote } from "../interfaces/book.interface";
 import { StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
-import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 type Props = {
 	books: Book[];
 	navigation: StackNavigationHelpers;
 };
 
+interface QuoteListItem extends Quote {
+	bookAuthor: string;
+	bookName: string;
+}
+
 const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
-	const quotes: Quote[] = [];
+	const [searchVisible, setSearchVisible] = useState(false);
+	const [searchVal, setSearchVal] = useState("");
+	const quotes: QuoteListItem[] = [];
 
 	books.forEach((book) => {
 		book.quotes.forEach((quote: Quote) => {
-			quotes.push({ bookId: book.id, ...quote });
+			quotes.push({
+				bookId: book.id,
+				bookAuthor: book.author,
+				bookName: book.name,
+				...quote,
+			});
 		});
 	});
 
+	const filteredQuotes = () =>
+		quotes.filter((quote) =>
+			quote.quote.toLowerCase().includes(searchVal.toLowerCase())
+		);
+
 	return (
 		<Container>
+			{searchVisible && (
+				<Item style={styles.searchBar}>
+					<Icon type="Ionicons" name="ios-search" />
+					<Input
+						placeholder="Search"
+						autoCorrect={false}
+						onChangeText={(val) => setSearchVal(val)}
+					/>
+					<Button
+						transparent
+						small
+						onPress={() => {
+							setSearchVisible(false);
+							setSearchVal("");
+						}}
+					>
+						<Icon
+							type="Ionicons"
+							name="md-close"
+							style={{ color: Colors.darkOrange }}
+						/>
+					</Button>
+				</Item>
+			)}
 			<List>
 				<SwipeListView
 					rightOpenValue={-75}
@@ -32,10 +84,14 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 					tension={-2}
 					friction={20}
 					keyExtractor={(quote, index) => `${quote.id}-${index}`}
-					data={quotes}
+					data={searchVal ? filteredQuotes() : quotes}
 					renderItem={({ item }) => (
 						<ListItem style={styles.rowFront}>
-							<QuoteItem quote={item} />
+							<QuoteItem
+								quote={item}
+								author={item.bookAuthor}
+								title={item.bookName}
+							/>
 						</ListItem>
 					)}
 					renderHiddenItem={({ item }) => (
@@ -58,6 +114,15 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 					)}
 				/>
 			</List>
+			{!searchVisible && (
+				<Fab
+					position="bottomRight"
+					style={styles.fabButton}
+					onPress={() => setSearchVisible(true)}
+				>
+					<Icon type="FontAwesome" name="search" />
+				</Fab>
+			)}
 		</Container>
 	);
 };
@@ -66,6 +131,10 @@ const styles = StyleSheet.create({
 	editIcon: {
 		color: Colors.blackChocolate,
 		fontSize: 22,
+	},
+	fabButton: {
+		zIndex: 1000,
+		backgroundColor: Colors.greyTransparent,
 	},
 	hiddenButton: {
 		alignItems: "center",
@@ -84,6 +153,11 @@ const styles = StyleSheet.create({
 	rowFront: {
 		backgroundColor: "white",
 		justifyContent: "center",
+	},
+	searchBar: {
+		marginRight: 30,
+		marginLeft: 20,
+		marginBottom: 5,
 	},
 });
 

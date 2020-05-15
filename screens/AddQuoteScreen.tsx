@@ -11,10 +11,10 @@ import {
 	Icon,
 } from "native-base";
 import { connect } from "react-redux";
-import { useNavigation, RouteProp } from "@react-navigation/native";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 import firebase from "firebase/app";
 
-import CategoryCheckBox from "../components/CategoryCheckBox";
 import QuoteForm from "../components/QuoteForm";
 import { firestore } from "../constants/Firebase.js";
 import { addQuoteToBook, deleteQuote } from "../store/actions/book";
@@ -25,82 +25,35 @@ import { showWarnToast } from "../helpers/Toast";
 
 interface Props {
 	route: RouteProp<StackParamList, "Add/Edit Quote">;
-	addQuoteToBook: (quote: Quote, bookId: number | string) => void;
+	addQuoteToBook: (quote: Quote, bookId: string) => void;
 	deleteQuote: (bookId: string, quoteId: string) => void;
+	navigation: StackNavigationHelpers;
 }
 
-interface Categories {
-	[key: string]: boolean;
-}
-
-const initialForm = {
+const initialQuote: Quote = {
 	quote: "",
-	categories: {
-		motivation: false,
-		love: false,
-		wisdom: false,
-		time: false,
-		happiness: false,
-		funny: false,
-		success: false,
-		productivity: false,
-	},
-};
-
-const categoriesMapped = (categories: Categories) =>
-	Object.keys(categories).filter((category) => categories[category]);
-
-const setInitialFormEdit = (quote: string, categories: string[]) => {
-	const initialFormEdit = {
-		quote,
-		categories: {
-			...initialForm.categories,
-		},
-	};
-
-	if (categories) {
-		categories.forEach(
-			(category) =>
-				((initialFormEdit.categories as Categories)[category] = true)
-		);
-	}
-
-	return initialFormEdit;
+	categories: [],
 };
 
 const AddQuoteScreen: React.FC<Props> = ({
 	route,
 	addQuoteToBook,
 	deleteQuote,
+	navigation,
 }) => {
 	const { bookId, quoteId, isEdit } = route.params;
 	const [loading, setLoading] = useState(false);
-	const initialFormEdit = setInitialFormEdit(
-		route.params.quote,
-		route.params.categories
-	);
-	const initialQuote = {
+	const initialEditQuote = {
 		id: quoteId,
-		categories: categoriesMapped(initialFormEdit.categories),
-		quote: initialFormEdit.quote,
+		quote: route.params.quote,
+		categories: route.params.categories,
 	};
 	const bookRef = firestore.collection("books").doc(bookId);
 
-	const [form, setForm] = useState(isEdit ? initialFormEdit : initialForm);
-	const navigation = useNavigation();
+	const [form, setForm] = useState(isEdit ? initialEditQuote : initialQuote);
 
-	const handleSubmit = ({
-		quote,
-		categories,
-	}: {
-		quote: string;
-		categories: Categories;
-	}) => {
-		const newQuote: Quote = {
-			id: "",
-			categories: categoriesMapped(categories),
-			quote,
-		};
+	const handleSubmit = ({ quote, categories }: Quote) => {
+		const newQuote: Quote = { categories, quote };
 
 		isEdit ? (newQuote.id = quoteId) : (newQuote.id = `${Math.random()}`);
 
@@ -108,7 +61,7 @@ const AddQuoteScreen: React.FC<Props> = ({
 			.validate(form, { abortEarly: false })
 			.then(() => {
 				isEdit
-					? updateQuoteInFirestore(initialQuote, newQuote)
+					? updateQuoteInFirestore(initialEditQuote, newQuote)
 					: addQuoteToFirestore(newQuote);
 			})
 			.catch((e) => {
@@ -148,7 +101,7 @@ const AddQuoteScreen: React.FC<Props> = ({
 
 		bookRef
 			.update({
-				quotes: firebase.firestore.FieldValue.arrayRemove(initialQuote),
+				quotes: firebase.firestore.FieldValue.arrayRemove(initialEditQuote),
 			})
 			.then(() => deleteQuote(bookId, quoteId))
 			.catch()
@@ -156,16 +109,6 @@ const AddQuoteScreen: React.FC<Props> = ({
 				setLoading(false);
 				navigation.goBack();
 			});
-	};
-
-	const toggleCategory = (category) => {
-		setForm({
-			...form,
-			categories: {
-				...form.categories,
-				[category]: !form.categories[category],
-			},
-		});
 	};
 
 	const confirmDelete = () => {
@@ -184,6 +127,18 @@ const AddQuoteScreen: React.FC<Props> = ({
 		);
 	};
 
+	const toggleCategory = (category: string) => {
+		form.categories.includes(category)
+			? setForm({
+					...form,
+					categories: form.categories.filter((c) => c !== category),
+			  })
+			: setForm({
+					...form,
+					categories: [...form.categories, category],
+			  });
+	};
+
 	return (
 		<Container>
 			<Content style={styles.content}>
@@ -191,22 +146,9 @@ const AddQuoteScreen: React.FC<Props> = ({
 					<ActivityIndicator size="large" />
 				) : (
 					<Form>
-						<View style={styles.formItem}>
-							<Text note>Categories</Text>
-							<View style={styles.categories}>
-								{Object.keys(initialForm.categories).map((category, index) => (
-									<View key={index}>
-										<CategoryCheckBox
-											category={category}
-											checked={form.categories[category]}
-											onPress={() => toggleCategory(category)}
-										/>
-									</View>
-								))}
-							</View>
-						</View>
 						<QuoteForm
-							categories={form.categories}
+							categoriesCheck={form.categories}
+							onPress={(val) => toggleCategory(val)}
 							quote={form.quote}
 							onChangeText={(value) => setForm({ ...form, quote: value })}
 						/>
@@ -225,7 +167,9 @@ const AddQuoteScreen: React.FC<Props> = ({
 								block
 								light
 								style={styles.clearButton}
-								onPress={() => setForm(isEdit ? initialFormEdit : initialForm)}
+								onPress={() =>
+									setForm(isEdit ? initialEditQuote : initialQuote)
+								}
 							>
 								<Text>Clear Form</Text>
 							</Button>

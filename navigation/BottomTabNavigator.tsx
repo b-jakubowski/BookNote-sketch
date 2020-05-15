@@ -1,51 +1,50 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as React from "react";
-import { connect } from "react-redux";
 import { Button, Icon } from "native-base";
-import PropTypes from "prop-types";
 
 import TabBarIcon from "../components/TabBarIcon";
 import BooksScreen from "../screens/BooksScreen";
 import QuotesScreen from "../screens/QuotesScreen";
 import AddBookScreen from "../screens/AddBookScreen";
 import DailyQuoteScreen from "../screens/DailyQuoteScreen";
-import { signOut } from "../constants/Firebase";
-import { logOutUser } from "../store/actions/auth";
-import { clearBooks } from "../store/actions/book";
 import Colors from "../constants/Colors";
 import ReadingListScreen from "../screens/ReadingListScreen";
 import { StyleSheet } from "react-native";
+import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
-const BottomTab = createBottomTabNavigator();
-const INITIAL_ROUTE_NAME = "Home";
+export type BottomStackParamList = {
+	"Add Book": { uri: string };
+	"Daily Quote": undefined;
+	"Reading list": undefined;
+	Quotes: undefined;
+	Books: undefined;
+};
 
-function BottomTabNavigator({ logOutUser, clearBooks, navigation, route }) {
+interface Props {
+	navigation: StackNavigationHelpers;
+}
+
+const BottomTab = createBottomTabNavigator<BottomStackParamList>();
+
+const BottomTabNavigator: React.FC<Props> = ({ navigation }) => {
 	navigation.setOptions({
-		headerTitle:
-			route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME,
 		headerRight: () => (
 			<Button
 				transparent
 				style={styles.logoutButton}
-				onPress={() =>
-					signOut()
-						.then(() => {
-							clearBooks();
-							logOutUser();
-						})
-						.catch()
-				}
+				onPress={() => navigation.navigate("User details")}
 			>
-				<Icon type="Ionicons" name="md-exit" style={styles.logoutIcon} />
+				<Icon
+					type="FontAwesome"
+					name="user-circle-o"
+					style={styles.logoutIcon}
+				/>
 			</Button>
 		),
 	});
 
 	return (
-		<BottomTab.Navigator
-			initialRouteName={INITIAL_ROUTE_NAME}
-			tabBarOptions={{ activeTintColor: Colors.darkOrange }}
-		>
+		<BottomTab.Navigator tabBarOptions={{ activeTintColor: Colors.darkOrange }}>
 			<BottomTab.Screen
 				name="Books"
 				component={BooksScreen}
@@ -101,14 +100,6 @@ function BottomTabNavigator({ logOutUser, clearBooks, navigation, route }) {
 			/>
 		</BottomTab.Navigator>
 	);
-}
-
-BottomTabNavigator.propTypes = {
-	logOutUser: PropTypes.func,
-	clearBooks: PropTypes.func,
-	navigation: PropTypes.object,
-	route: PropTypes.object,
-	focused: PropTypes.bool,
 };
 
 const styles = StyleSheet.create({
@@ -121,4 +112,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default connect(null, { logOutUser, clearBooks })(BottomTabNavigator);
+export default BottomTabNavigator;

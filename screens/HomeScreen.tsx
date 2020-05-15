@@ -8,10 +8,14 @@ import AddQuoteScreen from "./AddQuoteScreen";
 import CameraScreen from "./CameraScreen";
 import EditBookDetailsScreen from "./EditBookDetailsScreen";
 import { User } from "../interfaces/user.interface";
-import { BookDetails, Quote } from "../interfaces/book.interface";
+import { BookDetails } from "../interfaces/book.interface";
+import UserDetailsScreen from "./UserDetailsScreen";
 
 export type StackParamList = {
 	Books: undefined;
+	Camera: {
+		isEdit: boolean;
+	};
 	"Book details": { id: string };
 	"Add/Edit Quote": {
 		bookId: string;
@@ -20,12 +24,12 @@ export type StackParamList = {
 		categories: string[];
 		isEdit: boolean;
 	};
-	Camera: {
-		isEdit: boolean;
-	};
 	"Edit book details": {
 		id: string;
 		initialBookValues: BookDetails;
+	};
+	"User details": {
+		user: User;
 	};
 };
 
@@ -76,6 +80,11 @@ const HomeScreen: React.FC<Props> = ({ user, loading }) => {
 					<Stack.Screen
 						name="Edit book details"
 						component={EditBookDetailsScreen}
+						options={stackScreenOptions}
+					/>
+					<Stack.Screen
+						name="User details"
+						component={UserDetailsScreen}
 						options={stackScreenOptions}
 					/>
 				</Stack.Navigator>
