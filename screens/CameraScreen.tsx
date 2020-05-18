@@ -27,7 +27,9 @@ const CameraScreen: React.FC<Props> = ({ navigation, route }) => {
 			setHasMediaPermission(mediaPermissions.status === "granted");
 		})();
 
-		return setCameraRef(null);
+		return () => {
+			setCameraRef(null);
+		};
 	}, []);
 
 	const takePicture = async () => {

@@ -9,7 +9,7 @@ export interface BookDetails {
 	name: string;
 	author: string;
 	cover: string;
-	status: Status | string;
+	status: Status;
 }
 
 export enum Status {
