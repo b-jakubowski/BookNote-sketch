@@ -1,6 +1,8 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 import { Button, Icon } from "native-base";
+import { StyleSheet } from "react-native";
+import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 import TabBarIcon from "../components/TabBarIcon";
 import BooksScreen from "../screens/BooksScreen";
@@ -9,8 +11,6 @@ import AddBookScreen from "../screens/AddBookScreen";
 import DailyQuoteScreen from "../screens/DailyQuoteScreen";
 import Colors from "../constants/Colors";
 import ReadingListScreen from "../screens/ReadingListScreen";
-import { StyleSheet } from "react-native";
-import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 export type BottomStackParamList = {
 	"Add Book": { uri: string };
@@ -22,12 +22,14 @@ export type BottomStackParamList = {
 
 interface Props {
 	navigation: StackNavigationHelpers;
+	route: any;
 }
 
 const BottomTab = createBottomTabNavigator<BottomStackParamList>();
 
-const BottomTabNavigator: React.FC<Props> = ({ navigation }) => {
+const BottomTabNavigator: React.FC<Props> = ({ navigation, route }) => {
 	navigation.setOptions({
+		headerTitle: route.state?.routes[route.state.index]?.name,
 		headerRight: () => (
 			<Button
 				transparent
