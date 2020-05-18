@@ -8,7 +8,7 @@ export default function (containerRef) {
 			Root: {
 				path: "root",
 				screens: {
-					Books: "books",
+					Books: "Books",
 				},
 			},
 		},
