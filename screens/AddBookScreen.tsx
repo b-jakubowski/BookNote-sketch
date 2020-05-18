@@ -9,9 +9,10 @@ import {
 	View,
 	Icon,
 } from "native-base";
-import { useNavigation, RouteProp } from "@react-navigation/native";
+import { RouteProp } from "@react-navigation/native";
 import { connect } from "react-redux";
 import * as yup from "yup";
+import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 import { addBook } from "../store/actions/book";
 import QuoteForm from "../components/QuoteForm";
@@ -28,9 +29,10 @@ interface Props {
 	user: User;
 	addBook: (book: Book) => void;
 	route: RouteProp<BottomStackParamList, "Add Book">;
+	navigation: StackNavigationHelpers;
 }
 
-interface BookForm extends BookDetails {
+export interface BookForm extends BookDetails {
 	quote: string;
 	categories: string[];
 }
@@ -50,8 +52,12 @@ const bookSchema = yup.object({
 	quote: yup.string().required().min(5),
 });
 
-const AddBookScreen: React.FC<Props> = ({ user, addBook, route }) => {
-	const navigation = useNavigation();
+const AddBookScreen: React.FC<Props> = ({
+	user,
+	addBook,
+	route,
+	navigation,
+}) => {
 	const [form, setForm] = useState(initialForm);
 	const [loading, setLoading] = useState(false);
 
@@ -125,12 +131,12 @@ const AddBookScreen: React.FC<Props> = ({ user, addBook, route }) => {
 	};
 
 	return (
-		<Container>
-			<Content style={styles.content}>
-				{loading ? (
-					<ActivityIndicator size="large" />
-				) : (
-					<Form>
+		<>
+			{loading ? (
+				<ActivityIndicator size="large" />
+			) : (
+				<Container>
+					<View>
 						<BookDetailsFields
 							name={form.name}
 							author={form.author}
@@ -140,36 +146,40 @@ const AddBookScreen: React.FC<Props> = ({ user, addBook, route }) => {
 							setForm={setForm}
 							form={form}
 						/>
-						<QuoteForm
-							categoriesCheck={form.categories}
-							onPress={(val) => toggleCategory(val)}
-							quote={form.quote}
-							onChangeText={(value) => setForm({ ...form, quote: value })}
-						/>
-						<View style={styles.buttonsContainer}>
-							<Button
-								success
-								block
-								iconLeft
-								style={styles.addButton}
-								onPress={() => handleSubmit(form)}
-							>
-								<Icon type="AntDesign" name="pluscircle" />
-								<Text>Add Book</Text>
-							</Button>
-							<Button
-								block
-								light
-								style={styles.clearButton}
-								onPress={() => setForm(initialForm)}
-							>
-								<Text>Clear Form</Text>
-							</Button>
-						</View>
-					</Form>
-				)}
-			</Content>
-		</Container>
+					</View>
+					<Content style={styles.content}>
+						<Form>
+							<QuoteForm
+								categoriesCheck={form.categories}
+								onPress={(val) => toggleCategory(val)}
+								quote={form.quote}
+								onChangeText={(value) => setForm({ ...form, quote: value })}
+							/>
+							<View style={styles.buttonsContainer}>
+								<Button
+									success
+									block
+									iconLeft
+									style={styles.addButton}
+									onPress={() => handleSubmit(form)}
+								>
+									<Icon type="AntDesign" name="pluscircle" />
+									<Text>Add Book</Text>
+								</Button>
+								<Button
+									block
+									light
+									style={styles.clearButton}
+									onPress={() => setForm(initialForm)}
+								>
+									<Text>Clear Form</Text>
+								</Button>
+							</View>
+						</Form>
+					</Content>
+				</Container>
+			)}
+		</>
 	);
 };
 
