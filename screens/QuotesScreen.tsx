@@ -27,7 +27,7 @@ type Props = {
 
 interface QuoteListItem extends Quote {
 	bookAuthor: string;
-	bookName: string;
+	bookTitle: string;
 }
 
 const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
@@ -40,7 +40,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 			quotes.push({
 				bookId: book.id,
 				bookAuthor: book.author,
-				bookName: book.name,
+				bookTitle: book.title,
 				...quote,
 			});
 		});
@@ -77,6 +77,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 					</Button>
 				</Item>
 			)}
+
 			<List>
 				<SwipeListView
 					rightOpenValue={-75}
@@ -90,7 +91,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 							<QuoteItem
 								quote={item}
 								author={item.bookAuthor}
-								title={item.bookName}
+								title={item.bookTitle}
 							/>
 						</ListItem>
 					)}
@@ -114,6 +115,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 					)}
 				/>
 			</List>
+
 			{!searchVisible && (
 				<Fab
 					position="bottomRight"
@@ -134,7 +136,7 @@ const styles = StyleSheet.create({
 	},
 	fabButton: {
 		zIndex: 1000,
-		backgroundColor: Colors.greyTransparent,
+		backgroundColor: Colors.tintColor,
 	},
 	hiddenButton: {
 		alignItems: "center",

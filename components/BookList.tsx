@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, ActivityIndicator } from "react-native";
 import { connect } from "react-redux";
+import { Text, Fab, Icon, Item, Button, Input, Content } from "native-base";
+
 import BookListItem from "./BookListItem";
 import { firestore } from "../constants/Firebase";
 import { addBook } from "../store/actions/book";
-import { Text, Fab, Icon, Item, Button, Input } from "native-base";
 import Colors from "../constants/Colors";
 import { Book } from "../interfaces/book.interface";
 import { Store } from "../store/store";
+import { useNavigation } from "@react-navigation/native";
 
 interface Props {
 	uid: string;
@@ -15,10 +17,12 @@ interface Props {
 	addBook: (book: Book) => void;
 }
 
-const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
+const BookList: React.FC<Props> = ({ uid, books, addBook, ...props }) => {
 	const [loading, setLoading] = useState(false);
 	const [searchVisible, setSearchVisible] = useState(false);
 	const [searchVal, setSearchVal] = useState("");
+	const [fabActive, setFabActive] = useState(false);
+	const navigation = useNavigation();
 
 	useEffect(() => {
 		setLoading(true);
@@ -40,10 +44,20 @@ const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
 
 	const filteredBooks = (): Book[] =>
 		books.filter((book) =>
-			book.name.toLowerCase().includes(searchVal.toLowerCase())
+			book.title.toLowerCase().includes(searchVal.toLowerCase())
 		);
 
 	const booksSource = searchVal ? filteredBooks() : books;
+
+	const handleAddButtonPress = () => {
+		setFabActive(false);
+		navigation.navigate("Add book");
+	};
+
+	const handleSearchButtonPress = () => {
+		setFabActive(false);
+		setSearchVisible(true);
+	};
 
 	return (
 		<>
@@ -71,7 +85,8 @@ const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
 					</Button>
 				</Item>
 			)}
-			<ScrollView contentContainerStyle={styles.contentContainer}>
+
+			<Content contentContainerStyle={styles.contentContainer}>
 				{loading ? (
 					<ActivityIndicator size="large" />
 				) : books.length ? (
@@ -79,18 +94,33 @@ const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
 				) : (
 					<Text>No books found</Text>
 				)}
-			</ScrollView>
-			{!searchVisible && (
-				<Fab
-					position="bottomRight"
-					style={styles.fabButton}
-					onPress={() => {
-						setSearchVisible(true);
-					}}
-				>
-					<Icon type="FontAwesome" name="search" />
-				</Fab>
-			)}
+			</Content>
+
+			<Fab
+				active={fabActive}
+				direction="up"
+				style={styles.fabButton}
+				position="bottomRight"
+				onPress={() => setFabActive((val) => !val)}
+			>
+				<Icon type="Feather" name="more-horizontal" />
+				{fabActive && (
+					<Button
+						style={styles.searchFabButton}
+						onPress={() => handleSearchButtonPress()}
+					>
+						<Icon type="AntDesign" name="search1" />
+					</Button>
+				)}
+				{fabActive && (
+					<Button
+						style={styles.addBookFabButton}
+						onPress={() => handleAddButtonPress()}
+					>
+						<Icon type="Feather" name="plus" />
+					</Button>
+				)}
+			</Fab>
 		</>
 	);
 };
@@ -102,12 +132,18 @@ const styles = StyleSheet.create({
 	},
 	fabButton: {
 		zIndex: 1000,
-		backgroundColor: Colors.greyTransparent,
+		backgroundColor: Colors.blackChocolate,
 	},
 	searchBar: {
 		marginRight: 30,
 		marginLeft: 30,
 		marginBottom: 5,
+	},
+	searchFabButton: {
+		backgroundColor: Colors.tintColor,
+	},
+	addBookFabButton: {
+		backgroundColor: Colors.success,
 	},
 });
 

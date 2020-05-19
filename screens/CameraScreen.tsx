@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Camera } from "expo-camera";
 import { View, StyleSheet } from "react-native";
-import { Text, Icon, Button, Toast } from "native-base";
+import { Text, Icon, Button } from "native-base";
 import * as MediaLibrary from "expo-media-library";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 import { StackParamList } from "./HomeScreen";
+import { showWarnToast } from "../helpers/Toast";
 
 interface Props {
 	navigation: StackNavigationHelpers;
@@ -40,16 +41,11 @@ const CameraScreen: React.FC<Props> = ({ navigation, route }) => {
 				const { uri } = await (cameraRef as Camera).takePictureAsync();
 				asset = await MediaLibrary.createAssetAsync(uri);
 			} catch (e) {
-				Toast.show({
-					text: e.errors,
-					buttonText: "Okay",
-					type: "warning",
-					duration: 10000000,
-				});
+				showWarnToast(e);
 			} finally {
 				route.params.isEdit || !asset
 					? navigation.goBack()
-					: navigation.navigate("Add Book", { uri: asset.uri });
+					: navigation.navigate("Add book", { uri: asset.uri });
 			}
 		}
 	};

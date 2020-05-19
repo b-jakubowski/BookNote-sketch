@@ -1,20 +1,31 @@
 import React from "react";
-import PropTypes from "prop-types";
-import {StyleSheet, View, Image} from "react-native";
-import {Text, CardItem, Card} from "native-base";
-import {useNavigation} from "@react-navigation/native";
+import { StyleSheet, View, Image } from "react-native";
+import { Text, CardItem, Card } from "native-base";
+import { useNavigation } from "@react-navigation/native";
 
 import Colors from "../constants/Colors";
+import { Quote, Book } from "../interfaces/book.interface";
 
-export default function BookListItem({id, cover, name, author, quotes}) {
+interface Props extends Book {
+	id: string | number;
+	quotes: Quote[];
+}
+
+const BookListItem: React.FC<Props> = ({
+	id,
+	cover,
+	title,
+	author,
+	quotes,
+}) => {
 	const navigation = useNavigation();
 
 	const navigateToBookDetails = () => {
-		navigation.navigate("Book details", {id});
+		navigation.navigate("Book details", { id });
 	};
 
 	const bookCover = cover.length
-		? {uri: cover}
+		? { uri: cover }
 		: require("../assets/images/book-cover-placeholder.jpg");
 
 	return (
@@ -22,7 +33,7 @@ export default function BookListItem({id, cover, name, author, quotes}) {
 			<CardItem button onPress={() => navigateToBookDetails()}>
 				<Image source={bookCover} style={styles.cardImg} />
 				<View style={styles.bookDetails}>
-					<Text style={styles.bookTitle}>{name}</Text>
+					<Text style={styles.bookTitle}>{title}</Text>
 					<Text note style={styles.bookAuthor}>
 						{author}
 					</Text>
@@ -33,7 +44,7 @@ export default function BookListItem({id, cover, name, author, quotes}) {
 			</CardItem>
 		</Card>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	bookAuthor: {
@@ -60,20 +71,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-BookListItem.propTypes = {
-	navigation: PropTypes.shape({
-		navigate: PropTypes.func,
-	}),
-	id: PropTypes.string,
-	cover: PropTypes.string,
-	name: PropTypes.string,
-	author: PropTypes.string,
-	status: PropTypes.string,
-	quotes: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.string,
-			categories: PropTypes.arrayOf(PropTypes.string),
-			quote: PropTypes.string,
-		})
-	),
-};
+export default BookListItem;

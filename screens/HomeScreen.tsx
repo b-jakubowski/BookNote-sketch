@@ -10,6 +10,7 @@ import EditBookDetailsScreen from "./EditBookDetailsScreen";
 import { User } from "../interfaces/user.interface";
 import { BookDetails } from "../interfaces/book.interface";
 import UserDetailsScreen from "./UserDetailsScreen";
+import AddBookScreen from "./AddBookScreen";
 
 export type StackParamList = {
 	Books: undefined;
@@ -31,6 +32,7 @@ export type StackParamList = {
 	"User details": {
 		user: User;
 	};
+	"Add book": undefined;
 };
 
 interface Props {
@@ -85,6 +87,11 @@ const HomeScreen: React.FC<Props> = ({ user, loading }) => {
 					<Stack.Screen
 						name="User details"
 						component={UserDetailsScreen}
+						options={stackScreenOptions}
+					/>
+					<Stack.Screen
+						name="Add book"
+						component={AddBookScreen}
 						options={stackScreenOptions}
 					/>
 				</Stack.Navigator>

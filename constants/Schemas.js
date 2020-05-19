@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
 export const bookDetailsSchema = {
-	name: yup.string().required().min(2),
+	title: yup.string().required().min(2),
 	author: yup.string().required().min(2),
 };
 

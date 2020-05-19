@@ -1,5 +1,12 @@
 import React from "react";
-import { Container, Text, Content, Button, View } from "native-base";
+import {
+	Container,
+	Text,
+	Content,
+	Button,
+	View,
+	ActionSheet,
+} from "native-base";
 import { connect } from "react-redux";
 import { StyleSheet } from "react-native";
 
@@ -30,6 +37,22 @@ const UserDetailsScreen: React.FC<Props> = ({
 			.catch((e) => showWarnToast(e));
 	};
 
+	const confirmLogout = () => {
+		ActionSheet.show(
+			{
+				options: ["Yes", "No"],
+				cancelButtonIndex: 1,
+				destructiveButtonIndex: 0,
+				title: "Do You want to log out ?",
+			},
+			(buttonIndex) => {
+				if (buttonIndex === 0) {
+					logOut();
+				}
+			}
+		);
+	};
+
 	return (
 		<Container>
 			<Content contentContainerStyle={styles.content}>
@@ -40,7 +63,7 @@ const UserDetailsScreen: React.FC<Props> = ({
 						warning
 						block
 						style={styles.logOutButton}
-						onPress={() => logOut()}
+						onPress={() => confirmLogout()}
 					>
 						<Text>Log out</Text>
 					</Button>

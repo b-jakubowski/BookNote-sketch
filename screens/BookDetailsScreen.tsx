@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Image } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
-import PropTypes from "prop-types";
 import {
 	Container,
 	Text,
@@ -31,7 +30,7 @@ interface Props {
 
 const BookDetailsScreen: React.FC<Props> = ({ route, books, navigation }) => {
 	const { id } = route.params;
-	const { cover, name, author, quotes, status } =
+	const { cover, title, author, quotes, status } =
 		books.filter((book) => book.id === id)[0] || {};
 
 	const navigateToAddQuote = () => {
@@ -44,13 +43,13 @@ const BookDetailsScreen: React.FC<Props> = ({ route, books, navigation }) => {
 
 	return (
 		<>
-			{name && (
+			{title && (
 				<Container>
 					<Card>
 						<CardItem header bordered>
 							<Image source={bookCover} style={styles.cardImg} />
 							<View style={styles.bookDescription}>
-								<Text style={styles.bookTitle}>{name}</Text>
+								<Text style={styles.bookTitle}>{title}</Text>
 								<Text note>{author}</Text>
 								<Text note>Status: {status}</Text>
 							</View>
@@ -63,7 +62,7 @@ const BookDetailsScreen: React.FC<Props> = ({ route, books, navigation }) => {
 									onPress={() =>
 										navigation.navigate("Edit book details", {
 											id,
-											initialBookValues: { name, author, cover, status },
+											initialBookValues: { title, author, cover, status },
 										})
 									}
 								>
@@ -104,12 +103,11 @@ const BookDetailsScreen: React.FC<Props> = ({ route, books, navigation }) => {
 						)}
 					/>
 					<Fab
-						button
 						position="bottomRight"
 						style={styles.fabButton}
 						onPress={() => navigateToAddQuote()}
 					>
-						<Icon name="add" />
+						<Icon type="Feather" name="plus" />
 					</Fab>
 				</Container>
 			)}

@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-	Container,
-	Content,
-	Text,
-	ActionSheet,
-	Toast,
-	Form,
-	Button,
-	Icon,
-} from "native-base";
+import { Text, ActionSheet, Button, Icon, Container } from "native-base";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import * as yup from "yup";
@@ -21,6 +12,7 @@ import { bookDetailsSchema } from "../constants/Schemas";
 import BookDetailsFields from "../components/BookDetailsFields";
 import { BookDetails } from "../interfaces/book.interface";
 import { StackParamList } from "./HomeScreen";
+import { showWarnToast } from "../helpers/Toast";
 
 interface Props {
 	deleteBook: (bookId: string) => void;
@@ -48,14 +40,7 @@ const EditBookDetailsScreen: React.FC<Props> = ({
 			.then(() => {
 				deleteBook(id);
 			})
-			.catch((e) => {
-				Toast.show({
-					text: e.errors,
-					buttonText: "Okay",
-					type: "warning",
-					duration: 10000000,
-				});
-			})
+			.catch((e) => showWarnToast(e.errors))
 			.finally(() => {
 				setLoading(false);
 				navigation.navigate("Books");
@@ -69,25 +54,18 @@ const EditBookDetailsScreen: React.FC<Props> = ({
 			.object({ ...bookDetailsSchema })
 			.validate(form, { abortEarly: false })
 			.then(() => submitBookDetails())
-			.catch((e) => {
-				Toast.show({
-					text: e.errors.join(",\r\n"),
-					buttonText: "Okay",
-					type: "warning",
-					duration: 10000000,
-				});
-			});
+			.catch((e) => showWarnToast(e.errors.join(",\r\n")));
 	};
 
 	const submitBookDetails = () => {
 		bookRef
 			.update({
-				name: form.name,
+				title: form.title,
 				author: form.author,
 				cover: form.cover,
 				status: form.status,
 			})
-			.catch()
+			.catch((e) => showWarnToast(e))
 			.finally(() => {
 				setLoading(false);
 				updateBookDetails(id, form);
@@ -112,50 +90,48 @@ const EditBookDetailsScreen: React.FC<Props> = ({
 	};
 
 	return (
-		<Container>
-			<Content style={styles.content}>
-				{loading ? (
-					<View style={styles.activityIndicatorContainer}>
-						<ActivityIndicator size="large" />
+		<Container style={styles.content}>
+			{loading ? (
+				<View style={styles.activityIndicatorContainer}>
+					<ActivityIndicator size="large" />
+				</View>
+			) : (
+				<>
+					<View>
+						<BookDetailsFields
+							title={form.title}
+							author={form.author}
+							cover={form.cover}
+							status={form.status}
+							isEdit={true}
+							setForm={setForm}
+							form={form}
+						/>
 					</View>
-				) : (
-					<>
-						<Form>
-							<BookDetailsFields
-								name={form.name}
-								author={form.author}
-								cover={form.cover}
-								status={form.status}
-								isEdit={true}
-								setForm={setForm}
-								form={form}
-							/>
-						</Form>
-						<View style={styles.buttonsContainer}>
-							<Button
-								block
-								success
-								iconLeft
-								style={styles.changeButton}
-								onPress={() => handleSubmit()}
-							>
-								<Icon type="Entypo" name="edit" />
-								<Text>Change book details</Text>
-							</Button>
-							<Button
-								block
-								danger
-								iconLeft
-								style={styles.deleteButton}
-								onPress={() => confirmDelete()}
-							>
-								<Icon type="Ionicons" name="md-trash" />
-								<Text>Delete book</Text>
-							</Button>
-						</View>
-					</>
-				)}
-			</Content>
+					<View style={styles.buttonsContainer}>
+						<Button
+							block
+							success
+							iconLeft
+							style={styles.changeButton}
+							onPress={() => handleSubmit()}
+						>
+							<Icon type="Entypo" name="edit" />
+							<Text>Change book details</Text>
+						</Button>
+						<Button
+							block
+							danger
+							iconLeft
+							style={styles.deleteButton}
+							onPress={() => confirmDelete()}
+						>
+							<Icon type="Ionicons" name="md-trash" />
+							<Text>Delete book</Text>
+						</Button>
+					</View>
+				</>
+			)}
 		</Container>
 	);
 };
