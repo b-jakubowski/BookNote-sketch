@@ -113,7 +113,8 @@ const AuthScreen: React.FC<Props> = ({
 					</Button>
 				</SafeAreaView>
 			)}
-			<Content contentContainerStyle={styles.content}>
+
+			<Content contentContainerStyle={styles.content} padder>
 				{loading ? (
 					<ActivityIndicator size="large" />
 				) : (

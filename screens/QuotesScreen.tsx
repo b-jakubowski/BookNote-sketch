@@ -77,6 +77,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 					</Button>
 				</Item>
 			)}
+
 			<List>
 				<SwipeListView
 					rightOpenValue={-75}
@@ -114,6 +115,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 					)}
 				/>
 			</List>
+
 			{!searchVisible && (
 				<Fab
 					position="bottomRight"
@@ -134,7 +136,7 @@ const styles = StyleSheet.create({
 	},
 	fabButton: {
 		zIndex: 1000,
-		backgroundColor: Colors.greyTransparent,
+		backgroundColor: Colors.tintColor,
 	},
 	hiddenButton: {
 		alignItems: "center",

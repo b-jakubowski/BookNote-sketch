@@ -7,13 +7,11 @@ import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/s
 import TabBarIcon from "../components/TabBarIcon";
 import BooksScreen from "../screens/BooksScreen";
 import QuotesScreen from "../screens/QuotesScreen";
-import AddBookScreen from "../screens/AddBookScreen";
 import DailyQuoteScreen from "../screens/DailyQuoteScreen";
 import Colors from "../constants/Colors";
 import ReadingListScreen from "../screens/ReadingListScreen";
 
 export type BottomStackParamList = {
-	"Add Book": { uri: string };
 	"Daily Quote": undefined;
 	"Reading list": undefined;
 	Quotes: undefined;
@@ -88,15 +86,6 @@ const BottomTabNavigator: React.FC<Props> = ({ navigation, route }) => {
 							type="FontAwesome"
 							name="quote-right"
 						/>
-					),
-				}}
-			/>
-			<BottomTab.Screen
-				name="Add Book"
-				component={AddBookScreen}
-				options={{
-					tabBarIcon: ({ focused }) => (
-						<TabBarIcon type="AntDesign" focused={focused} name="pluscircle" />
 					),
 				}}
 			/>

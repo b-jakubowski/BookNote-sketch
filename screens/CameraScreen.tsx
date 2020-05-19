@@ -45,7 +45,7 @@ const CameraScreen: React.FC<Props> = ({ navigation, route }) => {
 			} finally {
 				route.params.isEdit || !asset
 					? navigation.goBack()
-					: navigation.navigate("Add Book", { uri: asset.uri });
+					: navigation.navigate("Add book", { uri: asset.uri });
 			}
 		}
 	};

@@ -147,6 +147,7 @@ const AddBookScreen: React.FC<Props> = ({
 							form={form}
 						/>
 					</View>
+
 					<Content style={styles.content}>
 						<Form>
 							<QuoteForm

@@ -107,7 +107,7 @@ const BookDetailsScreen: React.FC<Props> = ({ route, books, navigation }) => {
 						style={styles.fabButton}
 						onPress={() => navigateToAddQuote()}
 					>
-						<Icon name="add" />
+						<Icon type="Feather" name="plus" />
 					</Fab>
 				</Container>
 			)}
