@@ -43,7 +43,7 @@ const UserDetailsScreen: React.FC<Props> = ({
 				options: ["Yes", "No"],
 				cancelButtonIndex: 1,
 				destructiveButtonIndex: 0,
-				title: "Are you sure to delete this quote ?",
+				title: "Do You want to log out ?",
 			},
 			(buttonIndex) => {
 				if (buttonIndex === 0) {
