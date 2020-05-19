@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, ActionSheet, Form, Button, Icon, Container } from "native-base";
+import { Text, ActionSheet, Button, Icon, Container } from "native-base";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import * as yup from "yup";
@@ -60,12 +60,12 @@ const EditBookDetailsScreen: React.FC<Props> = ({
 	const submitBookDetails = () => {
 		bookRef
 			.update({
-				name: form.name,
+				title: form.title,
 				author: form.author,
 				cover: form.cover,
 				status: form.status,
 			})
-			.catch()
+			.catch((e) => showWarnToast(e))
 			.finally(() => {
 				setLoading(false);
 				updateBookDetails(id, form);
@@ -99,7 +99,7 @@ const EditBookDetailsScreen: React.FC<Props> = ({
 				<>
 					<View>
 						<BookDetailsFields
-							name={form.name}
+							title={form.title}
 							author={form.author}
 							cover={form.cover}
 							status={form.status}

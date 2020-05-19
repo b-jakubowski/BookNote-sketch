@@ -1,11 +1,17 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Body, Badge, Text } from "native-base";
 import { StyledText } from "./StyledText";
 import { View, StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
+import { Quote } from "../interfaces/book.interface";
 
-export default function QuoteItem({ quote, author, title }) {
+interface Props {
+	quote: Quote;
+	author?: string;
+	title?: string;
+}
+
+const QuoteItem: React.FC<Props> = ({ quote, author, title }) => {
 	return (
 		<Body>
 			<StyledText style={styles.quoteText}>"{quote.quote}"</StyledText>
@@ -23,7 +29,7 @@ export default function QuoteItem({ quote, author, title }) {
 			</View>
 		</Body>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	authorTitle: {
@@ -49,11 +55,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-QuoteItem.propTypes = {
-	quote: PropTypes.shape({
-		quote: PropTypes.string,
-		categories: PropTypes.arrayOf(PropTypes.string),
-	}),
-	author: PropTypes.string,
-	title: PropTypes.string,
-};
+export default QuoteItem;

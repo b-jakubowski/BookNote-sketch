@@ -27,7 +27,7 @@ type Props = {
 
 interface QuoteListItem extends Quote {
 	bookAuthor: string;
-	bookName: string;
+	bookTitle: string;
 }
 
 const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
@@ -40,7 +40,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 			quotes.push({
 				bookId: book.id,
 				bookAuthor: book.author,
-				bookName: book.name,
+				bookTitle: book.title,
 				...quote,
 			});
 		});
@@ -90,7 +90,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 							<QuoteItem
 								quote={item}
 								author={item.bookAuthor}
-								title={item.bookName}
+								title={item.bookTitle}
 							/>
 						</ListItem>
 					)}

@@ -41,7 +41,7 @@ const bookReducer = (state: Book[] = [], action: BookActionTypes): Book[] => {
 				...state.filter((book: Book) => book.id !== action.bookId),
 				{
 					...state.filter((book: Book) => book.id === action.bookId)[0],
-					name: action.payload.name,
+					title: action.payload.title,
 					author: action.payload.author,
 					cover: action.payload.cover,
 					status: action.payload.status,

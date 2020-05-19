@@ -30,7 +30,7 @@ interface Props extends BookDetails {
 
 const BookDetailsFields: React.FC<Props> = ({
 	books,
-	name,
+	title,
 	author,
 	cover,
 	status,
@@ -89,13 +89,13 @@ const BookDetailsFields: React.FC<Props> = ({
 		);
 	};
 
-	const filteredBookField = (field: "name" | "author") =>
+	const filteredBookField = (field: "title" | "author") =>
 		books.filter((book) =>
 			book[field].toLowerCase().includes(form[field].toLowerCase())
 		);
 
 	const handleBookTitleChange = (value: string) => {
-		setForm({ ...form, name: value });
+		setForm({ ...form, title: value });
 		if (showTitleResults) {
 			setShowTitleResults(false);
 		}
@@ -110,7 +110,7 @@ const BookDetailsFields: React.FC<Props> = ({
 
 	const handleAutocompleteItemPress = (value: string, key: string) => {
 		setForm({ ...form, [key]: value });
-		key === "name" ? setShowTitleResults(true) : setShowAuthorResults(true);
+		key === "title" ? setShowTitleResults(true) : setShowAuthorResults(true);
 	};
 
 	return (
@@ -126,16 +126,16 @@ const BookDetailsFields: React.FC<Props> = ({
 					listStyle={styles.autocompleteList}
 					hideResults={showTitleResults}
 					placeholder="Book title"
-					defaultValue={name}
-					data={form.name ? filteredBookField("name") : []}
-					keyExtractor={(item, index) => `${item.name}-${index}`}
+					defaultValue={title}
+					data={form.title ? filteredBookField("title") : []}
+					keyExtractor={(item, index) => `${item.title}-${index}`}
 					onChangeText={(value) => handleBookTitleChange(value)}
 					renderItem={({ item }) => (
 						<TouchableOpacity
 							style={styles.autocompleteListItem}
-							onPress={() => handleAutocompleteItemPress(item.name, "name")}
+							onPress={() => handleAutocompleteItemPress(item.title, "title")}
 						>
-							<Text style={styles.itemText}>{item.name}</Text>
+							<Text style={styles.itemText}>{item.title}</Text>
 						</TouchableOpacity>
 					)}
 				/>

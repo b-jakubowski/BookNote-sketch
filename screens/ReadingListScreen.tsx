@@ -27,7 +27,7 @@ const ReadingListScreen: React.FC<Props> = ({ books }) => {
 					return (
 						<ListItem key={book.id}>
 							<Body>
-								<Text>{book.name}</Text>
+								<Text>{book.title}</Text>
 								<Text note>{book.author}</Text>
 							</Body>
 						</ListItem>

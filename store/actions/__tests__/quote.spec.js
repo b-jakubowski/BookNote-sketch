@@ -12,7 +12,7 @@ import { status } from "../../../assets/mocks/books";
 
 const mockBook = {
 	id: "1",
-	name: "The Great Gatsby",
+	title: "The Great Gatsby",
 	author: "F. Scott Fitzgerald",
 	cover:
 		"https://upload.wikimedia.org/wikipedia/commons/a/a0/The_Great_Gatsby_cover_1925_%281%29.jpg",
@@ -36,7 +36,7 @@ const mockQuote = {
 };
 
 const mockBookDetails = {
-	name: "The Great Gatsby 2: Return of the Great",
+	title: "The Great Gatsby 2: Return of the Great",
 	author: "F. Scott Fitzgerald",
 	cover: "test cover",
 	status: status.TO_READ,

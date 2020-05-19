@@ -6,16 +6,17 @@ export interface Book extends BookDetails {
 }
 
 export interface BookDetails {
-	name: string;
+	title: string;
 	author: string;
 	cover: string;
-	status: Status | string;
+	status: Status;
 }
 
 export enum Status {
 	TO_READ = "To read",
 	READING = "Reading",
 	READ = "Read",
+	NONE = "",
 }
 
 export interface Quote {

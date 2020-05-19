@@ -1,4 +1,4 @@
-import {categoriesMock} from "./categories";
+import { categoriesMock } from "./categories";
 
 export const status = {
 	TO_READ: "To read",
@@ -9,7 +9,7 @@ export const status = {
 export const booksMock = [
 	{
 		id: "1",
-		name: "The Two Towers",
+		title: "The Two Towers",
 		author: "J.R.R. Tolkien",
 		cover:
 			"https://upload.wikimedia.org/wikipedia/en/a/a1/The_Two_Towers_cover.gif",
@@ -40,7 +40,7 @@ export const booksMock = [
 	},
 	{
 		id: "2",
-		name: "The Great Gatsby",
+		title: "The Great Gatsby",
 		author: "F. Scott Fitzgerald",
 		cover:
 			"https://upload.wikimedia.org/wikipedia/commons/a/a0/The_Great_Gatsby_cover_1925_%281%29.jpg",
@@ -58,7 +58,7 @@ export const booksMock = [
 	},
 	{
 		id: "3",
-		name: "Deep Work",
+		title: "Deep Work",
 		author: "Cal Newport",
 		cover:
 			"https://images-na.ssl-images-amazon.com/images/I/41QoykqonNL._SX317_BO1,204,203,200_.jpg",
@@ -89,7 +89,7 @@ export const booksMock = [
 	},
 	{
 		id: "4",
-		name: "The Shining",
+		title: "The Shining",
 		author: "Stephen King",
 		cover: "https://upload.wikimedia.org/wikipedia/en/4/4c/Shiningnovel.jpg",
 		status: status.READ,

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, ActivityIndicator } from "react-native";
 import { connect } from "react-redux";
+import { Text, Fab, Icon, Item, Button, Input } from "native-base";
+
 import BookListItem from "./BookListItem";
 import { firestore } from "../constants/Firebase";
 import { addBook } from "../store/actions/book";
-import { Text, Fab, Icon, Item, Button, Input } from "native-base";
 import Colors from "../constants/Colors";
 import { Book } from "../interfaces/book.interface";
 import { Store } from "../store/store";
@@ -40,7 +41,7 @@ const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
 
 	const filteredBooks = (): Book[] =>
 		books.filter((book) =>
-			book.name.toLowerCase().includes(searchVal.toLowerCase())
+			book.title.toLowerCase().includes(searchVal.toLowerCase())
 		);
 
 	const booksSource = searchVal ? filteredBooks() : books;

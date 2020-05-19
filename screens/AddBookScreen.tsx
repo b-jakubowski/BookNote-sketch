@@ -20,7 +20,7 @@ import { firestore } from "../constants/Firebase";
 import BookDetailsFields from "../components/BookDetailsFields";
 import { bookDetailsSchema } from "../constants/Schemas";
 import { User } from "../interfaces/user.interface";
-import { Book, BookDetails } from "../interfaces/book.interface";
+import { Book, BookDetails, Status } from "../interfaces/book.interface";
 import { BottomStackParamList } from "../navigation/BottomTabNavigator";
 import { Store } from "../store/store";
 import { showWarnToast } from "../helpers/Toast";
@@ -38,10 +38,10 @@ export interface BookForm extends BookDetails {
 }
 
 const initialForm: BookForm = {
-	name: "",
+	title: "",
 	author: "",
 	cover: "",
-	status: "",
+	status: Status.NONE,
 	quote: "",
 	categories: [],
 };
@@ -138,7 +138,7 @@ const AddBookScreen: React.FC<Props> = ({
 				<Container>
 					<View>
 						<BookDetailsFields
-							name={form.name}
+							title={form.title}
 							author={form.author}
 							cover={form.cover}
 							status={form.status}
