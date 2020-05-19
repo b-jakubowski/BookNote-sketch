@@ -19,7 +19,6 @@ import {
 } from "react-native";
 import * as yup from "yup";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import Constants from "expo-constants";
 
 import { logInUser } from "../store/actions/auth";
@@ -73,15 +72,16 @@ const AuthScreen: React.FC<Props> = ({
 					? signInUser(email, password)
 					: createAndSignUser(email, password);
 			})
-			.catch((e) => showWarnToast(e.errors.join(",\r\n")));
+			.catch((e) => {
+				showWarnToast(e.errors.join(",\r\n"));
+				setLoadingComplete();
+			});
 	};
 
 	const signInUser = (email: string, password: string) => {
 		signIn(email, password)
 			.then(({ user }) => logInUser(user as User))
-			.catch(({ message }) => {
-				showWarnToast(message);
-			})
+			.catch(({ message }) => showWarnToast(message))
 			.finally(() => setLoadingComplete());
 	};
 
@@ -91,9 +91,7 @@ const AuthScreen: React.FC<Props> = ({
 				createUserProfileDocument(user);
 				logInUser(user as User);
 			})
-			.catch(({ message }) => {
-				showWarnToast(message);
-			})
+			.catch(({ message }) => showWarnToast(message))
 			.finally(() => setLoadingComplete());
 	};
 
@@ -120,7 +118,7 @@ const AuthScreen: React.FC<Props> = ({
 					<ActivityIndicator size="large" />
 				) : (
 					<Card>
-						<CardItem style={styles.card}>
+						<CardItem>
 							<Form style={styles.form}>
 								<View>
 									<Item style={styles.input}>
