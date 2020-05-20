@@ -10,7 +10,6 @@ import Colors from "../constants/Colors";
 import { Book } from "../interfaces/book.interface";
 import { Store } from "../store/store";
 import { useNavigation } from "@react-navigation/native";
-import ContainerBackground from "./ContainerBackground";
 
 interface Props {
 	uid: string;
@@ -18,7 +17,7 @@ interface Props {
 	addBook: (book: Book) => void;
 }
 
-const BookList: React.FC<Props> = ({ uid, books, addBook, ...props }) => {
+const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
 	const [loading, setLoading] = useState(false);
 	const [searchVisible, setSearchVisible] = useState(false);
 	const [searchVal, setSearchVal] = useState("");
@@ -61,7 +60,7 @@ const BookList: React.FC<Props> = ({ uid, books, addBook, ...props }) => {
 	};
 
 	return (
-		<ContainerBackground>
+		<>
 			{searchVisible && (
 				<Item style={styles.searchBar}>
 					<Icon type="Ionicons" name="ios-search" />
@@ -121,7 +120,7 @@ const BookList: React.FC<Props> = ({ uid, books, addBook, ...props }) => {
 					</Button>
 				)}
 			</Fab>
-		</ContainerBackground>
+		</>
 	);
 };
 

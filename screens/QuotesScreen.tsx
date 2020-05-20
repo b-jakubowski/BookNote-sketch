@@ -19,6 +19,7 @@ import QuoteItem from "../components/QuoteItem";
 import { Book, Quote } from "../interfaces/book.interface";
 import { StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
+import ContainerBackground from "../components/ContainerBackground";
 
 type Props = {
 	books: Book[];
@@ -52,7 +53,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 		);
 
 	return (
-		<Container>
+		<ContainerBackground>
 			{searchVisible && (
 				<Item style={styles.searchBar}>
 					<Icon type="Ionicons" name="ios-search" />
@@ -78,7 +79,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 				</Item>
 			)}
 
-			<List>
+			<List style={{ flex: 1, margin: 10 }}>
 				<SwipeListView
 					rightOpenValue={-75}
 					disableRightSwipe={true}
@@ -87,7 +88,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 					keyExtractor={(quote, index) => `${quote.id}-${index}`}
 					data={searchVal ? filteredQuotes() : quotes}
 					renderItem={({ item }) => (
-						<ListItem style={styles.rowFront}>
+						<ListItem style={styles.rowFront} noIndent itemDivider>
 							<QuoteItem
 								quote={item}
 								author={item.bookAuthor}
@@ -125,7 +126,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 					<Icon type="FontAwesome" name="search" />
 				</Fab>
 			)}
-		</Container>
+		</ContainerBackground>
 	);
 };
 
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.lightOrange,
 		flex: 1,
 		justifyContent: "center",
-		paddingLeft: 25,
+		paddingLeft: 15,
 		width: 100,
 	},
 	rowBack: {
@@ -151,10 +152,14 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: "row",
 		justifyContent: "flex-end",
+		backgroundColor: "white",
+		marginBottom: 10,
 	},
 	rowFront: {
+		flex: 1,
 		backgroundColor: "white",
 		justifyContent: "center",
+		marginBottom: 10,
 	},
 	searchBar: {
 		marginRight: 30,
