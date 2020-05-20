@@ -1,11 +1,11 @@
 import React from "react";
-import { Container } from "native-base";
 import BookList from "../components/BookList";
+import ContainerBackground from "../components/ContainerBackground";
 
 const BooksScreen: React.FC = () => (
-	<Container>
+	<ContainerBackground>
 		<BookList />
-	</Container>
+	</ContainerBackground>
 );
 
 export default BooksScreen;
