@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, StyleSheet, ActivityIndicator } from "react-native";
+import { StyleSheet, ActivityIndicator } from "react-native";
 import { connect } from "react-redux";
 import { Text, Fab, Icon, Item, Button, Input, Content } from "native-base";
 
@@ -10,6 +10,7 @@ import Colors from "../constants/Colors";
 import { Book } from "../interfaces/book.interface";
 import { Store } from "../store/store";
 import { useNavigation } from "@react-navigation/native";
+import ContainerBackground from "./ContainerBackground";
 
 interface Props {
 	uid: string;
@@ -60,7 +61,7 @@ const BookList: React.FC<Props> = ({ uid, books, addBook, ...props }) => {
 	};
 
 	return (
-		<>
+		<ContainerBackground>
 			{searchVisible && (
 				<Item style={styles.searchBar}>
 					<Icon type="Ionicons" name="ios-search" />
@@ -85,8 +86,7 @@ const BookList: React.FC<Props> = ({ uid, books, addBook, ...props }) => {
 					</Button>
 				</Item>
 			)}
-
-			<Content contentContainerStyle={styles.contentContainer}>
+			<Content>
 				{loading ? (
 					<ActivityIndicator size="large" />
 				) : books.length ? (
@@ -121,15 +121,11 @@ const BookList: React.FC<Props> = ({ uid, books, addBook, ...props }) => {
 					</Button>
 				)}
 			</Fab>
-		</>
+		</ContainerBackground>
 	);
 };
 
 const styles = StyleSheet.create({
-	contentContainer: {
-		alignItems: "center",
-		paddingVertical: 15,
-	},
 	fabButton: {
 		zIndex: 1000,
 		backgroundColor: Colors.blackChocolate,

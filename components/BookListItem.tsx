@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Image } from "react-native";
-import { Text, CardItem, Card } from "native-base";
+import { Text, CardItem, Card, ListItem, Body } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 
 import Colors from "../constants/Colors";
@@ -29,7 +29,7 @@ const BookListItem: React.FC<Props> = ({
 		: require("../assets/images/book-cover-placeholder.jpg");
 
 	return (
-		<Card style={styles.card}>
+		<ListItem noIndent itemDivider style={styles.listItem}>
 			<CardItem button onPress={() => navigateToBookDetails()}>
 				<Image source={bookCover} style={styles.cardImg} />
 				<View style={styles.bookDetails}>
@@ -42,7 +42,7 @@ const BookListItem: React.FC<Props> = ({
 					</Text>
 				</View>
 			</CardItem>
-		</Card>
+		</ListItem>
 	);
 };
 
@@ -60,14 +60,16 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		marginBottom: 5,
 	},
-	card: {
-		width: "85%",
-	},
 	cardImg: {
 		flex: 1,
 		height: 130,
 		marginRight: 10,
 		maxWidth: 90,
+	},
+	listItem: {
+		marginBottom: -10,
+		marginLeft: -5,
+		backgroundColor: "transparent",
 	},
 });
 
