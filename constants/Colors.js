@@ -13,6 +13,7 @@ export default {
 	noticeText: "#fff",
 	success: "#4DAD4A",
 	successTransparent: "#4dad4a99",
+	backgroundGrey: "#f7f7f7",
 	lightGrey: "#F1F1F1",
 	lightOrange: "#FFCB78",
 	accentOrange: "#F7B05B",
