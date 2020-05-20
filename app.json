@@ -1,8 +1,9 @@
 {
 	"expo": {
 		"name": "BookNote",
-		"slug": "BookNote",
+		"slug": "book-note",
 		"platforms": ["ios", "android", "web"],
+		"privacy": "unlisted",
 		"version": "1.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/images/icon.png",
@@ -18,6 +19,7 @@
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
 			"supportsTablet": true
-		}
+		},
+		"githubUrl": "https://github.com/b-jakubowski/BookNote"
 	}
 }
