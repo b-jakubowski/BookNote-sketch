@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, View, Image } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
 import {
-	Container,
 	Text,
 	Card,
 	CardItem,
@@ -10,6 +9,7 @@ import {
 	Fab,
 	Icon,
 	ListItem,
+	List,
 } from "native-base";
 import { connect } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -21,6 +21,7 @@ import Colors from "../constants/Colors";
 import { StackParamList } from "./HomeScreen";
 import { Book } from "../interfaces/book.interface";
 import { Store } from "../store/store";
+import ContainerBackground from "../components/ContainerBackground";
 
 interface Props {
 	navigation: StackNavigationHelpers;
@@ -42,76 +43,74 @@ const BookDetailsScreen: React.FC<Props> = ({ route, books, navigation }) => {
 		: require("../assets/images/book-cover-placeholder.jpg");
 
 	return (
-		<>
-			{title && (
-				<Container>
-					<Card>
-						<CardItem header bordered>
-							<Image source={bookCover} style={styles.cardImg} />
-							<View style={styles.bookDescription}>
-								<Text style={styles.bookTitle}>{title}</Text>
-								<Text note>{author}</Text>
-								<Text note>Status: {status}</Text>
-							</View>
-							<View style={styles.editQuoteContainer}>
-								<Button
-									light
-									block
-									transparent
-									style={styles.editBookButton}
-									onPress={() =>
-										navigation.navigate("Edit book details", {
-											id,
-											initialBookValues: { title, author, cover, status },
-										})
-									}
-								>
-									<Icon type="Entypo" name="edit" style={styles.editIcon} />
-								</Button>
-							</View>
-						</CardItem>
-					</Card>
-					<SwipeListView
-						rightOpenValue={-75}
-						disableRightSwipe={true}
-						tension={-2}
-						friction={20}
-						keyExtractor={(quote) => quote.id}
-						data={quotes}
-						renderItem={({ item }) => (
-							<ListItem style={styles.rowFront}>
-								<QuoteItem quote={item} />
-							</ListItem>
-						)}
-						renderHiddenItem={({ item }) => (
-							<View style={styles.rowBack}>
-								<TouchableOpacity
-									style={styles.hiddenButton}
-									onPress={() =>
-										navigation.navigate("Add/Edit Quote", {
-											bookId: id,
-											quoteId: item.id,
-											quote: item.quote,
-											categories: item.categories,
-											isEdit: true,
-										})
-									}
-								>
-									<Icon type="Entypo" name="edit" style={styles.editIcon} />
-								</TouchableOpacity>
-							</View>
-						)}
-					/>
-					<Fab
-						position="bottomRight"
-						style={styles.fabButton}
-						onPress={() => navigateToAddQuote()}
-					>
-						<Icon type="Feather" name="plus" />
-					</Fab>
-				</Container>
-			)}
-		</>
+		<ContainerBackground>
+			<Card transparent>
+				<CardItem header bordered>
+					<Image source={bookCover} style={styles.cardImg} />
+					<View style={styles.bookDescription}>
+						<Text style={styles.bookTitle}>{title}</Text>
+						<Text note>{author}</Text>
+						<Text note>Status: {status}</Text>
+					</View>
+					<View style={styles.editQuoteContainer}>
+						<Button
+							light
+							block
+							transparent
+							style={styles.editBookButton}
+							onPress={() =>
+								navigation.navigate("Edit book details", {
+									id,
+									initialBookValues: { title, author, cover, status },
+								})
+							}
+						>
+							<Icon type="Entypo" name="edit" style={styles.editIcon} />
+						</Button>
+					</View>
+				</CardItem>
+			</Card>
+			<List style={{ flex: 1, margin: 10 }}>
+				<SwipeListView
+					rightOpenValue={-75}
+					disableRightSwipe={true}
+					tension={-2}
+					friction={20}
+					keyExtractor={(quote) => quote.id}
+					data={quotes}
+					renderItem={({ item }) => (
+						<ListItem style={styles.rowFront} noIndent itemDivider>
+							<QuoteItem quote={item} />
+						</ListItem>
+					)}
+					renderHiddenItem={({ item }) => (
+						<View style={styles.rowBack}>
+							<TouchableOpacity
+								style={styles.hiddenButton}
+								onPress={() =>
+									navigation.navigate("Add/Edit Quote", {
+										bookId: id,
+										quoteId: item.id,
+										quote: item.quote,
+										categories: item.categories,
+										isEdit: true,
+									})
+								}
+							>
+								<Icon type="Entypo" name="edit" style={styles.editIcon} />
+							</TouchableOpacity>
+						</View>
+					)}
+				/>
+			</List>
+			<Fab
+				position="bottomRight"
+				style={styles.fabButton}
+				onPress={() => navigateToAddQuote()}
+			>
+				<Icon type="Feather" name="plus" />
+			</Fab>
+		</ContainerBackground>
 	);
 };
 
@@ -157,10 +156,12 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: "row",
 		justifyContent: "flex-end",
+		marginBottom: 10,
 	},
 	rowFront: {
 		backgroundColor: "white",
 		justifyContent: "center",
+		marginBottom: 10,
 	},
 });
 
