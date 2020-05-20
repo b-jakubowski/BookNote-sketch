@@ -32,7 +32,9 @@ export type StackParamList = {
 	"User details": {
 		user: User;
 	};
-	"Add book": undefined;
+	"Add book": {
+		uri: string;
+	};
 };
 
 interface Props {

@@ -21,14 +21,15 @@ import BookDetailsFields from "../components/BookDetailsFields";
 import { bookDetailsSchema } from "../constants/Schemas";
 import { User } from "../interfaces/user.interface";
 import { Book, BookDetails, Status } from "../interfaces/book.interface";
-import { BottomStackParamList } from "../navigation/BottomTabNavigator";
 import { Store } from "../store/store";
 import { showWarnToast } from "../helpers/Toast";
+import { StackParamList } from "./HomeScreen";
+import { uuid } from "../helpers/uuid";
 
 interface Props {
 	user: User;
 	addBook: (book: Book) => void;
-	route: RouteProp<BottomStackParamList, "Add Book">;
+	route: RouteProp<StackParamList, "Add book">;
 	navigation: StackNavigationHelpers;
 }
 
@@ -96,7 +97,7 @@ const AddBookScreen: React.FC<Props> = ({
 				userId: user.uid,
 				quotes: [
 					{
-						id: `${Math.random()}`,
+						id: uuid(),
 						categories,
 						quote,
 					},

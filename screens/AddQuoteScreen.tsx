@@ -22,6 +22,7 @@ import { StackParamList } from "./HomeScreen";
 import { Quote } from "../interfaces/book.interface";
 import { quoteSchema } from "../constants/Schemas";
 import { showWarnToast } from "../helpers/Toast";
+import { uuid } from "../helpers/uuid";
 
 interface Props {
 	route: RouteProp<StackParamList, "Add/Edit Quote">;
@@ -55,7 +56,7 @@ const AddQuoteScreen: React.FC<Props> = ({
 	const handleSubmit = ({ quote, categories }: Quote) => {
 		const newQuote: Quote = { categories, quote };
 
-		isEdit ? (newQuote.id = quoteId) : (newQuote.id = `${Math.random()}`);
+		isEdit ? (newQuote.id = quoteId) : (newQuote.id = uuid());
 
 		quoteSchema
 			.validate(form, { abortEarly: false })
@@ -64,9 +65,7 @@ const AddQuoteScreen: React.FC<Props> = ({
 					? updateQuoteInFirestore(initialEditQuote, newQuote)
 					: addQuoteToFirestore(newQuote);
 			})
-			.catch((e) => {
-				showWarnToast(e.errors.join(",\r\n"));
-			});
+			.catch((e) => showWarnToast(e.errors.join(",\r\n")));
 	};
 
 	const addQuoteToFirestore = (quote: Quote) => {
