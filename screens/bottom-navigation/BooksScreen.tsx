@@ -3,15 +3,15 @@ import { Fab, Icon, Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { connect } from "react-redux";
 
-import { addBook } from "../store/actions/book";
-import BookList from "../components/BookList";
-import ContainerBackground from "../components/ContainerBackground";
-import Search from "../components/Search";
+import { addBook } from "../../store/actions/book";
+import BookList from "../../components/BookList";
+import ContainerBackground from "../../components/ContainerBackground";
+import Search from "../../components/Search";
 import { StyleSheet } from "react-native";
-import Colors from "../constants/Colors";
-import { firestore } from "../constants/Firebase";
-import { Store } from "../store/store";
-import { Book } from "../interfaces/book.interface";
+import Colors from "../../constants/Colors";
+import { firestore } from "../../constants/Firebase";
+import { Store } from "../../store/store";
+import { Book } from "../../interfaces/book.interface";
 
 interface Props {
 	uid: string;

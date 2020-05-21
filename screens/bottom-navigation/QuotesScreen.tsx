@@ -15,12 +15,12 @@ import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/s
 import { SwipeListView } from "react-native-swipe-list-view";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-import QuoteItem from "../components/QuoteItem";
-import { Book, Quote } from "../interfaces/book.interface";
+import QuoteItem from "../../components/QuoteItem";
+import { Book, Quote } from "../../interfaces/book.interface";
 import { StyleSheet } from "react-native";
-import Colors from "../constants/Colors";
-import ContainerBackground from "../components/ContainerBackground";
-import Search from "../components/Search";
+import Colors from "../../constants/Colors";
+import ContainerBackground from "../../components/ContainerBackground";
+import Search from "../../components/Search";
 
 type Props = {
 	books: Book[];
