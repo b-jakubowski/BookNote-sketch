@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { connect } from "react-redux";
 
 import { addBook } from "../../store/actions/book";
-import BookList from "../../components/BookList";
+import BookList from "../../components/BookList/BookList";
 import ContainerBackground from "../../components/ContainerBackground";
 import Search from "../../components/Search";
 import { StyleSheet } from "react-native";

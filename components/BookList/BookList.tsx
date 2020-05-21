@@ -3,7 +3,7 @@ import { ActivityIndicator } from "react-native";
 import { Text, Content } from "native-base";
 
 import BookListItem from "./BookListItem";
-import { Book } from "../interfaces/book.interface";
+import { Book } from "../../interfaces/book.interface";
 
 interface Props {
 	books: Book[];

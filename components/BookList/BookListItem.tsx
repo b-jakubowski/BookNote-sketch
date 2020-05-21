@@ -1,10 +1,10 @@
 import React from "react";
 import { StyleSheet, View, Image } from "react-native";
-import { Text, CardItem, Card, ListItem, Body } from "native-base";
+import { Text, CardItem, ListItem } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 
-import Colors from "../constants/Colors";
-import { Quote, Book } from "../interfaces/book.interface";
+import Colors from "../../constants/Colors";
+import { Quote, Book } from "../../interfaces/book.interface";
 
 interface Props extends Book {
 	id: string | number;
@@ -26,7 +26,7 @@ const BookListItem: React.FC<Props> = ({
 
 	const bookCover = cover.length
 		? { uri: cover }
-		: require("../assets/images/book-cover-placeholder.jpg");
+		: require("../../assets/images/book-cover-placeholder.jpg");
 
 	return (
 		<ListItem noIndent itemDivider style={styles.listItem}>
