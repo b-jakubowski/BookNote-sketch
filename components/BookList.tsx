@@ -1,133 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, ActivityIndicator } from "react-native";
-import { connect } from "react-redux";
-import { Text, Fab, Icon, Button, Content } from "native-base";
+import React, { useEffect } from "react";
+import { ActivityIndicator } from "react-native";
+import { Text, Content } from "native-base";
 
 import BookListItem from "./BookListItem";
-import { firestore } from "../constants/Firebase";
-import { addBook } from "../store/actions/book";
-import Colors from "../constants/Colors";
 import { Book } from "../interfaces/book.interface";
-import { Store } from "../store/store";
-import { useNavigation } from "@react-navigation/native";
-import Search from "./Search";
 
 interface Props {
-	uid: string;
 	books: Book[];
-	addBook: (book: Book) => void;
+	loading: boolean;
 }
 
-const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
-	const [loading, setLoading] = useState(false);
-	const [searchVisible, setSearchVisible] = useState(false);
-	const [searchVal, setSearchVal] = useState("");
-	const [fabActive, setFabActive] = useState(false);
-	const navigation = useNavigation();
-
-	useEffect(() => {
-		setLoading(true);
-
-		firestore
-			.collection("books")
-			.where("userId", "==", uid)
-			.get()
-			.then((booksStore) => {
-				if (!books.length) {
-					booksStore.docs.forEach((book) =>
-						addBook({ id: book.id, ...book.data() } as Book)
-					);
-				}
-			})
-			.catch()
-			.finally(() => setLoading(false));
-	}, []);
-
-	const filteredBooks = (): Book[] =>
-		books.filter((book) =>
-			book.title.toLowerCase().includes(searchVal.toLowerCase())
-		);
-
-	const booksSource = searchVal ? filteredBooks() : books;
-
-	const handleAddButtonPress = () => {
-		setFabActive(false);
-		navigation.navigate("Add book");
-	};
-
-	const handleSearchButtonPress = () => {
-		setFabActive(false);
-		setSearchVisible(true);
-	};
-
-	const handleCloseSearch = () => {
-		setSearchVisible(false);
-		setSearchVal("");
-	};
+const BookList: React.FC<Props> = ({ books, loading }) => {
+	useEffect(() => {}, [books, loading]);
 
 	return (
-		<>
-			{searchVisible && (
-				<Search
-					onChangeText={(val: string) => setSearchVal(val)}
-					onPress={() => handleCloseSearch()}
-				/>
+		<Content>
+			{loading ? (
+				<ActivityIndicator size="large" />
+			) : books.length ? (
+				books.map((book) => <BookListItem key={book.id} {...book} />)
+			) : (
+				<Text>No books found</Text>
 			)}
-			<Content>
-				{loading ? (
-					<ActivityIndicator size="large" />
-				) : books.length ? (
-					booksSource.map((book) => <BookListItem key={book.id} {...book} />)
-				) : (
-					<Text>No books found</Text>
-				)}
-			</Content>
-
-			<Fab
-				active={fabActive}
-				direction="up"
-				style={styles.fabButton}
-				position="bottomRight"
-				onPress={() => setFabActive((val) => !val)}
-			>
-				<Icon type="Feather" name="more-horizontal" />
-				{fabActive && (
-					<Button
-						style={styles.searchFabButton}
-						onPress={() => handleSearchButtonPress()}
-					>
-						<Icon type="AntDesign" name="search1" />
-					</Button>
-				)}
-				{fabActive && (
-					<Button
-						style={styles.addBookFabButton}
-						onPress={() => handleAddButtonPress()}
-					>
-						<Icon type="Feather" name="plus" />
-					</Button>
-				)}
-			</Fab>
-		</>
+		</Content>
 	);
 };
 
-const styles = StyleSheet.create({
-	fabButton: {
-		zIndex: 1000,
-		backgroundColor: Colors.blackChocolate,
-	},
-	searchFabButton: {
-		backgroundColor: Colors.tintColor,
-	},
-	addBookFabButton: {
-		backgroundColor: Colors.success,
-	},
-});
-
-const mapStateToProps = (state: Store) => ({
-	books: state.books,
-	uid: state.auth.uid,
-});
-
-export default connect(mapStateToProps, { addBook })(BookList);
+export default BookList;
