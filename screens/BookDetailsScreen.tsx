@@ -70,39 +70,43 @@ const BookDetailsScreen: React.FC<Props> = ({ route, books, navigation }) => {
 					</View>
 				</CardItem>
 			</Card>
-			<List style={{ flex: 1, margin: 10 }}>
-				<SwipeListView
-					rightOpenValue={-75}
-					disableRightSwipe={true}
-					tension={-2}
-					friction={20}
-					keyExtractor={(quote) => quote.id}
-					data={quotes}
-					renderItem={({ item }) => (
-						<ListItem style={styles.rowFront} noIndent itemDivider>
-							<QuoteItem quote={item} />
-						</ListItem>
-					)}
-					renderHiddenItem={({ item }) => (
-						<View style={styles.rowBack}>
-							<TouchableOpacity
-								style={styles.hiddenButton}
-								onPress={() =>
-									navigation.navigate("Add/Edit Quote", {
-										bookId: id,
-										quoteId: item.id,
-										quote: item.quote,
-										categories: item.categories,
-										isEdit: true,
-									})
-								}
-							>
-								<Icon type="Entypo" name="edit" style={styles.editIcon} />
-							</TouchableOpacity>
-						</View>
-					)}
-				/>
-			</List>
+			{quotes ? (
+				<List style={{ flex: 1, margin: 10 }}>
+					<SwipeListView
+						rightOpenValue={-75}
+						disableRightSwipe={true}
+						tension={-2}
+						friction={20}
+						keyExtractor={(quote) => quote.id}
+						data={quotes}
+						renderItem={({ item }) => (
+							<ListItem style={styles.rowFront} noIndent itemDivider>
+								<QuoteItem quote={item} />
+							</ListItem>
+						)}
+						renderHiddenItem={({ item }) => (
+							<View style={styles.rowBack}>
+								<TouchableOpacity
+									style={styles.hiddenButton}
+									onPress={() =>
+										navigation.navigate("Add/Edit Quote", {
+											bookId: id,
+											quoteId: item.id,
+											quote: item.quote,
+											categories: item.categories,
+											isEdit: true,
+										})
+									}
+								>
+									<Icon type="Entypo" name="edit" style={styles.editIcon} />
+								</TouchableOpacity>
+							</View>
+						)}
+					/>
+				</List>
+			) : (
+				<Text style={{ textAlign: "center" }}>No quotes/notes added yet</Text>
+			)}
 			<Fab
 				position="bottomRight"
 				style={styles.fabButton}

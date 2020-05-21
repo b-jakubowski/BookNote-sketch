@@ -15,16 +15,13 @@ import * as yup from "yup";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 import { addBook } from "../store/actions/book";
-import QuoteForm from "../components/QuoteForm";
 import { firestore } from "../constants/Firebase";
 import BookDetailsFields from "../components/BookDetailsFields";
-import { bookDetailsSchema } from "../constants/Schemas";
 import { User } from "../interfaces/user.interface";
 import { Book, BookDetails, Status } from "../interfaces/book.interface";
 import { Store } from "../store/store";
 import { showWarnToast } from "../helpers/Toast";
 import { StackParamList } from "./HomeScreen";
-import { uuid } from "../helpers/uuid";
 
 interface Props {
 	user: User;
@@ -33,24 +30,16 @@ interface Props {
 	navigation: StackNavigationHelpers;
 }
 
-export interface BookForm extends BookDetails {
-	quote: string;
-	categories: string[];
-}
-
-const initialForm: BookForm = {
+const initialForm: BookDetails = {
 	title: "",
 	author: "",
 	cover: "",
 	status: Status.NONE,
-	quote: "",
-	categories: [],
 };
 
-const bookSchema = yup.object({
-	...bookDetailsSchema,
-	categories: yup.array().of(yup.string()),
-	quote: yup.string().required().min(5),
+const bookDetailsSchema = yup.object({
+	title: yup.string().required().min(2),
+	author: yup.string().required().min(2),
 });
 
 const AddBookScreen: React.FC<Props> = ({
@@ -73,35 +62,26 @@ const AddBookScreen: React.FC<Props> = ({
 			const docRef = await firestore.collection("books").add(book);
 			const doc = await docRef.get();
 
-			const bookFirestore =
-				{
-					id: doc.id,
-					...doc.data(),
-				} as Book;
+			addBook({
+				id: doc.id,
+				...doc.data(),
+			} as Book);
 
-			addBook(bookFirestore);
+			navigation.navigate("Book details", { id: doc.id });
 		} catch (e) {
 			showWarnToast(e);
 		} finally {
 			setForm(initialForm);
 			setLoading(false);
-			navigation.navigate("Books");
 		}
 	};
 
-	const handleSubmit = ({ quote, categories, ...book }: BookForm) => {
+	const handleSubmit = ({ ...book }: BookDetails) => {
 		const newBook =
 			{
 				...book,
 				createdAt: new Date(),
 				userId: user.uid,
-				quotes: [
-					{
-						id: uuid(),
-						categories,
-						quote,
-					},
-				],
 			} as Book;
 
 		validateFormAndCreateBook(newBook);
@@ -110,25 +90,13 @@ const AddBookScreen: React.FC<Props> = ({
 	const validateFormAndCreateBook = (book: Book) => {
 		setLoading(true);
 
-		bookSchema
+		bookDetailsSchema
 			.validate(form, { abortEarly: false })
 			.then(() => handleCreateBook(book))
 			.catch((e) => {
 				setLoading(false);
 				showWarnToast(e.errors.join(",\r\n"));
 			});
-	};
-
-	const toggleCategory = (category: string) => {
-		form.categories.includes(category)
-			? setForm({
-					...form,
-					categories: form.categories.filter((c) => c !== category),
-			  })
-			: setForm({
-					...form,
-					categories: [...form.categories, category],
-			  });
 	};
 
 	return (
@@ -151,12 +119,6 @@ const AddBookScreen: React.FC<Props> = ({
 
 					<Content style={styles.content}>
 						<Form>
-							<QuoteForm
-								categoriesCheck={form.categories}
-								onPress={(val) => toggleCategory(val)}
-								quote={form.quote}
-								onChangeText={(value) => setForm({ ...form, quote: value })}
-							/>
 							<View style={styles.buttonsContainer}>
 								<Button
 									success

@@ -1,10 +1,5 @@
 import * as yup from "yup";
 
-export const bookDetailsSchema = {
-	title: yup.string().required().min(2),
-	author: yup.string().required().min(2),
-};
-
 export const categoriesSchema = yup.object({
 	motivation: yup.boolean(),
 	love: yup.boolean(),

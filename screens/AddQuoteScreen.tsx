@@ -15,7 +15,7 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 import firebase from "firebase/app";
 
-import QuoteForm from "../components/QuoteForm";
+import QuoteForm from "../components/QuoteForm/QuoteForm";
 import { firestore } from "../constants/Firebase.js";
 import { addQuoteToBook, deleteQuote } from "../store/actions/book";
 import { StackParamList } from "./HomeScreen";

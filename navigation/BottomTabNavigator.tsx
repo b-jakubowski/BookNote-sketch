@@ -5,11 +5,11 @@ import { StyleSheet } from "react-native";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 import TabBarIcon from "../components/TabBarIcon";
-import BooksScreen from "../screens/BooksScreen";
-import QuotesScreen from "../screens/QuotesScreen";
-import DailyQuoteScreen from "../screens/DailyQuoteScreen";
+import BooksScreen from "../screens/bottom-navigation/BooksScreen";
+import QuotesScreen from "../screens/bottom-navigation/QuotesScreen";
+import DailyQuoteScreen from "../screens/bottom-navigation/DailyQuoteScreen";
 import Colors from "../constants/Colors";
-import ReadingListScreen from "../screens/ReadingListScreen";
+import ReadingListScreen from "../screens/bottom-navigation/ReadingListScreen";
 
 export type BottomStackParamList = {
 	"Daily Quote": undefined;

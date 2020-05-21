@@ -22,10 +22,14 @@ const bookReducer = (state: Book[] = [], action: BookActionTypes): Book[] => {
 		case ADD_QUOTE_TO_BOOK:
 			return [
 				...state.map((book: Book) => {
+					const quotes = book.quotes
+						? [...book.quotes, action.payload]
+						: [action.payload];
+
 					if (book.id === action.bookId) {
 						return {
 							...book,
-							quotes: [...book.quotes, action.payload],
+							quotes,
 						};
 					}
 

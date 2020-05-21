@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, Item, Textarea } from "native-base";
 import { StyleSheet } from "react-native";
 import CategoryCheckBox from "./CategoryCheckBox";
-import { categoriesButtons } from "../constants/Categories";
+import { categoriesButtons } from "../../constants/Categories";
 
 interface Props {
 	quote: string;

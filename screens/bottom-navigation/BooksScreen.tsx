@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, ActivityIndicator } from "react-native";
-import { connect } from "react-redux";
-import { Text, Fab, Icon, Item, Button, Input, Content } from "native-base";
-
-import BookListItem from "./BookListItem";
-import { firestore } from "../constants/Firebase";
-import { addBook } from "../store/actions/book";
-import Colors from "../constants/Colors";
-import { Book } from "../interfaces/book.interface";
-import { Store } from "../store/store";
+import { Fab, Icon, Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
+import { connect } from "react-redux";
+
+import { addBook } from "../../store/actions/book";
+import BookList from "../../components/BookList/BookList";
+import ContainerBackground from "../../components/ContainerBackground";
+import Search from "../../components/Search";
+import { StyleSheet } from "react-native";
+import Colors from "../../constants/Colors";
+import { firestore } from "../../constants/Firebase";
+import { Store } from "../../store/store";
+import { Book } from "../../interfaces/book.interface";
 
 interface Props {
 	uid: string;
@@ -17,7 +19,7 @@ interface Props {
 	addBook: (book: Book) => void;
 }
 
-const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
+const BooksScreen: React.FC<Props> = ({ uid, books, addBook }) => {
 	const [loading, setLoading] = useState(false);
 	const [searchVisible, setSearchVisible] = useState(false);
 	const [searchVal, setSearchVal] = useState("");
@@ -59,41 +61,21 @@ const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
 		setSearchVisible(true);
 	};
 
+	const handleCloseSearch = () => {
+		setSearchVisible(false);
+		setSearchVal("");
+	};
+
 	return (
-		<>
+		<ContainerBackground>
 			{searchVisible && (
-				<Item style={styles.searchBar}>
-					<Icon type="Ionicons" name="ios-search" />
-					<Input
-						placeholder="Search"
-						autoCorrect={false}
-						onChangeText={(val) => setSearchVal(val)}
-					/>
-					<Button
-						transparent
-						small
-						onPress={() => {
-							setSearchVal("");
-							setSearchVisible(false);
-						}}
-					>
-						<Icon
-							type="Ionicons"
-							name="md-close"
-							style={{ color: Colors.darkOrange }}
-						/>
-					</Button>
-				</Item>
+				<Search
+					onChangeText={(val: string) => setSearchVal(val)}
+					onPress={() => handleCloseSearch()}
+				/>
 			)}
-			<Content>
-				{loading ? (
-					<ActivityIndicator size="large" />
-				) : books.length ? (
-					booksSource.map((book) => <BookListItem key={book.id} {...book} />)
-				) : (
-					<Text>No books found</Text>
-				)}
-			</Content>
+
+			<BookList books={booksSource} loading={loading} />
 
 			<Fab
 				active={fabActive}
@@ -120,7 +102,7 @@ const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
 					</Button>
 				)}
 			</Fab>
-		</>
+		</ContainerBackground>
 	);
 };
 
@@ -128,11 +110,6 @@ const styles = StyleSheet.create({
 	fabButton: {
 		zIndex: 1000,
 		backgroundColor: Colors.blackChocolate,
-	},
-	searchBar: {
-		marginRight: 30,
-		marginLeft: 30,
-		marginBottom: 5,
 	},
 	searchFabButton: {
 		backgroundColor: Colors.tintColor,
@@ -147,4 +124,4 @@ const mapStateToProps = (state: Store) => ({
 	uid: state.auth.uid,
 });
 
-export default connect(mapStateToProps, { addBook })(BookList);
+export default connect(mapStateToProps, { addBook })(BooksScreen);

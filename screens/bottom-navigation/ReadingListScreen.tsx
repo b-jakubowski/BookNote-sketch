@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Container, ListItem, Text, Body, Tabs, Tab } from "native-base";
-import Colors from "../constants/Colors";
+import Colors from "../../constants/Colors";
 import { StyleSheet } from "react-native";
-import { Book, Status } from "../interfaces/book.interface";
+import { Book, Status } from "../../interfaces/book.interface";
 
 type Props = {
 	books: Book[];
