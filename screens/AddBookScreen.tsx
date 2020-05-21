@@ -15,7 +15,7 @@ import * as yup from "yup";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 import { addBook } from "../store/actions/book";
-import QuoteForm from "../components/QuoteForm";
+import QuoteForm from "../components/QuoteForm/QuoteForm";
 import { firestore } from "../constants/Firebase";
 import BookDetailsFields from "../components/BookDetailsFields";
 import { bookDetailsSchema } from "../constants/Schemas";
