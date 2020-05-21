@@ -38,14 +38,16 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 	const quotes: QuoteListItem[] = [];
 
 	books.forEach((book) => {
-		book.quotes.forEach((quote: Quote) => {
-			quotes.push({
-				bookId: book.id,
-				bookAuthor: book.author,
-				bookTitle: book.title,
-				...quote,
+		if (book.quotes) {
+			book.quotes.forEach((quote: Quote) => {
+				quotes.push({
+					bookId: book.id,
+					bookAuthor: book.author,
+					bookTitle: book.title,
+					...quote,
+				});
 			});
-		});
+		}
 	});
 
 	const filteredQuotes = () =>

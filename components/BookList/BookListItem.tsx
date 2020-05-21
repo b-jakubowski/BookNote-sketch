@@ -38,7 +38,7 @@ const BookListItem: React.FC<Props> = ({
 						{author}
 					</Text>
 					<Text note style={styles.bookAuthor}>
-						Quotes: {quotes.length}
+						Quotes: {quotes ? quotes.length : 0}
 					</Text>
 				</View>
 			</CardItem>
