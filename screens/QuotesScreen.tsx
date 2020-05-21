@@ -20,6 +20,7 @@ import { Book, Quote } from "../interfaces/book.interface";
 import { StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 import ContainerBackground from "../components/ContainerBackground";
+import Search from "../components/Search";
 
 type Props = {
 	books: Book[];
@@ -52,31 +53,18 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 			quote.quote.toLowerCase().includes(searchVal.toLowerCase())
 		);
 
+	const handleCloseSearch = () => {
+		setSearchVisible(false);
+		setSearchVal("");
+	};
+
 	return (
 		<ContainerBackground>
 			{searchVisible && (
-				<Item style={styles.searchBar}>
-					<Icon type="Ionicons" name="ios-search" />
-					<Input
-						placeholder="Search"
-						autoCorrect={false}
-						onChangeText={(val) => setSearchVal(val)}
-					/>
-					<Button
-						transparent
-						small
-						onPress={() => {
-							setSearchVisible(false);
-							setSearchVal("");
-						}}
-					>
-						<Icon
-							type="Ionicons"
-							name="md-close"
-							style={{ color: Colors.darkOrange }}
-						/>
-					</Button>
-				</Item>
+				<Search
+					onChangeText={(val: string) => setSearchVal(val)}
+					onPress={() => handleCloseSearch()}
+				/>
 			)}
 
 			<List style={{ flex: 1, margin: 10 }}>
@@ -160,11 +148,6 @@ const styles = StyleSheet.create({
 		backgroundColor: "white",
 		justifyContent: "center",
 		marginBottom: 10,
-	},
-	searchBar: {
-		marginRight: 30,
-		marginLeft: 20,
-		marginBottom: 5,
 	},
 });
 

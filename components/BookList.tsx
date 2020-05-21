@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, ActivityIndicator } from "react-native";
 import { connect } from "react-redux";
-import { Text, Fab, Icon, Item, Button, Input, Content } from "native-base";
+import { Text, Fab, Icon, Button, Content } from "native-base";
 
 import BookListItem from "./BookListItem";
 import { firestore } from "../constants/Firebase";
@@ -10,6 +10,7 @@ import Colors from "../constants/Colors";
 import { Book } from "../interfaces/book.interface";
 import { Store } from "../store/store";
 import { useNavigation } from "@react-navigation/native";
+import Search from "./Search";
 
 interface Props {
 	uid: string;
@@ -59,31 +60,18 @@ const BookList: React.FC<Props> = ({ uid, books, addBook }) => {
 		setSearchVisible(true);
 	};
 
+	const handleCloseSearch = () => {
+		setSearchVisible(false);
+		setSearchVal("");
+	};
+
 	return (
 		<>
 			{searchVisible && (
-				<Item style={styles.searchBar}>
-					<Icon type="Ionicons" name="ios-search" />
-					<Input
-						placeholder="Search"
-						autoCorrect={false}
-						onChangeText={(val) => setSearchVal(val)}
-					/>
-					<Button
-						transparent
-						small
-						onPress={() => {
-							setSearchVal("");
-							setSearchVisible(false);
-						}}
-					>
-						<Icon
-							type="Ionicons"
-							name="md-close"
-							style={{ color: Colors.darkOrange }}
-						/>
-					</Button>
-				</Item>
+				<Search
+					onChangeText={(val: string) => setSearchVal(val)}
+					onPress={() => handleCloseSearch()}
+				/>
 			)}
 			<Content>
 				{loading ? (
@@ -128,11 +116,6 @@ const styles = StyleSheet.create({
 	fabButton: {
 		zIndex: 1000,
 		backgroundColor: Colors.blackChocolate,
-	},
-	searchBar: {
-		marginRight: 30,
-		marginLeft: 30,
-		marginBottom: 5,
 	},
 	searchFabButton: {
 		backgroundColor: Colors.tintColor,
