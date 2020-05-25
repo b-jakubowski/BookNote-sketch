@@ -17,19 +17,20 @@ import { useNavigation } from "@react-navigation/native";
 import Autocomplete from "react-native-autocomplete-input";
 
 import { BookDetails, Book } from "../interfaces/book.interface";
-import { BookForm } from "../screens/AddBookScreen";
 import { Store } from "../store/store";
 import { connect } from "react-redux";
 
 interface Props extends BookDetails {
 	isEdit: boolean;
-	form: BookForm;
-	setForm: (f: BookForm) => void;
+	id: string | number;
+	form: BookDetails;
+	setForm: (f: BookDetails) => void;
 	books: Book[];
 }
 
 const BookDetailsFields: React.FC<Props> = ({
 	books,
+	id,
 	title,
 	author,
 	cover,
@@ -83,7 +84,11 @@ const BookDetailsFields: React.FC<Props> = ({
 					getPermissionAndPickImage();
 				}
 				if (buttonIndex === 1) {
-					navigation.navigate("Camera", { isEdit });
+					navigation.navigate("Camera", {
+						isEdit,
+						id,
+						initialBookValues: form,
+					});
 				}
 			}
 		);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, ActionSheet, Button, Icon, Container } from "native-base";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { connect } from "react-redux";
@@ -30,6 +30,12 @@ const EditBookDetailsScreen: React.FC<Props> = ({
 	const [form, setForm] = useState(initialBookValues);
 	const [loading, setLoading] = useState(false);
 	const bookRef = firestore.collection("books").doc(id);
+
+	useEffect(() => {
+		if (initialBookValues.cover.length) {
+			setForm({ ...form, cover: initialBookValues.cover });
+		}
+	}, [initialBookValues]);
 
 	const handleDelete = () => {
 		setLoading(true);
@@ -97,6 +103,7 @@ const EditBookDetailsScreen: React.FC<Props> = ({
 				<>
 					<View>
 						<BookDetailsFields
+							id={id}
 							title={form.title}
 							author={form.author}
 							cover={form.cover}

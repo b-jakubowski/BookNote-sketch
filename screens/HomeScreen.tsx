@@ -16,6 +16,8 @@ export type StackParamList = {
 	Books: undefined;
 	Camera: {
 		isEdit: boolean;
+		initialBookValues: BookDetails;
+		id: string | number;
 	};
 	"Book details": { id: string };
 	"Add/Edit Quote": {
