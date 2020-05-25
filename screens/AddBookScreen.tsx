@@ -22,6 +22,7 @@ import { Book, BookDetails, Status } from "../interfaces/book.interface";
 import { Store } from "../store/store";
 import { showWarnToast } from "../helpers/Toast";
 import { StackParamList } from "./HomeScreen";
+import { bookDetailsSchema } from "../constants/Schemas";
 
 interface Props {
 	user: User;
@@ -36,11 +37,6 @@ const initialForm: BookDetails = {
 	cover: "",
 	status: Status.NONE,
 };
-
-const bookDetailsSchema = yup.object({
-	title: yup.string().required().min(2),
-	author: yup.string().required().min(2),
-});
 
 const AddBookScreen: React.FC<Props> = ({
 	user,

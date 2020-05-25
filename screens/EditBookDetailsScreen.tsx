@@ -2,17 +2,16 @@ import React, { useState } from "react";
 import { Text, ActionSheet, Button, Icon, Container } from "native-base";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { connect } from "react-redux";
-import * as yup from "yup";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 import { RouteProp } from "@react-navigation/native";
 
 import { deleteBook, updateBookDetails } from "../store/actions/book";
 import { firestore } from "../constants/Firebase";
-import { bookDetailsSchema } from "../constants/Schemas";
 import BookDetailsFields from "../components/BookDetailsFields";
 import { BookDetails } from "../interfaces/book.interface";
 import { StackParamList } from "./HomeScreen";
 import { showWarnToast } from "../helpers/Toast";
+import { bookDetailsSchema } from "../constants/Schemas";
 
 interface Props {
 	deleteBook: (bookId: string) => void;
@@ -50,8 +49,7 @@ const EditBookDetailsScreen: React.FC<Props> = ({
 	const handleSubmit = () => {
 		setLoading(true);
 
-		yup
-			.object({ ...bookDetailsSchema })
+		bookDetailsSchema
 			.validate(form, { abortEarly: false })
 			.then(() => submitBookDetails())
 			.catch((e) => showWarnToast(e.errors.join(",\r\n")));

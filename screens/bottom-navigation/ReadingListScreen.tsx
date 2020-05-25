@@ -1,20 +1,37 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Container, ListItem, Text, Body, Tabs, Tab } from "native-base";
+import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
+
 import Colors from "../../constants/Colors";
 import { StyleSheet } from "react-native";
 import { Book, Status } from "../../interfaces/book.interface";
 
 type Props = {
 	books: Book[];
+	navigation: StackNavigationHelpers;
 };
 
-const ReadingListScreen: React.FC<Props> = ({ books }) => {
+const ReadingListScreen: React.FC<Props> = ({ books, navigation }) => {
 	const [activePage, setActivePage] = useState<Status>(Status.TO_READ);
 	const statusCount = {
 		[Status.TO_READ]: 0,
 		[Status.READING]: 0,
 		[Status.READ]: 0,
+		[Status.NONE]: 0,
+	};
+
+	const navigateToBookDetails = (
+		id: string | number,
+		title: string,
+		author: string,
+		cover: string,
+		status: string
+	) => {
+		navigation.navigate("Edit book details", {
+			id,
+			initialBookValues: { title, author, cover, status },
+		});
 	};
 
 	books.forEach((book) => statusCount[book.status]++);
@@ -25,7 +42,18 @@ const ReadingListScreen: React.FC<Props> = ({ books }) => {
 			{books.map((book) => {
 				if (activePage === book.status) {
 					return (
-						<ListItem key={book.id}>
+						<ListItem
+							key={book.id}
+							onLongPress={() =>
+								navigateToBookDetails(
+									book.id,
+									book.title,
+									book.author,
+									book.cover,
+									book.status
+								)
+							}
+						>
 							<Body>
 								<Text>{book.title}</Text>
 								<Text note>{book.author}</Text>

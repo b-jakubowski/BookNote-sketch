@@ -15,3 +15,8 @@ export const quoteSchema = yup.object({
 	quote: yup.string().required().min(5),
 	categories: yup.array().of(yup.string()),
 });
+
+export const bookDetailsSchema = yup.object({
+	title: yup.string().required().min(2),
+	author: yup.string().required().min(2),
+});
