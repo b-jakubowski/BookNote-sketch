@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Button, Icon, Title, Text } from "native-base";
 import { StyleSheet, Modal, ActivityIndicator } from "react-native";
-import PropTypes from "prop-types";
 
-function EditBookDetailsModal() {
+function EditBookDetailsModal({ modalVisible }: { modalVisible: true }) {
 	const [loading, setLoading] = useState(false);
 
 	return (
@@ -13,18 +12,8 @@ function EditBookDetailsModal() {
 				<View style={styles.modalContent}>
 					<View style={{ ...StyleSheet.absoluteFillObject }}>
 						<View style={styles.closeButtonContainer}>
-							<Button
-								onPress={() => {
-									setModalVisible(false);
-								}}
-								block
-								rounded
-								transparent
-							>
-								<Icon
-									ios="ios-close-circle-outline"
-									android="md-close-circle-outline"
-								/>
+							<Button onPress={() => {}} block rounded transparent>
+								<Icon type="Ionicons" name="md-close-circle-outline" />
 							</Button>
 						</View>
 					</View>
@@ -78,14 +67,5 @@ const styles = StyleSheet.create({
 		width: "90%",
 	},
 });
-
-EditBookDetailsModal.propTypes = {
-	id: PropTypes.string,
-	initialBookValues: PropTypes.object,
-	setModalVisible: PropTypes.func,
-	modalVisible: PropTypes.bool,
-	deleteBook: PropTypes.func,
-	updateBookDetails: PropTypes.func,
-};
 
 export default EditBookDetailsModal;

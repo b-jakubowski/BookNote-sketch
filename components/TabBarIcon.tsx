@@ -1,17 +1,22 @@
 import * as React from "react";
-import PropTypes from "prop-types";
-import {Icon} from "native-base";
-import {StyleSheet} from "react-native";
+import { Icon } from "native-base";
+import { StyleSheet } from "react-native";
 
 import Colors from "../constants/Colors";
 
-export default function TabBarIcon({focused, name, type}) {
+interface Props {
+	focused: boolean;
+	name: string;
+	type: any;
+}
+
+const TabBarIcon: React.FC<Props> = ({ focused, name, type }) => {
 	const iconColor = {
 		color: focused ? Colors.darkOrange : Colors.tabIconDefault,
 	};
 
 	return <Icon name={name} type={type} style={[styles.icon, iconColor]} />;
-}
+};
 
 const styles = StyleSheet.create({
 	icon: {
@@ -20,8 +25,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-TabBarIcon.propTypes = {
-	focused: PropTypes.bool,
-	name: PropTypes.string,
-	type: PropTypes.string,
-};
+export default TabBarIcon;
