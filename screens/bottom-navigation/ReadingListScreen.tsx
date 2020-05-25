@@ -5,12 +5,16 @@ import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/s
 
 import Colors from "../../constants/Colors";
 import { StyleSheet } from "react-native";
-import { Book, Status } from "../../interfaces/book.interface";
+import { Book, Status, BookDetails } from "../../interfaces/book.interface";
 
 type Props = {
 	books: Book[];
 	navigation: StackNavigationHelpers;
 };
+
+interface EditBookDetails extends BookDetails {
+	id: string | number;
+}
 
 const ReadingListScreen: React.FC<Props> = ({ books, navigation }) => {
 	const [activePage, setActivePage] = useState<Status>(Status.TO_READ);
@@ -21,13 +25,13 @@ const ReadingListScreen: React.FC<Props> = ({ books, navigation }) => {
 		[Status.NONE]: 0,
 	};
 
-	const navigateToBookDetails = (
-		id: string | number,
-		title: string,
-		author: string,
-		cover: string,
-		status: string
-	) => {
+	const navigateToEditBook = ({
+		id,
+		title,
+		author,
+		cover,
+		status,
+	}: EditBookDetails) => {
 		navigation.navigate("Edit book details", {
 			id,
 			initialBookValues: { title, author, cover, status },
@@ -44,15 +48,7 @@ const ReadingListScreen: React.FC<Props> = ({ books, navigation }) => {
 					return (
 						<ListItem
 							key={book.id}
-							onLongPress={() =>
-								navigateToBookDetails(
-									book.id,
-									book.title,
-									book.author,
-									book.cover,
-									book.status
-								)
-							}
+							onLongPress={() => navigateToEditBook(book)}
 						>
 							<Body>
 								<Text>{book.title}</Text>
