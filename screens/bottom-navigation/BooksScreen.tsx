@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 
 import { addBook } from "../../store/actions/book";
 import BookList from "../../components/BookList/BookList";
-import ContainerBackground from "../../components/ContainerBackground";
 import Search from "../../components/Search";
 import { StyleSheet } from "react-native";
 import Colors from "../../constants/Colors";
@@ -67,7 +66,7 @@ const BooksScreen: React.FC<Props> = ({ uid, books, addBook }) => {
 	};
 
 	return (
-		<ContainerBackground>
+		<>
 			{searchVisible && (
 				<Search
 					onChangeText={(val: string) => setSearchVal(val)}
@@ -102,7 +101,7 @@ const BooksScreen: React.FC<Props> = ({ uid, books, addBook }) => {
 					</Button>
 				)}
 			</Fab>
-		</ContainerBackground>
+		</>
 	);
 };
 

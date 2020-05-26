@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { Container, ListItem, Text, Body, Tabs, Tab } from "native-base";
+import { ListItem, Text, Body, Tabs, Tab } from "native-base";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 import Colors from "../../constants/Colors";
@@ -62,37 +62,35 @@ const ReadingListScreen: React.FC<Props> = ({ books, navigation }) => {
 	);
 
 	return (
-		<Container>
-			<Tabs
-				onChangeTab={(active: any) => setActivePage(active.ref.props.heading)}
-				tabBarUnderlineStyle={styles.tabUnderline}
+		<Tabs
+			onChangeTab={(active: any) => setActivePage(active.ref.props.heading)}
+			tabBarUnderlineStyle={styles.tabUnderline}
+		>
+			<Tab
+				heading={Status.TO_READ}
+				activeTabStyle={styles.activeTab}
+				activeTextStyle={styles.activeText}
+				tabStyle={styles.tab}
 			>
-				<Tab
-					heading={Status.TO_READ}
-					activeTabStyle={styles.activeTab}
-					activeTextStyle={styles.activeText}
-					tabStyle={styles.tab}
-				>
-					<ActivePageBookList status={Status.TO_READ} />
-				</Tab>
-				<Tab
-					heading={Status.READING}
-					activeTabStyle={styles.activeTab}
-					tabStyle={styles.tab}
-					activeTextStyle={styles.activeText}
-				>
-					<ActivePageBookList status={Status.READING} />
-				</Tab>
-				<Tab
-					heading={Status.READ}
-					activeTabStyle={styles.activeTab}
-					tabStyle={styles.tab}
-					activeTextStyle={styles.activeText}
-				>
-					<ActivePageBookList status={Status.READ} />
-				</Tab>
-			</Tabs>
-		</Container>
+				<ActivePageBookList status={Status.TO_READ} />
+			</Tab>
+			<Tab
+				heading={Status.READING}
+				activeTabStyle={styles.activeTab}
+				tabStyle={styles.tab}
+				activeTextStyle={styles.activeText}
+			>
+				<ActivePageBookList status={Status.READING} />
+			</Tab>
+			<Tab
+				heading={Status.READ}
+				activeTabStyle={styles.activeTab}
+				tabStyle={styles.tab}
+				activeTextStyle={styles.activeText}
+			>
+				<ActivePageBookList status={Status.READ} />
+			</Tab>
+		</Tabs>
 	);
 };
 

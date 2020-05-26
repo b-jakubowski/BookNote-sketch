@@ -18,10 +18,9 @@ import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/s
 
 import QuoteItem from "../components/QuoteItem";
 import Colors from "../constants/Colors";
-import { StackParamList } from "./HomeScreen";
 import { Book } from "../interfaces/book.interface";
 import { Store } from "../store/store";
-import ContainerBackground from "../components/ContainerBackground";
+import { StackParamList } from "../navigation/types";
 
 interface Props {
 	navigation: StackNavigationHelpers;
@@ -43,7 +42,7 @@ const BookDetailsScreen: React.FC<Props> = ({ route, books, navigation }) => {
 		: require("../assets/images/book-cover-placeholder.jpg");
 
 	return (
-		<ContainerBackground>
+		<>
 			<Card transparent>
 				<CardItem header bordered>
 					<Image source={bookCover} style={styles.cardImg} />
@@ -114,7 +113,7 @@ const BookDetailsScreen: React.FC<Props> = ({ route, books, navigation }) => {
 			>
 				<Icon type="Feather" name="plus" />
 			</Fab>
-		</ContainerBackground>
+		</>
 	);
 };
 

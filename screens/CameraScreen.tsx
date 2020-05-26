@@ -6,8 +6,8 @@ import * as MediaLibrary from "expo-media-library";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
-import { StackParamList } from "./HomeScreen";
 import { showWarnToast } from "../helpers/Toast";
+import { StackParamList } from "../navigation/types";
 
 interface Props {
 	navigation: StackNavigationHelpers;

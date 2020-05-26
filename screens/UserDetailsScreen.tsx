@@ -1,12 +1,5 @@
 import React from "react";
-import {
-	Container,
-	Text,
-	Content,
-	Button,
-	View,
-	ActionSheet,
-} from "native-base";
+import { Text, Content, Button, View, ActionSheet } from "native-base";
 import { connect } from "react-redux";
 import { StyleSheet } from "react-native";
 
@@ -54,22 +47,20 @@ const UserDetailsScreen: React.FC<Props> = ({
 	};
 
 	return (
-		<Container>
-			<Content contentContainerStyle={styles.content}>
-				<Text>id: {user.uid}</Text>
-				<Text>email: {user.email}</Text>
-				<View style={styles.buttonsContainer}>
-					<Button
-						warning
-						block
-						style={styles.logOutButton}
-						onPress={() => confirmLogout()}
-					>
-						<Text>Log out</Text>
-					</Button>
-				</View>
-			</Content>
-		</Container>
+		<Content contentContainerStyle={styles.content}>
+			<Text>id: {user.uid}</Text>
+			<Text>email: {user.email}</Text>
+			<View style={styles.buttonsContainer}>
+				<Button
+					warning
+					block
+					style={styles.logOutButton}
+					onPress={() => confirmLogout()}
+				>
+					<Text>Log out</Text>
+				</Button>
+			</View>
+		</Content>
 	);
 };
 

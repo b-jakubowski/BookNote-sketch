@@ -11,7 +11,6 @@ import {
 } from "native-base";
 import { RouteProp } from "@react-navigation/native";
 import { connect } from "react-redux";
-import * as yup from "yup";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 import { addBook } from "../store/actions/book";
@@ -21,8 +20,8 @@ import { User } from "../interfaces/user.interface";
 import { Book, BookDetails, Status } from "../interfaces/book.interface";
 import { Store } from "../store/store";
 import { showWarnToast } from "../helpers/Toast";
-import { StackParamList } from "./HomeScreen";
 import { bookDetailsSchema } from "../constants/Schemas";
+import { StackParamList } from "../navigation/types";
 
 interface Props {
 	user: User;
@@ -100,7 +99,7 @@ const AddBookScreen: React.FC<Props> = ({
 			{loading ? (
 				<ActivityIndicator size="large" />
 			) : (
-				<Container>
+				<>
 					<View>
 						<BookDetailsFields
 							title={form.title}
@@ -137,7 +136,7 @@ const AddBookScreen: React.FC<Props> = ({
 							</View>
 						</Form>
 					</Content>
-				</Container>
+				</>
 			)}
 		</>
 	);

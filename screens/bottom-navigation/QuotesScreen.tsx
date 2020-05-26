@@ -1,16 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import {
-	Container,
-	List,
-	ListItem,
-	View,
-	Icon,
-	Item,
-	Input,
-	Button,
-	Fab,
-} from "native-base";
+import { List, ListItem, View, Icon, Fab } from "native-base";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -19,7 +9,6 @@ import QuoteItem from "../../components/QuoteItem";
 import { Book, Quote } from "../../interfaces/book.interface";
 import { StyleSheet } from "react-native";
 import Colors from "../../constants/Colors";
-import ContainerBackground from "../../components/ContainerBackground";
 import Search from "../../components/Search";
 
 type Props = {
@@ -61,7 +50,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 	};
 
 	return (
-		<ContainerBackground>
+		<>
 			{searchVisible && (
 				<Search
 					onChangeText={(val: string) => setSearchVal(val)}
@@ -116,7 +105,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 					<Icon type="FontAwesome" name="search" />
 				</Fab>
 			)}
-		</ContainerBackground>
+		</>
 	);
 };
 

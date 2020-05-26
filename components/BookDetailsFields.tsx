@@ -22,7 +22,7 @@ import { connect } from "react-redux";
 
 interface Props extends BookDetails {
 	isEdit: boolean;
-	id: string | number;
+	id?: string | number;
 	form: BookDetails;
 	setForm: (f: BookDetails) => void;
 	books: Book[];

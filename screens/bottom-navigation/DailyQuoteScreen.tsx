@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
-import { Container, Text } from "native-base";
+import { Text } from "native-base";
 
 interface RandomQuote {
 	content: string;
@@ -24,7 +24,7 @@ const DailyQuoteScreen: React.FC = () => {
 	}, []);
 
 	return (
-		<Container>
+		<>
 			<View style={styles.fillSpace}></View>
 			<View style={styles.quoteContainer}>
 				{loading ? (
@@ -39,7 +39,7 @@ const DailyQuoteScreen: React.FC = () => {
 				)}
 			</View>
 			<View style={styles.fillSpace}></View>
-		</Container>
+		</>
 	);
 };
 

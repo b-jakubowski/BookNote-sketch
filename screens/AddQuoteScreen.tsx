@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, ActivityIndicator } from "react-native";
 import {
-	Container,
 	Content,
 	Form,
 	Text,
@@ -18,11 +17,11 @@ import firebase from "firebase/app";
 import QuoteForm from "../components/QuoteForm/QuoteForm";
 import { firestore } from "../constants/Firebase.js";
 import { addQuoteToBook, deleteQuote } from "../store/actions/book";
-import { StackParamList } from "./HomeScreen";
 import { Quote } from "../interfaces/book.interface";
 import { quoteSchema } from "../constants/Schemas";
 import { showWarnToast } from "../helpers/Toast";
 import { uuid } from "../helpers/uuid";
+import { StackParamList } from "../navigation/types";
 
 interface Props {
 	route: RouteProp<StackParamList, "Add/Edit Quote">;
@@ -139,56 +138,52 @@ const AddQuoteScreen: React.FC<Props> = ({
 	};
 
 	return (
-		<Container>
-			<Content style={styles.content}>
-				{loading ? (
-					<ActivityIndicator size="large" />
-				) : (
-					<Form>
-						<QuoteForm
-							categoriesCheck={form.categories}
-							onPress={(val) => toggleCategory(val)}
-							quote={form.quote}
-							onChangeText={(value) => setForm({ ...form, quote: value })}
-						/>
+		<Content style={styles.content}>
+			{loading ? (
+				<ActivityIndicator size="large" />
+			) : (
+				<Form>
+					<QuoteForm
+						categoriesCheck={form.categories}
+						onPress={(val) => toggleCategory(val)}
+						quote={form.quote}
+						onChangeText={(value) => setForm({ ...form, quote: value })}
+					/>
+					<Button
+						block
+						success
+						iconLeft
+						style={styles.addButton}
+						onPress={() => handleSubmit(form)}
+					>
+						<Icon type="Entypo" name="edit" />
+						<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
+					</Button>
+					<View style={styles.buttonsContainer}>
 						<Button
 							block
-							success
-							iconLeft
-							style={styles.addButton}
-							onPress={() => handleSubmit(form)}
+							light
+							style={styles.clearButton}
+							onPress={() => setForm(isEdit ? initialEditQuote : initialQuote)}
 						>
-							<Icon type="Entypo" name="edit" />
-							<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
+							<Text>Clear Form</Text>
 						</Button>
-						<View style={styles.buttonsContainer}>
+						{isEdit && (
 							<Button
 								block
-								light
-								style={styles.clearButton}
-								onPress={() =>
-									setForm(isEdit ? initialEditQuote : initialQuote)
-								}
+								danger
+								iconLeft
+								style={styles.deleteButton}
+								onPress={() => confirmDelete()}
 							>
-								<Text>Clear Form</Text>
+								<Icon type="Ionicons" name="md-trash" />
+								<Text>Delete quote</Text>
 							</Button>
-							{isEdit && (
-								<Button
-									block
-									danger
-									iconLeft
-									style={styles.deleteButton}
-									onPress={() => confirmDelete()}
-								>
-									<Icon type="Ionicons" name="md-trash" />
-									<Text>Delete quote</Text>
-								</Button>
-							)}
-						</View>
-					</Form>
-				)}
-			</Content>
-		</Container>
+						)}
+					</View>
+				</Form>
+			)}
+		</Content>
 	);
 };
 
