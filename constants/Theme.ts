@@ -58,6 +58,7 @@ const green = {
 };
 
 const white = "#fcfcfc";
+const black = "#0a0a0a";
 
 export const backgroundColor = theme("mode", {
 	light: gray[100],
@@ -69,17 +70,17 @@ export const foregroundColor = theme("mode", {
 	dark: gray[300],
 });
 
-export const navigationColor = theme("mode", {
-	light: white,
-	dark: gray[500],
+export const iconColor = theme("mode", {
+	light: gray[900],
+	dark: gray[100],
 });
 
-export const navigationFocusedBtn = theme("mode", {
-	light: orange[800],
-	dark: orange[300],
+export const mainText = theme("mode", {
+	light: black,
+	dark: gray[100],
 });
 
-export const navigationBtn = theme("mode", {
-	light: white,
-	dark: gray[500],
+export const noteText = theme("mode", {
+	light: gray[900],
+	dark: gray[300],
 });
