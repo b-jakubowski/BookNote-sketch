@@ -34,6 +34,7 @@ export const orange = {
 export const gray = {
 	100: "#F5F5F5",
 	300: "#E0E0E0",
+	400: "#BDBDBD",
 	500: "#9E9E9E",
 	700: "#616161",
 	800: "#424242",
@@ -58,8 +59,8 @@ export const green = {
 	900: "#33691E",
 };
 
-const white = "#fcfcfc";
-const black = "#0a0a0a";
+export const white = "#fcfcfc";
+export const black = "#0a0a0a";
 
 export const backgroundColor = theme("mode", {
 	light: gray[100],
@@ -82,11 +83,11 @@ export const titleTextColor = theme("mode", {
 });
 
 export const noteText = theme("mode", {
-	light: gray[500],
-	dark: gray[300],
+	light: gray[700],
+	dark: gray[400],
 });
 
 export const fabExtendedColor = theme("mode", {
 	light: brown[900],
-	dark: gray[300],
+	dark: gray[400],
 });

@@ -38,7 +38,7 @@ const BottomTabNavigator: React.FC<Props> = ({ navigation, route }) => {
 			<Button transparent onPress={() => theme.toggle()}>
 				<IconTheme
 					type="Feather"
-					name={theme.mode === "dark" ? "moon" : "sun"}
+					name={theme.mode === "dark" ? "sun" : "moon"}
 				/>
 			</Button>
 		),

@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { ListItem, Text, Body, Tabs, Tab } from "native-base";
+import { ListItem, Text, Body, Tabs, Tab, Content } from "native-base";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
-import Colors from "../../constants/Colors";
 import { StyleSheet } from "react-native";
 import { Book, Status, BookDetails } from "../../interfaces/book.interface";
+import styled from "styled-components";
+import {
+	backgroundColor,
+	foregroundColor,
+	gray,
+	orange,
+	brown,
+	spacing,
+	titleTextColor,
+	noteText,
+} from "../../constants/Theme";
 
 type Props = {
 	books: Book[];
@@ -15,6 +25,24 @@ type Props = {
 interface EditBookDetails extends BookDetails {
 	id: string | number;
 }
+
+const ContentTheme = styled(Content)`
+	background-color: ${backgroundColor};
+	flex: 1;
+`;
+const BookListItem = styled(ListItem)`
+	background-color: ${foregroundColor};
+`;
+const BookAmountText = styled(Text)`
+	color: ${brown[700]};
+	padding: ${spacing.m};
+`;
+const BookTitle = styled(Text)`
+	color: ${titleTextColor};
+`;
+const BookAuthor = styled(Text)`
+	color: ${noteText};
+`;
 
 const ReadingListScreen: React.FC<Props> = ({ books, navigation }) => {
 	const [activePage, setActivePage] = useState<Status>(Status.TO_READ);
@@ -41,24 +69,25 @@ const ReadingListScreen: React.FC<Props> = ({ books, navigation }) => {
 	books.forEach((book) => statusCount[book.status]++);
 
 	const ActivePageBookList: React.FC<{ status: Status }> = ({ status }) => (
-		<>
-			<Text style={styles.amountText}>Amount: {statusCount[status]}</Text>
+		<ContentTheme>
+			<BookAmountText>Amount: {statusCount[status]}</BookAmountText>
 			{books.map((book) => {
 				if (activePage === book.status) {
 					return (
-						<ListItem
+						<BookListItem
 							key={book.id}
+							noIndent
 							onLongPress={() => navigateToEditBook(book)}
 						>
 							<Body>
-								<Text>{book.title}</Text>
-								<Text note>{book.author}</Text>
+								<BookTitle>{book.title}</BookTitle>
+								<BookAuthor note>{book.author}</BookAuthor>
 							</Body>
-						</ListItem>
+						</BookListItem>
 					);
 				}
 			})}
-		</>
+		</ContentTheme>
 	);
 
 	return (
@@ -70,6 +99,7 @@ const ReadingListScreen: React.FC<Props> = ({ books, navigation }) => {
 				heading={Status.TO_READ}
 				activeTabStyle={styles.activeTab}
 				activeTextStyle={styles.activeText}
+				textStyle={styles.tabText}
 				tabStyle={styles.tab}
 			>
 				<ActivePageBookList status={Status.TO_READ} />
@@ -77,16 +107,18 @@ const ReadingListScreen: React.FC<Props> = ({ books, navigation }) => {
 			<Tab
 				heading={Status.READING}
 				activeTabStyle={styles.activeTab}
-				tabStyle={styles.tab}
 				activeTextStyle={styles.activeText}
+				textStyle={styles.tabText}
+				tabStyle={styles.tab}
 			>
 				<ActivePageBookList status={Status.READING} />
 			</Tab>
 			<Tab
 				heading={Status.READ}
 				activeTabStyle={styles.activeTab}
-				tabStyle={styles.tab}
 				activeTextStyle={styles.activeText}
+				textStyle={styles.tabText}
+				tabStyle={styles.tab}
 			>
 				<ActivePageBookList status={Status.READ} />
 			</Tab>
@@ -96,22 +128,19 @@ const ReadingListScreen: React.FC<Props> = ({ books, navigation }) => {
 
 const styles = StyleSheet.create({
 	activeTab: {
-		backgroundColor: Colors.lightOrange,
+		backgroundColor: orange[300],
 	},
 	activeText: {
-		color: Colors.blackChocolate,
-		fontWeight: "normal",
-	},
-	amountText: {
-		color: Colors.brownOrange,
-		marginLeft: 25,
-		paddingVertical: 10,
+		color: gray[800],
 	},
 	tab: {
-		backgroundColor: "white",
+		backgroundColor: gray[300],
+	},
+	tabText: {
+		color: gray[700],
 	},
 	tabUnderline: {
-		backgroundColor: Colors.accentOrange,
+		backgroundColor: orange[700],
 	},
 });
 
