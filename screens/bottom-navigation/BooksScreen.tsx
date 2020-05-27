@@ -2,15 +2,22 @@ import React, { useState, useEffect } from "react";
 import { Fab, Icon, Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { connect } from "react-redux";
+import styled from "styled-components";
 
 import { addBook } from "../../store/actions/book";
 import BookList from "../../components/BookList/BookList";
 import Search from "../../components/Search";
-import { StyleSheet } from "react-native";
-import Colors from "../../constants/Colors";
 import { firestore } from "../../constants/Firebase";
 import { Store } from "../../store/store";
 import { Book } from "../../interfaces/book.interface";
+import {
+	fabExtendedColor,
+	iconColor,
+	gray,
+	green,
+	orange,
+} from "../../constants/Theme";
+import { useTheme } from "../../context/ThemeContext";
 
 interface Props {
 	uid: string;
@@ -18,12 +25,22 @@ interface Props {
 	addBook: (book: Book) => void;
 }
 
+const FabTheme = styled(Fab)`
+	background-color: ${fabExtendedColor};
+`;
+const IconTheme = styled(Icon)`
+	color: ${iconColor};
+`;
+
 const BooksScreen: React.FC<Props> = ({ uid, books, addBook }) => {
 	const [loading, setLoading] = useState(false);
 	const [searchVisible, setSearchVisible] = useState(false);
 	const [searchVal, setSearchVal] = useState("");
 	const [fabActive, setFabActive] = useState(false);
 	const navigation = useNavigation();
+	const theme = useTheme();
+
+	const fabIconColor = theme.mode === "dark" ? gray[900] : gray[100];
 
 	useEffect(() => {
 		setLoading(true);
@@ -76,17 +93,20 @@ const BooksScreen: React.FC<Props> = ({ uid, books, addBook }) => {
 
 			<BookList books={booksSource} loading={loading} />
 
-			<Fab
+			<FabTheme
 				active={fabActive}
 				direction="up"
-				style={styles.fabButton}
 				position="bottomRight"
 				onPress={() => setFabActive((val) => !val)}
 			>
-				<Icon type="Feather" name="more-horizontal" />
+				<IconTheme
+					style={{ color: fabIconColor }}
+					type="Feather"
+					name="more-horizontal"
+				/>
 				{fabActive && (
 					<Button
-						style={styles.searchFabButton}
+						style={{ backgroundColor: orange[500] }}
 						onPress={() => handleSearchButtonPress()}
 					>
 						<Icon type="AntDesign" name="search1" />
@@ -94,29 +114,16 @@ const BooksScreen: React.FC<Props> = ({ uid, books, addBook }) => {
 				)}
 				{fabActive && (
 					<Button
-						style={styles.addBookFabButton}
+						style={{ backgroundColor: green[700] }}
 						onPress={() => handleAddButtonPress()}
 					>
 						<Icon type="Feather" name="plus" />
 					</Button>
 				)}
-			</Fab>
+			</FabTheme>
 		</>
 	);
 };
-
-const styles = StyleSheet.create({
-	fabButton: {
-		zIndex: 1000,
-		backgroundColor: Colors.blackChocolate,
-	},
-	searchFabButton: {
-		backgroundColor: Colors.tintColor,
-	},
-	addBookFabButton: {
-		backgroundColor: Colors.success,
-	},
-});
 
 const mapStateToProps = (state: Store) => ({
 	books: state.books,

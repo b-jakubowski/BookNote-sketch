@@ -22,7 +22,7 @@ export const fontFamily = {
 	gotu: "gotu",
 };
 
-const orange = {
+export const orange = {
 	100: "#FFE57F",
 	300: "#FFD54F",
 	500: "#FFC107",
@@ -31,7 +31,7 @@ const orange = {
 	900: "#FF6F00",
 };
 
-const gray = {
+export const gray = {
 	100: "#F5F5F5",
 	300: "#E0E0E0",
 	500: "#9E9E9E",
@@ -40,7 +40,7 @@ const gray = {
 	900: "#212121",
 };
 
-const brown = {
+export const brown = {
 	100: "#D7CCC8",
 	300: "#A1887F",
 	500: "#795548",
@@ -49,7 +49,7 @@ const brown = {
 	900: "#3E2723",
 };
 
-const green = {
+export const green = {
 	100: "#CCFF90",
 	200: "#B2FF59",
 	400: "#76FF03",
@@ -83,5 +83,10 @@ export const titleTextColor = theme("mode", {
 
 export const noteText = theme("mode", {
 	light: gray[500],
+	dark: gray[300],
+});
+
+export const fabExtendedColor = theme("mode", {
+	light: brown[900],
 	dark: gray[300],
 });
