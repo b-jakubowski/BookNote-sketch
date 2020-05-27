@@ -1,22 +1,23 @@
 import theme from "styled-theming";
 
-const spacing = {
-	s: 8,
-	m: 16,
-	l: 24,
-	xl: 40,
+export const spacing = {
+	xs: "4px",
+	s: "8px",
+	m: "16px",
+	l: "24px",
+	xl: "40px",
 };
 
-const fontSize = {
-	s: 8,
-	sm: 12,
-	m: 16,
-	ml: 20,
-	l: 24,
-	xl: 30,
+export const fontSize = {
+	s: "8px",
+	sm: "12px",
+	m: "16px",
+	ml: "20px",
+	l: "24px",
+	xl: "30px",
 };
 
-const fontFamily = {
+export const fontFamily = {
 	roboto: "Roboto",
 	gotu: "gotu",
 };
@@ -67,7 +68,7 @@ export const backgroundColor = theme("mode", {
 
 export const foregroundColor = theme("mode", {
 	light: white,
-	dark: gray[300],
+	dark: gray[700],
 });
 
 export const iconColor = theme("mode", {
@@ -75,12 +76,12 @@ export const iconColor = theme("mode", {
 	dark: gray[100],
 });
 
-export const mainText = theme("mode", {
+export const titleTextColor = theme("mode", {
 	light: black,
 	dark: gray[100],
 });
 
 export const noteText = theme("mode", {
-	light: gray[900],
+	light: gray[500],
 	dark: gray[300],
 });

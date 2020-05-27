@@ -1,15 +1,46 @@
 import React from "react";
-import { StyleSheet, View, Image } from "react-native";
-import { Text, CardItem, ListItem } from "native-base";
+import { View, Image } from "react-native";
+import { Text, CardItem, ListItem, H3 } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 
-import Colors from "../../constants/Colors";
 import { Quote, Book } from "../../interfaces/book.interface";
+import styled from "styled-components";
+import {
+	foregroundColor,
+	titleTextColor,
+	spacing,
+	noteText,
+	fontSize,
+} from "../../constants/Theme";
 
 interface Props extends Book {
 	id: string | number;
 	quotes: Quote[];
 }
+
+const CardTheme = styled(CardItem)`
+	background-color: ${foregroundColor};
+`;
+const CardTitle = styled(H3)`
+	color: ${titleTextColor};
+	margin-bottom: ${spacing.s};
+`;
+const CardNote = styled(Text)`
+	color: ${noteText};
+	font-size: ${fontSize.m};
+	margin-bottom: ${spacing.m};
+`;
+const CardItemTheme = styled(ListItem)`
+	margin-bottom: -${spacing.s};
+	margin-left: -${spacing.xs};
+	background-color: transparent;
+`;
+const CardImg = styled(Image)`
+	flex: 1;
+	height: 130px;
+	margin-right: ${spacing.l};
+	max-width: 90px;
+`;
 
 const BookListItem: React.FC<Props> = ({
 	id,
@@ -29,48 +60,17 @@ const BookListItem: React.FC<Props> = ({
 		: require("../../assets/images/book-cover-placeholder.jpg");
 
 	return (
-		<ListItem noIndent itemDivider style={styles.listItem}>
-			<CardItem button onPress={() => navigateToBookDetails()}>
-				<Image source={bookCover} style={styles.cardImg} />
-				<View style={styles.bookDetails}>
-					<Text style={styles.bookTitle}>{title}</Text>
-					<Text note style={styles.bookAuthor}>
-						{author}
-					</Text>
-					<Text note style={styles.bookAuthor}>
-						Quotes: {quotes ? quotes.length : 0}
-					</Text>
+		<CardItemTheme noIndent itemDivider>
+			<CardTheme button onPress={() => navigateToBookDetails()}>
+				<CardImg source={bookCover} />
+				<View style={{ flex: 1 }}>
+					<CardTitle>{title}</CardTitle>
+					<CardNote>{author}</CardNote>
+					<CardNote>Quotes: {quotes ? quotes.length : 0}</CardNote>
 				</View>
-			</CardItem>
-		</ListItem>
+			</CardTheme>
+		</CardItemTheme>
 	);
 };
-
-const styles = StyleSheet.create({
-	bookAuthor: {
-		fontSize: 15,
-		marginBottom: 15,
-	},
-	bookDetails: {
-		flex: 1,
-		minHeight: 40,
-	},
-	bookTitle: {
-		color: Colors.blackChocolate,
-		fontSize: 20,
-		marginBottom: 5,
-	},
-	cardImg: {
-		flex: 1,
-		height: 130,
-		marginRight: 10,
-		maxWidth: 90,
-	},
-	listItem: {
-		marginBottom: -10,
-		marginLeft: -5,
-		backgroundColor: "transparent",
-	},
-});
 
 export default BookListItem;
