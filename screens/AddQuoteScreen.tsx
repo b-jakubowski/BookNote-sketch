@@ -1,15 +1,6 @@
 import React, { useState } from "react";
-import { StyleSheet, ActivityIndicator } from "react-native";
-import {
-	Container,
-	Content,
-	Form,
-	Text,
-	Button,
-	View,
-	ActionSheet,
-	Icon,
-} from "native-base";
+import { StyleSheet, ActivityIndicator, SafeAreaView } from "react-native";
+import { Form, Text, Button, View, ActionSheet, Icon } from "native-base";
 import { connect } from "react-redux";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
@@ -18,11 +9,11 @@ import firebase from "firebase/app";
 import QuoteForm from "../components/QuoteForm/QuoteForm";
 import { firestore } from "../constants/Firebase.js";
 import { addQuoteToBook, deleteQuote } from "../store/actions/book";
-import { StackParamList } from "./HomeScreen";
 import { Quote } from "../interfaces/book.interface";
 import { quoteSchema } from "../constants/Schemas";
 import { showWarnToast } from "../helpers/Toast";
 import { uuid } from "../helpers/uuid";
+import { StackParamList } from "../navigation/types";
 
 interface Props {
 	route: RouteProp<StackParamList, "Add/Edit Quote">;
@@ -139,29 +130,31 @@ const AddQuoteScreen: React.FC<Props> = ({
 	};
 
 	return (
-		<Container>
-			<Content style={styles.content}>
-				{loading ? (
-					<ActivityIndicator size="large" />
-				) : (
-					<Form>
-						<QuoteForm
-							categoriesCheck={form.categories}
-							onPress={(val) => toggleCategory(val)}
-							quote={form.quote}
-							onChangeText={(value) => setForm({ ...form, quote: value })}
-						/>
-						<Button
-							block
-							success
-							iconLeft
-							style={styles.addButton}
-							onPress={() => handleSubmit(form)}
-						>
-							<Icon type="Entypo" name="edit" />
-							<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
-						</Button>
-						<View style={styles.buttonsContainer}>
+		<View style={styles.content}>
+			{loading ? (
+				<ActivityIndicator size="large" />
+			) : (
+				<Form style={styles.form}>
+					<QuoteForm
+						categoriesCheck={form.categories}
+						onPress={(val) => toggleCategory(val)}
+						quote={form.quote}
+						onChangeText={(value) => setForm({ ...form, quote: value })}
+					/>
+					<SafeAreaView style={styles.buttonsContainer}>
+						<View style={{ flexDirection: "row" }}>
+							<Button
+								block
+								success
+								iconLeft
+								style={styles.addButton}
+								onPress={() => handleSubmit(form)}
+							>
+								<Icon type="Entypo" name={isEdit ? "edit" : "plus"} />
+								<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
+							</Button>
+						</View>
+						<View style={styles.clearButtonsContainer}>
 							<Button
 								block
 								light
@@ -185,10 +178,10 @@ const AddQuoteScreen: React.FC<Props> = ({
 								</Button>
 							)}
 						</View>
-					</Form>
-				)}
-			</Content>
-		</Container>
+					</SafeAreaView>
+				</Form>
+			)}
+		</View>
 	);
 };
 
@@ -198,6 +191,10 @@ const styles = StyleSheet.create({
 		margin: 5,
 	},
 	buttonsContainer: {
+		flex: 1,
+		justifyContent: "flex-end",
+	},
+	clearButtonsContainer: {
 		flexDirection: "row",
 		marginTop: 20,
 	},
@@ -211,11 +208,17 @@ const styles = StyleSheet.create({
 		margin: 5,
 	},
 	content: {
+		flex: 1,
 		padding: 10,
 	},
 	deleteButton: {
 		flex: 0.8,
 		margin: 5,
+	},
+	form: {
+		flex: 1,
+		flexDirection: "column",
+		justifyContent: "space-between",
 	},
 	formItem: {
 		marginBottom: 15,

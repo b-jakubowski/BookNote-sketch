@@ -1,26 +1,21 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import {
-	Container,
-	List,
-	ListItem,
-	View,
-	Icon,
-	Item,
-	Input,
-	Button,
-	Fab,
-} from "native-base";
+import { List, ListItem, View, Icon, Fab } from "native-base";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import QuoteItem from "../../components/QuoteItem";
 import { Book, Quote } from "../../interfaces/book.interface";
-import { StyleSheet } from "react-native";
-import Colors from "../../constants/Colors";
-import ContainerBackground from "../../components/ContainerBackground";
 import Search from "../../components/Search";
+import styled from "styled-components";
+import {
+	foregroundColor,
+	spacing,
+	brown,
+	fontSize,
+	orange,
+} from "../../constants/Theme";
 
 type Props = {
 	books: Book[];
@@ -31,6 +26,37 @@ interface QuoteListItem extends Quote {
 	bookAuthor: string;
 	bookTitle: string;
 }
+
+export const QuotesList = styled(List)`
+	flex: 1;
+	margin: ${spacing.m};
+`;
+export const ListItemTheme = styled(ListItem)`
+	flex: 1;
+	background-color: ${foregroundColor};
+	justify-content: center;
+	margin-bottom: ${spacing.m};
+`;
+export const HiddenListItem = styled(View)`
+	align-items: center;
+	flex: 1;
+	flex-direction: row;
+	justify-content: flex-end;
+	background-color: ${foregroundColor};
+	margin-bottom: ${spacing.m};
+`;
+export const HiddenButton = styled(TouchableOpacity)`
+	align-items: center;
+	background-color: ${orange[500]};
+	flex: 1;
+	justify-content: center;
+	padding-left: ${spacing.m};
+	width: 100px;
+`;
+export const EditIcon = styled(Icon)`
+	color: ${brown[900]};
+	font-size: ${fontSize.l};
+`;
 
 const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 	const [searchVisible, setSearchVisible] = useState(false);
@@ -61,7 +87,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 	};
 
 	return (
-		<ContainerBackground>
+		<>
 			{searchVisible && (
 				<Search
 					onChangeText={(val: string) => setSearchVal(val)}
@@ -69,7 +95,7 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 				/>
 			)}
 
-			<List style={{ flex: 1, margin: 10 }}>
+			<QuotesList>
 				<SwipeListView
 					rightOpenValue={-75}
 					disableRightSwipe={true}
@@ -78,18 +104,17 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 					keyExtractor={(quote, index) => `${quote.id}-${index}`}
 					data={searchVal ? filteredQuotes() : quotes}
 					renderItem={({ item }) => (
-						<ListItem style={styles.rowFront} noIndent itemDivider>
+						<ListItemTheme noIndent itemDivider>
 							<QuoteItem
 								quote={item}
 								author={item.bookAuthor}
 								title={item.bookTitle}
 							/>
-						</ListItem>
+						</ListItemTheme>
 					)}
 					renderHiddenItem={({ item }) => (
-						<View style={styles.rowBack}>
-							<TouchableOpacity
-								style={styles.hiddenButton}
+						<HiddenListItem>
+							<HiddenButton
 								onPress={() =>
 									navigation.navigate("Add/Edit Quote", {
 										bookId: item.bookId,
@@ -100,58 +125,25 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 									})
 								}
 							>
-								<Icon type="Entypo" name="edit" style={styles.editIcon} />
-							</TouchableOpacity>
-						</View>
+								<EditIcon type="Entypo" name="edit" />
+							</HiddenButton>
+						</HiddenListItem>
 					)}
 				/>
-			</List>
+			</QuotesList>
 
 			{!searchVisible && (
 				<Fab
 					position="bottomRight"
-					style={styles.fabButton}
+					style={{ backgroundColor: orange[800] }}
 					onPress={() => setSearchVisible(true)}
 				>
 					<Icon type="FontAwesome" name="search" />
 				</Fab>
 			)}
-		</ContainerBackground>
+		</>
 	);
 };
-
-const styles = StyleSheet.create({
-	editIcon: {
-		color: Colors.blackChocolate,
-		fontSize: 22,
-	},
-	fabButton: {
-		zIndex: 1000,
-		backgroundColor: Colors.tintColor,
-	},
-	hiddenButton: {
-		alignItems: "center",
-		backgroundColor: Colors.lightOrange,
-		flex: 1,
-		justifyContent: "center",
-		paddingLeft: 15,
-		width: 100,
-	},
-	rowBack: {
-		alignItems: "center",
-		flex: 1,
-		flexDirection: "row",
-		justifyContent: "flex-end",
-		backgroundColor: "white",
-		marginBottom: 10,
-	},
-	rowFront: {
-		flex: 1,
-		backgroundColor: "white",
-		justifyContent: "center",
-		marginBottom: 10,
-	},
-});
 
 const mapStateToProps = ({ books }: Props) => ({ books });
 

@@ -11,7 +11,7 @@ export default {
 	warningText: "#666804",
 	noticeBackground: tintColor,
 	noticeText: "#fff",
-	success: "#4DAD4A",
+	success: "#64DD17",
 	successTransparent: "#4dad4a99",
 	backgroundGrey: "#f7f7f7",
 	lightGrey: "#F1F1F1",

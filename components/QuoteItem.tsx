@@ -1,9 +1,19 @@
 import React from "react";
 import { Body, Badge, Text } from "native-base";
-import { StyledText } from "./StyledText";
-import { View, StyleSheet } from "react-native";
-import Colors from "../constants/Colors";
+
+import { View } from "react-native";
 import { Quote } from "../interfaces/book.interface";
+import styled from "styled-components";
+import {
+	fontFamily,
+	titleTextColor,
+	fontSize,
+	foregroundColor,
+	spacing,
+	noteText,
+	orange,
+	brown,
+} from "../constants/Theme";
 
 interface Props {
 	quote: Quote;
@@ -11,48 +21,52 @@ interface Props {
 	title?: string;
 }
 
+const QuoteText = styled(Text)`
+	font-family: ${fontFamily.gotu};
+	color: ${titleTextColor};
+	font-size: ${fontSize.m};
+`;
+const AuthorText = styled(Text)`
+	color: ${noteText};
+	font-size: ${fontSize.sm};
+	margin-top: ${spacing.s};
+`;
+const ContainerTheme = styled(Body)`
+	background-color: ${foregroundColor};
+`;
+const CategoriesWrapper = styled(View)`
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin-top: ${spacing.s};
+`;
+const CategoryBadge = styled(Badge)`
+	background-color: ${orange[300]};
+	margin-right: ${spacing.s};
+	margin-top: ${spacing.xs};
+`;
+const CategoryText = styled(Text)`
+	color: ${brown[900]};
+	font-size: ${fontSize.sm};
+`;
+
 const QuoteItem: React.FC<Props> = ({ quote, author, title }) => {
 	return (
-		<Body>
-			<StyledText style={styles.quoteText}>"{quote.quote}"</StyledText>
+		<ContainerTheme>
+			<QuoteText>"{quote.quote}"</QuoteText>
 			{author && title && (
-				<Text note style={styles.authorTitle}>
+				<AuthorText>
 					{author}, {title}
-				</Text>
+				</AuthorText>
 			)}
-			<View style={styles.categories}>
+			<CategoriesWrapper>
 				{quote.categories.map((category, index) => (
-					<Badge key={index} style={styles.categoryBadge}>
-						<Text style={styles.categoryText}>{category}</Text>
-					</Badge>
+					<CategoryBadge key={index}>
+						<CategoryText>{category}</CategoryText>
+					</CategoryBadge>
 				))}
-			</View>
-		</Body>
+			</CategoriesWrapper>
+		</ContainerTheme>
 	);
 };
-
-const styles = StyleSheet.create({
-	authorTitle: {
-		fontSize: 12,
-		marginVertical: 3,
-	},
-	categories: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-		marginTop: 5,
-	},
-	categoryBadge: {
-		backgroundColor: Colors.lightOrange,
-		marginRight: 5,
-		marginTop: 3,
-	},
-	categoryText: {
-		color: Colors.blackChocolate,
-		fontSize: 12,
-	},
-	quoteText: {
-		fontSize: 16,
-	},
-});
 
 export default QuoteItem;

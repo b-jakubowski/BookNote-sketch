@@ -1,11 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, ActivityIndicator } from "react-native";
-import { Container, Text } from "native-base";
+import { View, ActivityIndicator } from "react-native";
+import { Text, H3 } from "native-base";
+import styled from "styled-components";
+import {
+	titleTextColor,
+	spacing,
+	fontSize,
+	noteText,
+} from "../../constants/Theme";
 
 interface RandomQuote {
 	content: string;
 	author: string;
 }
+
+const ContainerTheme = styled(View)`
+	flex: 1;
+	padding: ${spacing.m};
+	justify-content: center;
+`;
+const Quote = styled(H3)`
+	color: ${titleTextColor};
+	margin-bottom: ${spacing.m};
+`;
+const Author = styled(Text)`
+	font-size: ${fontSize.m};
+	color: ${noteText};
+`;
 
 const DailyQuoteScreen: React.FC = () => {
 	const [quote, setQuote] = useState<RandomQuote>({ content: "", author: "" });
@@ -24,40 +45,17 @@ const DailyQuoteScreen: React.FC = () => {
 	}, []);
 
 	return (
-		<Container>
-			<View style={styles.fillSpace}></View>
-			<View style={styles.quoteContainer}>
-				{loading ? (
-					<ActivityIndicator size="large" />
-				) : (
-					<>
-						<Text style={styles.quote}>"{quote.content}"</Text>
-						<Text note style={styles.author}>
-							{quote.author}
-						</Text>
-					</>
-				)}
-			</View>
-			<View style={styles.fillSpace}></View>
-		</Container>
+		<ContainerTheme>
+			{loading ? (
+				<ActivityIndicator size="large" />
+			) : (
+				<>
+					<Quote>"{quote.content}"</Quote>
+					<Author>{quote.author}</Author>
+				</>
+			)}
+		</ContainerTheme>
 	);
 };
-
-const styles = StyleSheet.create({
-	author: {
-		fontSize: 15,
-	},
-	fillSpace: {
-		flex: 1,
-	},
-	quote: {
-		fontSize: 20,
-		marginBottom: 10,
-	},
-	quoteContainer: {
-		flex: 1,
-		padding: 20,
-	},
-});
 
 export default DailyQuoteScreen;

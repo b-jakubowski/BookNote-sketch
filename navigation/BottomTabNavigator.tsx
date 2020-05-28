@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import * as React from "react";
+import React from "react";
 import { Button, Icon } from "native-base";
-import { StyleSheet } from "react-native";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 import TabBarIcon from "../components/TabBarIcon";
@@ -10,34 +9,36 @@ import QuotesScreen from "../screens/bottom-navigation/QuotesScreen";
 import DailyQuoteScreen from "../screens/bottom-navigation/DailyQuoteScreen";
 import Colors from "../constants/Colors";
 import ReadingListScreen from "../screens/bottom-navigation/ReadingListScreen";
-
-export type BottomStackParamList = {
-	"Daily Quote": undefined;
-	"Reading list": undefined;
-	Quotes: undefined;
-	Books: undefined;
-};
+import styled from "styled-components";
+import { iconColor } from "../constants/Theme";
+import { useTheme } from "../context/ThemeContext";
+import { BottomStackParamList } from "./types";
 
 interface Props {
 	navigation: StackNavigationHelpers;
 	route: any;
 }
+const IconTheme = styled(Icon)`
+	color: ${iconColor};
+`;
 
 const BottomTab = createBottomTabNavigator<BottomStackParamList>();
 
 const BottomTabNavigator: React.FC<Props> = ({ navigation, route }) => {
+	const theme = useTheme();
+
 	navigation.setOptions({
 		headerTitle: route.state?.routes[route.state.index]?.name,
 		headerRight: () => (
-			<Button
-				transparent
-				style={styles.logoutButton}
-				onPress={() => navigation.navigate("User details")}
-			>
-				<Icon
-					type="FontAwesome"
-					name="user-circle-o"
-					style={styles.logoutIcon}
+			<Button transparent onPress={() => navigation.navigate("User details")}>
+				<IconTheme type="FontAwesome" name="user-circle-o" />
+			</Button>
+		),
+		headerLeft: () => (
+			<Button transparent onPress={() => theme.toggle()}>
+				<IconTheme
+					type="Feather"
+					name={theme.mode === "dark" ? "sun" : "moon"}
 				/>
 			</Button>
 		),
@@ -92,15 +93,5 @@ const BottomTabNavigator: React.FC<Props> = ({ navigation, route }) => {
 		</BottomTab.Navigator>
 	);
 };
-
-const styles = StyleSheet.create({
-	logoutButton: {
-		flex: 1,
-		marginRight: 10,
-	},
-	logoutIcon: {
-		color: Colors.blackChocolate,
-	},
-});
 
 export default BottomTabNavigator;

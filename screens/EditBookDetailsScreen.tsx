@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, ActionSheet, Button, Icon, Container } from "native-base";
+import { Text, ActionSheet, Button, Icon } from "native-base";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
@@ -9,9 +9,9 @@ import { deleteBook, updateBookDetails } from "../store/actions/book";
 import { firestore } from "../constants/Firebase";
 import BookDetailsFields from "../components/BookDetailsFields";
 import { BookDetails } from "../interfaces/book.interface";
-import { StackParamList } from "./HomeScreen";
 import { showWarnToast } from "../helpers/Toast";
 import { bookDetailsSchema } from "../constants/Schemas";
+import { StackParamList } from "../navigation/types";
 
 interface Props {
 	deleteBook: (bookId: string) => void;
@@ -94,7 +94,7 @@ const EditBookDetailsScreen: React.FC<Props> = ({
 	};
 
 	return (
-		<Container style={styles.content}>
+		<>
 			{loading ? (
 				<View style={styles.activityIndicatorContainer}>
 					<ActivityIndicator size="large" />
@@ -137,7 +137,7 @@ const EditBookDetailsScreen: React.FC<Props> = ({
 					</View>
 				</>
 			)}
-		</Container>
+		</>
 	);
 };
 
@@ -153,9 +153,6 @@ const styles = StyleSheet.create({
 	},
 	changeButton: {
 		flex: 1,
-	},
-	content: {
-		padding: 10,
 	},
 	deleteButton: {
 		flex: 0.7,

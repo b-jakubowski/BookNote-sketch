@@ -1,14 +1,7 @@
 import React from "react";
-import {
-	Container,
-	Text,
-	Content,
-	Button,
-	View,
-	ActionSheet,
-} from "native-base";
+import { Text, Button, View, ActionSheet } from "native-base";
 import { connect } from "react-redux";
-import { StyleSheet } from "react-native";
+import styled from "styled-components";
 
 import { Store } from "../store/store";
 import { logOutUser } from "../store/actions/auth";
@@ -16,12 +9,28 @@ import { clearBooks } from "../store/actions/book";
 import { User } from "../interfaces/user.interface";
 import { signOut } from "../constants/Firebase";
 import { showWarnToast } from "../helpers/Toast";
+import { titleTextColor, spacing } from "../constants/Theme";
 
 interface Props {
 	user: User;
 	logOutUser: () => void;
 	clearBooks: () => void;
 }
+
+const ScreenContainer = styled(View)`
+	flex: 1;
+	padding: ${spacing.m};
+	align-items: center;
+	justify-content: center;
+`;
+const TextTheme = styled(Text)`
+	color: ${titleTextColor};
+`;
+const ButtonsContainer = styled(View)`
+	flex-direction: row;
+	justify-content: space-around;
+	margin-top: 80px;
+`;
 
 const UserDetailsScreen: React.FC<Props> = ({
 	user,
@@ -54,41 +63,17 @@ const UserDetailsScreen: React.FC<Props> = ({
 	};
 
 	return (
-		<Container>
-			<Content contentContainerStyle={styles.content}>
-				<Text>id: {user.uid}</Text>
-				<Text>email: {user.email}</Text>
-				<View style={styles.buttonsContainer}>
-					<Button
-						warning
-						block
-						style={styles.logOutButton}
-						onPress={() => confirmLogout()}
-					>
-						<Text>Log out</Text>
-					</Button>
-				</View>
-			</Content>
-		</Container>
+		<ScreenContainer>
+			<TextTheme>id: {user.uid}</TextTheme>
+			<TextTheme>email: {user.email}</TextTheme>
+			<ButtonsContainer>
+				<Button warning block onPress={() => confirmLogout()}>
+					<Text>Log out</Text>
+				</Button>
+			</ButtonsContainer>
+		</ScreenContainer>
 	);
 };
-
-const styles = StyleSheet.create({
-	buttonsContainer: {
-		flexDirection: "row",
-		justifyContent: "space-around",
-		marginTop: 40,
-	},
-	content: {
-		flex: 1,
-		padding: 10,
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	logOutButton: {
-		marginTop: 50,
-	},
-});
 
 const mapStateToProps = (state: Store) => ({
 	user: state.auth,
