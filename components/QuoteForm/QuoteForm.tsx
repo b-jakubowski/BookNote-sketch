@@ -35,7 +35,6 @@ const QuoteTextArea = styled(Textarea)`
 	color: ${titleTextColor};
 	width: 100%;
 	font-size: ${fontSize.m};
-	height: 100%;
 `;
 
 const QuoteForm: React.FC<Props> = ({
@@ -65,7 +64,7 @@ const QuoteForm: React.FC<Props> = ({
 			<Text note>Quote</Text>
 			<Item>
 				<QuoteTextArea
-					rowSpan={5}
+					rowSpan={10}
 					underline={true}
 					bordered
 					placeholderTextColor={textColor}

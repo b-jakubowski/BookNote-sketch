@@ -1,14 +1,6 @@
 import React, { useState } from "react";
-import { StyleSheet, ActivityIndicator } from "react-native";
-import {
-	Content,
-	Form,
-	Text,
-	Button,
-	View,
-	ActionSheet,
-	Icon,
-} from "native-base";
+import { StyleSheet, ActivityIndicator, SafeAreaView } from "react-native";
+import { Form, Text, Button, View, ActionSheet, Icon } from "native-base";
 import { connect } from "react-redux";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
@@ -138,52 +130,58 @@ const AddQuoteScreen: React.FC<Props> = ({
 	};
 
 	return (
-		<Content style={styles.content}>
+		<View style={styles.content}>
 			{loading ? (
 				<ActivityIndicator size="large" />
 			) : (
-				<Form>
+				<Form style={styles.form}>
 					<QuoteForm
 						categoriesCheck={form.categories}
 						onPress={(val) => toggleCategory(val)}
 						quote={form.quote}
 						onChangeText={(value) => setForm({ ...form, quote: value })}
 					/>
-					<Button
-						block
-						success
-						iconLeft
-						style={styles.addButton}
-						onPress={() => handleSubmit(form)}
-					>
-						<Icon type="Entypo" name="edit" />
-						<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
-					</Button>
-					<View style={styles.buttonsContainer}>
-						<Button
-							block
-							light
-							style={styles.clearButton}
-							onPress={() => setForm(isEdit ? initialEditQuote : initialQuote)}
-						>
-							<Text>Clear Form</Text>
-						</Button>
-						{isEdit && (
+					<SafeAreaView style={styles.buttonsContainer}>
+						<View style={{ flexDirection: "row" }}>
 							<Button
 								block
-								danger
+								success
 								iconLeft
-								style={styles.deleteButton}
-								onPress={() => confirmDelete()}
+								style={styles.addButton}
+								onPress={() => handleSubmit(form)}
 							>
-								<Icon type="Ionicons" name="md-trash" />
-								<Text>Delete quote</Text>
+								<Icon type="Entypo" name={isEdit ? "edit" : "plus"} />
+								<Text>{isEdit ? "Update Quote" : "Add Quote"}</Text>
 							</Button>
-						)}
-					</View>
+						</View>
+						<View style={styles.clearButtonsContainer}>
+							<Button
+								block
+								light
+								style={styles.clearButton}
+								onPress={() =>
+									setForm(isEdit ? initialEditQuote : initialQuote)
+								}
+							>
+								<Text>Clear Form</Text>
+							</Button>
+							{isEdit && (
+								<Button
+									block
+									danger
+									iconLeft
+									style={styles.deleteButton}
+									onPress={() => confirmDelete()}
+								>
+									<Icon type="Ionicons" name="md-trash" />
+									<Text>Delete quote</Text>
+								</Button>
+							)}
+						</View>
+					</SafeAreaView>
 				</Form>
 			)}
-		</Content>
+		</View>
 	);
 };
 
@@ -193,6 +191,10 @@ const styles = StyleSheet.create({
 		margin: 5,
 	},
 	buttonsContainer: {
+		flex: 1,
+		justifyContent: "flex-end",
+	},
+	clearButtonsContainer: {
 		flexDirection: "row",
 		marginTop: 20,
 	},
@@ -206,11 +208,17 @@ const styles = StyleSheet.create({
 		margin: 5,
 	},
 	content: {
+		flex: 1,
 		padding: 10,
 	},
 	deleteButton: {
 		flex: 0.8,
 		margin: 5,
+	},
+	form: {
+		flex: 1,
+		flexDirection: "column",
+		justifyContent: "space-between",
 	},
 	formItem: {
 		marginBottom: 15,
