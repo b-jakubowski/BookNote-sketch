@@ -34,7 +34,7 @@ const BookListItem = styled(ListItem)`
 	background-color: ${foregroundColor};
 `;
 const BookAmountText = styled(Text)`
-	color: ${brown[700]};
+	color: ${orange[900]};
 	padding: ${spacing.m};
 `;
 const BookTitle = styled(Text)`

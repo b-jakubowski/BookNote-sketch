@@ -3,6 +3,17 @@ import { View, Text, Item, Textarea } from "native-base";
 import { StyleSheet } from "react-native";
 import CategoryCheckBox from "./CategoryCheckBox";
 import { categoriesButtons } from "../../constants/Categories";
+import styled from "styled-components";
+import {
+	foregroundColor,
+	spacing,
+	gray,
+	black,
+	noteText,
+	titleTextColor,
+	fontSize,
+} from "../../constants/Theme";
+import { useTheme } from "../../context/ThemeContext";
 
 interface Props {
 	quote: string;
@@ -11,16 +22,37 @@ interface Props {
 	categoriesCheck: string[];
 }
 
+const FormItem = styled(View)`
+	background-color: ${foregroundColor};
+	margin-bottom: ${spacing.m};
+	padding: ${spacing.m};
+`;
+const Categories = styled(View)`
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+`;
+const QuoteTextArea = styled(Textarea)`
+	color: ${titleTextColor};
+	width: 100%;
+	font-size: ${fontSize.m};
+	height: 100%;
+`;
+
 const QuoteForm: React.FC<Props> = ({
 	quote,
 	onChangeText,
 	onPress,
 	categoriesCheck,
 }) => {
+	const theme = useTheme();
+
+	const textColor = theme.mode === "dark" ? gray[100] : black;
+
 	return (
-		<View style={styles.formItem}>
+		<FormItem>
 			<Text note>Categories</Text>
-			<View style={styles.categories}>
+			<Categories>
 				{categoriesButtons.map((category, index) => (
 					<View key={index}>
 						<CategoryCheckBox
@@ -30,35 +62,21 @@ const QuoteForm: React.FC<Props> = ({
 						/>
 					</View>
 				))}
-			</View>
+			</Categories>
 			<Text note>Quote</Text>
 			<Item>
-				<Textarea
+				<QuoteTextArea
 					rowSpan={5}
 					underline={true}
 					bordered
-					style={styles.quoteField}
+					placeholderTextColor={textColor}
 					placeholder="Quote"
 					onChangeText={onChangeText}
 					value={quote}
 				/>
 			</Item>
-		</View>
+		</FormItem>
 	);
 };
-
-const styles = StyleSheet.create({
-	categories: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-		justifyContent: "center",
-	},
-	formItem: {
-		marginBottom: 15,
-	},
-	quoteField: {
-		width: "100%",
-	},
-});
 
 export default QuoteForm;
