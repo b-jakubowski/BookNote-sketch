@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, ActivityIndicator } from "react-native";
-import {
-	Container,
-	Content,
-	Form,
-	Text,
-	Button,
-	View,
-	Icon,
-} from "native-base";
+import { Content, Form, Text, Button, View, Icon } from "native-base";
 import { RouteProp } from "@react-navigation/native";
 import { connect } from "react-redux";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
@@ -22,6 +14,7 @@ import { Store } from "../store/store";
 import { showWarnToast } from "../helpers/Toast";
 import { bookDetailsSchema } from "../constants/Schemas";
 import { StackParamList } from "../navigation/types";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Props {
 	user: User;
@@ -99,44 +92,40 @@ const AddBookScreen: React.FC<Props> = ({
 			{loading ? (
 				<ActivityIndicator size="large" />
 			) : (
-				<>
-					<View>
-						<BookDetailsFields
-							title={form.title}
-							author={form.author}
-							cover={form.cover}
-							status={form.status}
-							isEdit={false}
-							setForm={setForm}
-							form={form}
-						/>
-					</View>
+				<View style={styles.container}>
+					<BookDetailsFields
+						title={form.title}
+						author={form.author}
+						cover={form.cover}
+						status={form.status}
+						isEdit={false}
+						setForm={setForm}
+						form={form}
+					/>
 
-					<Content style={styles.content}>
-						<Form>
-							<View style={styles.buttonsContainer}>
-								<Button
-									success
-									block
-									iconLeft
-									style={styles.addButton}
-									onPress={() => handleSubmit(form)}
-								>
-									<Icon type="AntDesign" name="pluscircle" />
-									<Text>Add Book</Text>
-								</Button>
-								<Button
-									block
-									light
-									style={styles.clearButton}
-									onPress={() => setForm(initialForm)}
-								>
-									<Text>Clear Form</Text>
-								</Button>
-							</View>
-						</Form>
-					</Content>
-				</>
+					<SafeAreaView>
+						<View style={styles.buttonsContainer}>
+							<Button
+								success
+								block
+								iconLeft
+								style={styles.addButton}
+								onPress={() => handleSubmit(form)}
+							>
+								<Icon type="AntDesign" name="pluscircle" />
+								<Text>Add Book</Text>
+							</Button>
+							<Button
+								block
+								info
+								style={styles.clearButton}
+								onPress={() => setForm(initialForm)}
+							>
+								<Text>Clear Form</Text>
+							</Button>
+						</View>
+					</SafeAreaView>
+				</View>
 			)}
 		</>
 	);
@@ -150,17 +139,14 @@ const styles = StyleSheet.create({
 	buttonsContainer: {
 		flexDirection: "row",
 	},
-	categories: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-		justifyContent: "center",
-	},
 	clearButton: {
 		flex: 1,
 		margin: 5,
 	},
-	content: {
-		padding: 10,
+	container: {
+		flex: 1,
+		flexDirection: "column",
+		justifyContent: "space-between",
 	},
 });
 

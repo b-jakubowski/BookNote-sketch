@@ -19,6 +19,15 @@ import Autocomplete from "react-native-autocomplete-input";
 import { BookDetails, Book } from "../interfaces/book.interface";
 import { Store } from "../store/store";
 import { connect } from "react-redux";
+import styled from "styled-components";
+import {
+	foregroundColor,
+	spacing,
+	noteText,
+	gray,
+	black,
+} from "../constants/Theme";
+import { useTheme } from "../context/ThemeContext";
 
 interface Props extends BookDetails {
 	isEdit: boolean;
@@ -27,6 +36,20 @@ interface Props extends BookDetails {
 	setForm: (f: BookDetails) => void;
 	books: Book[];
 }
+
+const FormItem = styled(View)`
+	background-color: ${foregroundColor};
+	padding: ${spacing.m};
+	margin-bottom: ${spacing.m};
+`;
+const TextTheme = styled(Text)`
+	color: ${noteText};
+`;
+const AutocompleteList = styled(TouchableOpacity)`
+	background-color: ${foregroundColor};
+	padding: ${spacing.m};
+	z-index: 100000;
+`;
 
 const BookDetailsFields: React.FC<Props> = ({
 	books,
@@ -42,6 +65,9 @@ const BookDetailsFields: React.FC<Props> = ({
 	const [showTitleResults, setShowTitleResults] = useState(true);
 	const [showAuthorResults, setShowAuthorResults] = useState(true);
 	const navigation = useNavigation();
+	const theme = useTheme();
+
+	const textColor = theme.mode === "dark" ? gray[100] : black;
 
 	const getPermissionAndPickImage = async () => {
 		if (Constants.platform.ios) {
@@ -119,29 +145,29 @@ const BookDetailsFields: React.FC<Props> = ({
 	};
 
 	return (
-		<View style={styles.formItem}>
-			<Text note>Book</Text>
+		<FormItem>
+			<TextTheme note>Book</TextTheme>
 			<Item style={{ zIndex: 2 }}>
 				<Autocomplete
 					autoCapitalize="none"
 					autoCorrect={false}
-					style={styles.autocomplete}
+					style={{ color: textColor, zIndex: 100000 }}
 					containerStyle={styles.autocompleteContainer}
 					inputContainerStyle={styles.autocompleteInput}
 					listStyle={styles.autocompleteList}
 					hideResults={showTitleResults}
+					placeholderTextColor={textColor}
 					placeholder="Book title"
 					defaultValue={title}
 					data={form.title ? filteredBookField("title") : []}
 					keyExtractor={(item, index) => `${item.title}-${index}`}
 					onChangeText={(value) => handleBookTitleChange(value)}
 					renderItem={({ item }) => (
-						<TouchableOpacity
-							style={styles.autocompleteListItem}
+						<AutocompleteList
 							onPress={() => handleAutocompleteItemPress(item.title, "title")}
 						>
-							<Text style={styles.itemText}>{item.title}</Text>
-						</TouchableOpacity>
+							<TextTheme>{item.title}</TextTheme>
+						</AutocompleteList>
 					)}
 				/>
 			</Item>
@@ -149,23 +175,23 @@ const BookDetailsFields: React.FC<Props> = ({
 				<Autocomplete
 					autoCapitalize="none"
 					autoCorrect={false}
-					style={styles.autocomplete}
+					style={{ color: textColor }}
 					containerStyle={styles.autocompleteContainer}
 					inputContainerStyle={styles.autocompleteInput}
 					listStyle={styles.autocompleteList}
 					hideResults={showAuthorResults}
+					placeholderTextColor={textColor}
 					placeholder="Book author"
 					defaultValue={author}
 					data={form.author ? filteredBookField("author") : []}
 					keyExtractor={(item, index) => `${item.author}-${index}`}
 					onChangeText={(value) => handleBookAuthorChange(value)}
 					renderItem={({ item }) => (
-						<TouchableOpacity
-							style={styles.autocompleteListItem}
+						<AutocompleteList
 							onPress={() => handleAutocompleteItemPress(item.author, "author")}
 						>
-							<Text style={styles.itemText}>{item.author}</Text>
-						</TouchableOpacity>
+							<TextTheme>{item.author}</TextTheme>
+						</AutocompleteList>
 					)}
 				/>
 			</Item>
@@ -173,7 +199,8 @@ const BookDetailsFields: React.FC<Props> = ({
 				<Input
 					placeholder="Cover URL"
 					autoCorrect={false}
-					style={styles.coverInput}
+					style={{ color: textColor, flex: 2 }}
+					placeholderTextColor={textColor}
 					onChangeText={(value) => setForm({ ...form, cover: value })}
 					value={cover}
 				/>
@@ -190,9 +217,9 @@ const BookDetailsFields: React.FC<Props> = ({
 				<Picker
 					mode="dropdown"
 					iosIcon={<Icon name="arrow-down" />}
-					style={styles.picker}
 					placeholder="Reading status"
 					placeholderIconColor="#007aff"
+					textStyle={{ color: textColor }}
 					selectedValue={status}
 					onValueChange={(value) => setForm({ ...form, status: value })}
 				>
@@ -201,49 +228,35 @@ const BookDetailsFields: React.FC<Props> = ({
 					<Picker.Item label="Read" value="Read" />
 				</Picker>
 			</Item>
-		</View>
+		</FormItem>
 	);
 };
 
 const styles = StyleSheet.create({
-	autocomplete: {
-		fontSize: 16,
-	},
 	autocompleteContainer: {
-		flex: 1,
-		paddingVertical: 10,
+		flex: 2,
+		paddingVertical: 12,
 	},
 	autocompleteList: {
 		borderTopColor: "lightgrey",
 		borderTopWidth: 1,
-		marginTop: 7,
-		paddingBottom: 5,
+		marginTop: 8,
+		paddingBottom: 8,
+		elevation: 10,
 	},
 	autocompleteListItem: {
-		padding: 10,
+		padding: 12,
 		backgroundColor: "white",
 	},
 	autocompleteInput: {
-		paddingVertical: 5,
+		paddingVertical: 4,
 		borderWidth: 0,
 	},
 	coverButton: {
-		marginVertical: 10,
+		marginVertical: 12,
 	},
 	coverInput: {
 		flex: 2,
-	},
-	formItem: {
-		padding: 10,
-		marginBottom: 15,
-		backgroundColor: "white",
-	},
-	picker: {
-		width: undefined,
-	},
-	itemText: {
-		fontSize: 15,
-		margin: 2,
 	},
 });
 
