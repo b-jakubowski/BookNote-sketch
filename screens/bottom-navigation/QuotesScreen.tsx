@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { List, ListItem, View, Icon, Fab } from "native-base";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 import QuoteItem from "../../components/QuoteItem";
 import { Book, Quote } from "../../interfaces/book.interface";
@@ -16,6 +15,7 @@ import {
 	fontSize,
 	orange,
 } from "../../constants/Theme";
+import { TouchableOpacity } from "react-native";
 
 type Props = {
 	books: Book[];
