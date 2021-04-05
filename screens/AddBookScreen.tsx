@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 import { addBook } from "../store/actions/book";
-import { firestore } from "../constants/Firebase";
+import firestore from "@react-native-firebase/firestore";
 import BookDetailsFields from "../components/BookDetailsFields";
 import { User } from "../interfaces/user.interface";
 import { Book, BookDetails, Status } from "../interfaces/book.interface";
@@ -47,7 +47,7 @@ const AddBookScreen: React.FC<Props> = ({
 
 	const handleCreateBook = async (book: Book) => {
 		try {
-			const docRef = await firestore.collection("books").add(book);
+			const docRef = await firestore().collection("books").add(book);
 			const doc = await docRef.get();
 
 			addBook({
