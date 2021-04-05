@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 	},
 	safeArea: {
-		paddingTop: Constants.platform.android ? 25 : 0,
+		paddingTop: Constants.platform?.android ? 25 : 0,
 	},
 	signUpButton: {
 		width: 150,

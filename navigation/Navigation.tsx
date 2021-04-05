@@ -1,5 +1,8 @@
-import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import React, { useEffect, useState } from "react";
+import {
+	createStackNavigator,
+	StackNavigationOptions,
+} from "@react-navigation/stack";
 import { connect } from "react-redux";
 import {
 	NavigationContainer,
@@ -7,6 +10,7 @@ import {
 	DefaultTheme,
 } from "@react-navigation/native";
 import styled, { ThemeProvider } from "styled-components";
+import auth from "@react-native-firebase/auth";
 
 import AuthScreen from "../screens/AuthScreen";
 import BottomTabNavigator from "./BottomTabNavigator";
@@ -21,10 +25,11 @@ import { useTheme } from "../context/ThemeContext";
 import { StackParamList } from "./types";
 import { Container } from "native-base";
 import { backgroundColor } from "../constants/Theme";
+import { logInUser } from "../store/actions/auth";
 
 interface Props {
-	user: User;
 	loading: boolean;
+	logInUser: (user: any) => void;
 }
 
 interface StateProps {
@@ -40,13 +45,33 @@ const ContainerTheme = styled(Container)`
 	background: ${backgroundColor};
 `;
 
-const stackScreenOptions = {
+const stackScreenOptions: StackNavigationOptions = {
 	headerBackTitleVisible: false,
 	headerTitleAlign: "center",
 };
 
-const Navigation: React.FC<Props> = ({ user, loading }) => {
+const Navigation: React.FC<Props> = ({ loading, logInUser }) => {
+	const [initializing, setInitializing] = useState(true);
+	const [user, setUser] = useState();
 	const theme = useTheme();
+
+	const onAuthStateChanged = (user: any) => {
+		setUser(user);
+		if (user) logInUser(user);
+		if (initializing) setInitializing(false);
+	};
+
+	useEffect(() => {
+		const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+
+		return subscriber;
+	}, []);
+
+	if (initializing) return null;
+
+	if (!user) {
+		return <AuthScreen />;
+	}
 
 	return (
 		<ThemeProvider theme={{ mode: theme.mode }}>
@@ -54,7 +79,7 @@ const Navigation: React.FC<Props> = ({ user, loading }) => {
 				<NavigationContainer
 					theme={theme.mode === "dark" ? DarkTheme : DefaultTheme}
 				>
-					{user.uid && !loading ? (
+					{!loading && (
 						<Stack.Navigator>
 							<Stack.Screen
 								name="Books"
@@ -92,8 +117,6 @@ const Navigation: React.FC<Props> = ({ user, loading }) => {
 								options={stackScreenOptions}
 							/>
 						</Stack.Navigator>
-					) : (
-						<AuthScreen />
 					)}
 				</NavigationContainer>
 			</ContainerTheme>
@@ -106,4 +129,4 @@ const mapStateToProps = (state: StateProps) => ({
 	loading: state.globalLoading.loading,
 });
 
-export default connect(mapStateToProps)(Navigation);
+export default connect(mapStateToProps, { logInUser })(Navigation);

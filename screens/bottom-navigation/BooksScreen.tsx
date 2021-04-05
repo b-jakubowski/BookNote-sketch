@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { addBook } from "../../store/actions/book";
 import BookList from "../../components/BookList/BookList";
 import Search from "../../components/Search";
-import { firestore } from "../../constants/Firebase";
+import firestore from "@react-native-firebase/firestore";
 import { Store } from "../../store/store";
 import { Book } from "../../interfaces/book.interface";
 import {
@@ -45,7 +45,7 @@ const BooksScreen: React.FC<Props> = ({ uid, books, addBook }) => {
 	useEffect(() => {
 		setLoading(true);
 
-		firestore
+		firestore()
 			.collection("books")
 			.where("userId", "==", uid)
 			.get()

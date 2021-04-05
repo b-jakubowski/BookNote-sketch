@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "528556434593",
+    "firebase_url": "https://booknote-1ec65.firebaseio.com",
+    "project_id": "booknote-1ec65",
+    "storage_bucket": "booknote-1ec65.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528556434593:android:1a0765f58ee15162b13ce0",
+        "android_client_info": {
+          "package_name": "com.bjakubov.booknote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "528556434593-qcjuea11b6vtssnb77tgitp6vlg0il0h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFrehq_BC_9mQGxqU5IUWqCAx_3xNICEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "528556434593-qcjuea11b6vtssnb77tgitp6vlg0il0h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "528556434593-guetdjk58i6hnjk9qqutbp4pqnfb8ej3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.exp.bj.booknote"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

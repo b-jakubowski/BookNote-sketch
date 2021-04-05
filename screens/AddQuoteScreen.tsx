@@ -4,10 +4,9 @@ import { Form, Text, Button, View, ActionSheet, Icon } from "native-base";
 import { connect } from "react-redux";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
-import firebase from "firebase/app";
 
 import QuoteForm from "../components/QuoteForm/QuoteForm";
-import { firestore } from "../constants/Firebase.js";
+import firestore from "@react-native-firebase/firestore";
 import { addQuoteToBook, deleteQuote } from "../store/actions/book";
 import { Quote } from "../interfaces/book.interface";
 import { quoteSchema } from "../constants/Schemas";
@@ -40,7 +39,7 @@ const AddQuoteScreen: React.FC<Props> = ({
 		quote: route.params.quote,
 		categories: route.params.categories,
 	};
-	const bookRef = firestore.collection("books").doc(bookId);
+	const bookRef = firestore().collection("books").doc(bookId);
 
 	const [form, setForm] = useState(isEdit ? initialEditQuote : initialQuote);
 
@@ -64,7 +63,7 @@ const AddQuoteScreen: React.FC<Props> = ({
 
 		bookRef
 			.update({
-				quotes: firebase.firestore.FieldValue.arrayUnion(quote),
+				quotes: firestore.FieldValue.arrayUnion(quote),
 			})
 			.then(() => addQuoteToBook(quote, bookId))
 			.catch()
@@ -77,7 +76,7 @@ const AddQuoteScreen: React.FC<Props> = ({
 	const updateQuoteInFirestore = (oldQuote: Quote, newQuote: Quote) => {
 		bookRef
 			.update({
-				quotes: firebase.firestore.FieldValue.arrayRemove(oldQuote),
+				quotes: firestore.FieldValue.arrayRemove(oldQuote),
 			})
 			.then(() => {
 				deleteQuote(bookId, quoteId);
@@ -91,7 +90,7 @@ const AddQuoteScreen: React.FC<Props> = ({
 
 		bookRef
 			.update({
-				quotes: firebase.firestore.FieldValue.arrayRemove(initialEditQuote),
+				quotes: firestore.FieldValue.arrayRemove(initialEditQuote),
 			})
 			.then(() => deleteQuote(bookId, quoteId))
 			.catch()

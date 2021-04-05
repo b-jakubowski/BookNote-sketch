@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Platform, StatusBar } from "react-native";
-import { SplashScreen } from "expo";
+import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { Provider } from "react-redux";
@@ -22,7 +22,7 @@ const App: React.FC<Props> = ({ skipLoadingScreen }) => {
 	useEffect(() => {
 		async function loadResourcesAndDataAsync() {
 			try {
-				SplashScreen.preventAutoHide();
+				SplashScreen.preventAutoHideAsync();
 
 				await Font.loadAsync({
 					Roboto: require("native-base/Fonts/Roboto.ttf"),
@@ -35,7 +35,7 @@ const App: React.FC<Props> = ({ skipLoadingScreen }) => {
 				console.warn(e);
 			} finally {
 				setLoadingComplete(true);
-				SplashScreen.hide();
+				SplashScreen.hideAsync();
 			}
 		}
 
