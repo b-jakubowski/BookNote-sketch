@@ -1,7 +1,7 @@
 import React from "react";
 import { Body, Badge, Text } from "native-base";
 
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { Quote } from "../interfaces/book.interface";
 import styled from "styled-components";
 import {
@@ -19,6 +19,7 @@ interface Props {
 	quote: Quote;
 	author?: string;
 	title?: string;
+	onPress: () => void;
 }
 
 const QuoteText = styled(Text)`
@@ -49,22 +50,26 @@ const CategoryText = styled(Text)`
 	font-size: ${fontSize.sm};
 `;
 
-const QuoteItem: React.FC<Props> = ({ quote, author, title }) => {
+const QuoteItem: React.FC<Props> = ({ quote, author, title, onPress }) => {
 	return (
 		<ContainerTheme>
-			<QuoteText>"{quote.quote}"</QuoteText>
-			{author && title && (
-				<AuthorText>
-					{author}, {title}
-				</AuthorText>
-			)}
-			<CategoriesWrapper>
-				{quote.categories.map((category, index) => (
-					<CategoryBadge key={index}>
-						<CategoryText>{category}</CategoryText>
-					</CategoryBadge>
-				))}
-			</CategoriesWrapper>
+			<TouchableOpacity onPress={onPress}>
+				<>
+					<QuoteText>"{quote.quote}"</QuoteText>
+					{author && title && (
+						<AuthorText>
+							{author}, {title}
+						</AuthorText>
+					)}
+					<CategoriesWrapper>
+						{quote.categories.map((category, index) => (
+							<CategoryBadge key={index}>
+								<CategoryText>{category}</CategoryText>
+							</CategoryBadge>
+						))}
+					</CategoriesWrapper>
+				</>
+			</TouchableOpacity>
 		</ContainerTheme>
 	);
 };

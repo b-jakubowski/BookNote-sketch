@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { List, ListItem, View, Icon, Fab } from "native-base";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
-import { SwipeListView } from "react-native-swipe-list-view";
 
 import QuoteItem from "../../components/QuoteItem";
 import { Book, Quote } from "../../interfaces/book.interface";
@@ -15,14 +14,14 @@ import {
 	fontSize,
 	orange,
 } from "../../constants/Theme";
-import { TouchableOpacity } from "react-native";
+import { FlatList, TouchableOpacity } from "react-native";
 
 type Props = {
 	books: Book[];
 	navigation: StackNavigationHelpers;
 };
 
-interface QuoteListItem extends Quote {
+export interface QuoteListItem extends Quote {
 	bookAuthor: string;
 	bookTitle: string;
 }
@@ -63,18 +62,20 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 	const [searchVal, setSearchVal] = useState("");
 	const quotes: QuoteListItem[] = [];
 
-	books.forEach((book) => {
-		if (book.quotes) {
-			book.quotes.forEach((quote: Quote) => {
-				quotes.push({
-					bookId: book.id,
-					bookAuthor: book.author,
-					bookTitle: book.title,
-					...quote,
+	useEffect(() => {
+		books.forEach((book) => {
+			if (book.quotes) {
+				book.quotes.forEach((quote: Quote) => {
+					quotes.push({
+						bookId: book.id,
+						bookAuthor: book.author,
+						bookTitle: book.title,
+						...quote,
+					});
 				});
-			});
-		}
-	});
+			}
+		});
+	}, [books]);
 
 	const filteredQuotes = () =>
 		quotes.filter((quote) =>
@@ -86,6 +87,26 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 		setSearchVal("");
 	};
 
+	const onQuotePress = (item: QuoteListItem) =>
+		navigation.navigate("Add/Edit Quote", {
+			bookId: item.bookId,
+			quoteId: item.id,
+			quote: item.quote,
+			categories: item.categories,
+			isEdit: true,
+		});
+
+	const renderItem = ({ item }: { item: QuoteListItem }) => (
+		<ListItemTheme noIndent itemDivider>
+			<QuoteItem
+				quote={item}
+				author={item.bookAuthor}
+				title={item.bookTitle}
+				onPress={() => onQuotePress(item)}
+			/>
+		</ListItemTheme>
+	);
+
 	return (
 		<>
 			{searchVisible && (
@@ -96,39 +117,12 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 			)}
 
 			<QuotesList>
-				<SwipeListView
-					rightOpenValue={-75}
-					disableRightSwipe={true}
-					tension={-2}
-					friction={20}
-					keyExtractor={(quote, index) => `${quote.id}-${index}`}
+				<FlatList
 					data={searchVal ? filteredQuotes() : quotes}
-					renderItem={({ item }) => (
-						<ListItemTheme noIndent itemDivider>
-							<QuoteItem
-								quote={item}
-								author={item.bookAuthor}
-								title={item.bookTitle}
-							/>
-						</ListItemTheme>
-					)}
-					renderHiddenItem={({ item }) => (
-						<HiddenListItem>
-							<HiddenButton
-								onPress={() =>
-									navigation.navigate("Add/Edit Quote", {
-										bookId: item.bookId,
-										quoteId: item.id,
-										quote: item.quote,
-										categories: item.categories,
-										isEdit: true,
-									})
-								}
-							>
-								<EditIcon type="Entypo" name="edit" />
-							</HiddenButton>
-						</HiddenListItem>
-					)}
+					renderItem={renderItem}
+					keyExtractor={(item: QuoteListItem) =>
+						`${Math.random()}-${item.bookTitle}`
+					}
 				/>
 			</QuotesList>
 

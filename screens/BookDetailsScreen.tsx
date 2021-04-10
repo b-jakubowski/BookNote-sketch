@@ -1,22 +1,15 @@
 import React from "react";
-import { View, Image } from "react-native";
-import { SwipeListView } from "react-native-swipe-list-view";
+import { View, Image, FlatList } from "react-native";
 import { Text, CardItem, Button, Fab, Icon, H3 } from "native-base";
 import { connect } from "react-redux";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 import QuoteItem from "../components/QuoteItem";
-import { Book } from "../interfaces/book.interface";
+import { Book, Quote } from "../interfaces/book.interface";
 import { Store } from "../store/store";
 import { StackParamList } from "../navigation/types";
-import {
-	QuotesList,
-	HiddenListItem,
-	HiddenButton,
-	EditIcon,
-	ListItemTheme,
-} from "./bottom-navigation/QuotesScreen";
+import { QuotesList, ListItemTheme } from "./bottom-navigation/QuotesScreen";
 import styled from "styled-components";
 import {
 	titleTextColor,
@@ -71,6 +64,27 @@ const BookDetailsScreen: React.FC<Props> = ({ route, books, navigation }) => {
 		? { uri: cover }
 		: require("../assets/images/book-cover-placeholder.jpg");
 
+	const onQuotePress = (item: Quote) =>
+		navigation.navigate("Add/Edit Quote", {
+			bookId: id,
+			quoteId: item.id,
+			quote: item.quote,
+			categories: item.categories,
+			isEdit: true,
+		});
+
+	const onEditBookPress = () =>
+		navigation.navigate("Edit book details", {
+			id,
+			initialBookValues: { title, author, cover, status },
+		});
+
+	const renderItem = ({ item }: { item: Quote }) => (
+		<ListItemTheme noIndent itemDivider>
+			<QuoteItem quote={item} onPress={() => onQuotePress(item)} />
+		</ListItemTheme>
+	);
+
 	return (
 		<>
 			<BookDetailsCard header>
@@ -81,56 +95,21 @@ const BookDetailsScreen: React.FC<Props> = ({ route, books, navigation }) => {
 					<BookDetails note>Status: {status}</BookDetails>
 				</View>
 				<View style={{ flex: 0.4 }}>
-					<EditBookButton
-						light
-						block
-						transparent
-						onPress={() =>
-							navigation.navigate("Edit book details", {
-								id,
-								initialBookValues: { title, author, cover, status },
-							})
-						}
-					>
+					<EditBookButton light block transparent onPress={onEditBookPress}>
 						<EditBookIcon type="Entypo" name="edit" />
 					</EditBookButton>
 				</View>
 			</BookDetailsCard>
 			{quotes ? (
 				<QuotesList>
-					<SwipeListView
-						rightOpenValue={-75}
-						disableRightSwipe={true}
-						tension={-2}
-						friction={20}
-						keyExtractor={(quote) => quote.id}
+					<FlatList
 						data={quotes}
-						renderItem={({ item }) => (
-							<ListItemTheme noIndent itemDivider>
-								<QuoteItem quote={item} />
-							</ListItemTheme>
-						)}
-						renderHiddenItem={({ item }) => (
-							<HiddenListItem>
-								<HiddenButton
-									onPress={() =>
-										navigation.navigate("Add/Edit Quote", {
-											bookId: id,
-											quoteId: item.id,
-											quote: item.quote,
-											categories: item.categories,
-											isEdit: true,
-										})
-									}
-								>
-									<EditIcon type="Entypo" name="edit" />
-								</HiddenButton>
-							</HiddenListItem>
-						)}
+						renderItem={renderItem}
+						keyExtractor={(item: Quote) => `${Math.random()}-${item.id}`}
 					/>
 				</QuotesList>
 			) : (
-				<Text style={{ textAlign: "center" }}>No quotes/notes added yet</Text>
+				<Text style={{ textAlign: "center" }}>No quotes added yet</Text>
 			)}
 			<Fab
 				position="bottomRight"
