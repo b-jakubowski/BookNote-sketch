@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import React from "react";
 import { Button, Icon } from "native-base";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
@@ -28,7 +29,7 @@ const BottomTabNavigator: React.FC<Props> = ({ navigation, route }) => {
 	const theme = useTheme();
 
 	navigation.setOptions({
-		headerTitle: route.state?.routes[route.state.index]?.name,
+		headerTitle: getFocusedRouteNameFromRoute(route),
 		headerRight: () => (
 			<Button transparent onPress={() => navigation.navigate("User details")}>
 				<IconTheme type="FontAwesome" name="user-circle-o" />
