@@ -4,6 +4,7 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { Provider } from "react-redux";
+import { enableScreens } from "react-native-screens";
 
 import configureStore from "./store/store";
 import { Root } from "native-base";
@@ -20,6 +21,8 @@ const App: React.FC<Props> = ({ skipLoadingScreen }) => {
 	const [isLoadingComplete, setLoadingComplete] = useState(false);
 
 	useEffect(() => {
+		enableScreens();
+
 		async function loadResourcesAndDataAsync() {
 			try {
 				SplashScreen.preventAutoHideAsync();
