@@ -45,7 +45,7 @@ const EditBookDetailsScreen: React.FC<Props> = ({
 			.then(() => {
 				deleteBook(id);
 			})
-			.catch((e) => showWarnToast(e.errors))
+			.catch((e) => showWarnToast(e))
 			.finally(() => {
 				setLoading(false);
 				navigation.navigate("Books");
@@ -58,7 +58,7 @@ const EditBookDetailsScreen: React.FC<Props> = ({
 		bookDetailsSchema
 			.validate(form, { abortEarly: false })
 			.then(() => submitBookDetails())
-			.catch((e) => showWarnToast(e.errors.join(",\r\n")));
+			.catch((e) => showWarnToast(e));
 	};
 
 	const submitBookDetails = () => {

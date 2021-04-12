@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Fab, Icon, Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { addBook } from "../../store/actions/book";
+import { addBook, addBooks } from "../../store/actions/book";
 import BookList from "../../components/BookList/BookList";
 import Search from "../../components/Search";
 import firestore from "@react-native-firebase/firestore";
@@ -18,12 +18,7 @@ import {
 	orange,
 } from "../../constants/Theme";
 import { useTheme } from "../../context/ThemeContext";
-
-interface Props {
-	uid: string;
-	books: Book[];
-	addBook: (book: Book) => void;
-}
+import { showWarnToast } from "../../helpers/Toast";
 
 const FabTheme = styled(Fab)`
 	background-color: ${fabExtendedColor};
@@ -32,14 +27,16 @@ const IconTheme = styled(Icon)`
 	color: ${iconColor};
 `;
 
-const BooksScreen: React.FC<Props> = ({ uid, books, addBook }) => {
+const BooksScreen: React.FC = () => {
 	const [loading, setLoading] = useState(false);
 	const [searchVisible, setSearchVisible] = useState(false);
 	const [searchVal, setSearchVal] = useState("");
 	const [fabActive, setFabActive] = useState(false);
+	const books = useSelector((state: Store) => state.books);
+	const uid = useSelector((state: Store) => state.auth.uid);
+	const dispatch = useDispatch();
 	const navigation = useNavigation();
 	const theme = useTheme();
-
 	const fabIconColor = theme.mode === "dark" ? gray[900] : gray[100];
 
 	useEffect(() => {
@@ -51,12 +48,16 @@ const BooksScreen: React.FC<Props> = ({ uid, books, addBook }) => {
 			.get()
 			.then((booksStore) => {
 				if (!books.length) {
-					booksStore.docs.forEach((book) =>
-						addBook({ id: book.id, ...book.data() } as Book)
+					const booksDocs: Book[] = [];
+					booksStore.docs.forEach(
+						(book) => booksDocs.push({ id: book.id, ...book.data() } as Book)
+						// TODO: Map quotes and add to store here
 					);
+
+					dispatch(addBooks(booksDocs));
 				}
 			})
-			.catch()
+			.catch((e) => showWarnToast(e))
 			.finally(() => setLoading(false));
 	}, []);
 
@@ -125,9 +126,4 @@ const BooksScreen: React.FC<Props> = ({ uid, books, addBook }) => {
 	);
 };
 
-const mapStateToProps = (state: Store) => ({
-	books: state.books,
-	uid: state.auth.uid,
-});
-
-export default connect(mapStateToProps, { addBook })(BooksScreen);
+export default BooksScreen;

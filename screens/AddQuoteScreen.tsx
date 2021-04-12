@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { ErrorInfo, useState } from "react";
 import { StyleSheet, ActivityIndicator, SafeAreaView } from "react-native";
 import { Form, Text, Button, View, ActionSheet, Icon } from "native-base";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
@@ -16,8 +16,6 @@ import { StackParamList } from "../navigation/types";
 
 interface Props {
 	route: RouteProp<StackParamList, "Add/Edit Quote">;
-	addQuoteToBook: (quote: Quote, bookId: string) => void;
-	deleteQuote: (bookId: string, quoteId: string) => void;
 	navigation: StackNavigationHelpers;
 }
 
@@ -26,78 +24,76 @@ const initialQuote: Quote = {
 	categories: [],
 };
 
-const AddQuoteScreen: React.FC<Props> = ({
-	route,
-	addQuoteToBook,
-	deleteQuote,
-	navigation,
-}) => {
+const AddQuoteScreen: React.FC<Props> = ({ route, navigation }) => {
 	const { bookId, quoteId, isEdit } = route.params;
 	const [loading, setLoading] = useState(false);
+	const dispatch = useDispatch();
 	const initialEditQuote = {
 		id: quoteId,
 		quote: route.params.quote,
 		categories: route.params.categories,
 	};
 	const bookRef = firestore().collection("books").doc(bookId);
-
 	const [form, setForm] = useState(isEdit ? initialEditQuote : initialQuote);
 
-	const handleSubmit = ({ quote, categories }: Quote) => {
+	const handleSubmit = async ({ quote, categories }: Quote) => {
 		const newQuote: Quote = { categories, quote };
 
 		isEdit ? (newQuote.id = quoteId) : (newQuote.id = uuid());
 
-		quoteSchema
-			.validate(form, { abortEarly: false })
-			.then(() => {
-				isEdit
-					? updateQuoteInFirestore(initialEditQuote, newQuote)
-					: addQuoteToFirestore(newQuote);
-			})
-			.catch((e) => showWarnToast(e.errors.join(",\r\n")));
+		try {
+			await quoteSchema.validate(form, { abortEarly: false });
+			isEdit
+				? updateQuoteInFirestore(initialEditQuote, newQuote)
+				: addQuoteToFirestore(newQuote);
+		} catch (e) {
+			showWarnToast(e);
+		}
 	};
 
-	const addQuoteToFirestore = (quote: Quote) => {
+	const addQuoteToFirestore = async (quote: Quote) => {
 		setLoading(true);
 
-		bookRef
-			.update({
+		try {
+			await bookRef.update({
 				quotes: firestore.FieldValue.arrayUnion(quote),
-			})
-			.then(() => addQuoteToBook(quote, bookId))
-			.catch()
-			.finally(() => {
-				setLoading(false);
-				navigation.goBack();
 			});
+			dispatch(addQuoteToBook(quote, bookId));
+		} catch (e) {
+			showWarnToast(e);
+		} finally {
+			setLoading(false);
+			navigation.goBack();
+		}
 	};
 
-	const updateQuoteInFirestore = (oldQuote: Quote, newQuote: Quote) => {
-		bookRef
-			.update({
+	const updateQuoteInFirestore = async (oldQuote: Quote, newQuote: Quote) => {
+		try {
+			await bookRef.update({
 				quotes: firestore.FieldValue.arrayRemove(oldQuote),
-			})
-			.then(() => {
-				deleteQuote(bookId, quoteId);
-				addQuoteToFirestore(newQuote);
-			})
-			.catch();
+			});
+			dispatch(deleteQuote(bookId, quoteId));
+			addQuoteToFirestore(newQuote);
+		} catch (e) {
+			showWarnToast(e);
+		}
 	};
 
-	const deleteQuoteInFirestore = () => {
+	const deleteQuoteInFirestore = async () => {
 		setLoading(true);
 
-		bookRef
-			.update({
+		try {
+			await bookRef.update({
 				quotes: firestore.FieldValue.arrayRemove(initialEditQuote),
-			})
-			.then(() => deleteQuote(bookId, quoteId))
-			.catch()
-			.finally(() => {
-				setLoading(false);
-				navigation.goBack();
 			});
+
+			dispatch(deleteQuote(bookId, quoteId));
+		} catch (e) {
+			showWarnToast(e);
+		} finally {
+			setLoading(false);
+			navigation.goBack();
+		}
 	};
 
 	const confirmDelete = () => {
@@ -170,7 +166,7 @@ const AddQuoteScreen: React.FC<Props> = ({
 									danger
 									iconLeft
 									style={styles.deleteButton}
-									onPress={() => confirmDelete()}
+									onPress={confirmDelete}
 								>
 									<Icon type="Ionicons" name="md-trash" />
 									<Text>Delete quote</Text>
@@ -224,4 +220,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default connect(null, { addQuoteToBook, deleteQuote })(AddQuoteScreen);
+export default AddQuoteScreen;

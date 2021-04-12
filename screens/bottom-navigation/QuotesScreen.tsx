@@ -62,20 +62,19 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 	const [searchVal, setSearchVal] = useState("");
 	const quotes: QuoteListItem[] = [];
 
-	useEffect(() => {
-		books.forEach((book) => {
-			if (book.quotes) {
-				book.quotes.forEach((quote: Quote) => {
-					quotes.push({
-						bookId: book.id,
-						bookAuthor: book.author,
-						bookTitle: book.title,
-						...quote,
-					});
+	// TODO: Put all quotes to redux store instead loop here
+	books.forEach((book) => {
+		if (book.quotes) {
+			book.quotes.forEach((quote: Quote) => {
+				quotes.push({
+					bookId: book.id,
+					bookAuthor: book.author,
+					bookTitle: book.title,
+					...quote,
 				});
-			}
-		});
-	}, [books]);
+			});
+		}
+	});
 
 	const filteredQuotes = () =>
 		quotes.filter((quote) =>

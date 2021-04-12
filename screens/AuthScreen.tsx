@@ -18,7 +18,7 @@ import {
 	ImageBackground,
 } from "react-native";
 import * as yup from "yup";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Constants from "expo-constants";
 
 import { logInUser } from "../store/actions/auth";
@@ -32,67 +32,62 @@ import { showWarnToast } from "../helpers/Toast";
 import { User, UserCredentials } from "../interfaces/user.interface";
 import { Store } from "../store/store";
 
-interface Props {
-	logInUser: (user: User) => void;
-	setLoading: () => void;
-	setLoadingComplete: () => void;
-	loading: boolean;
-}
-
 const authSchema = yup.object({
 	email: yup.string().email().required(),
 	password: yup.string().required().min(5),
 });
 
-const AuthScreen: React.FC<Props> = ({
-	logInUser,
-	loading,
-	setLoading,
-	setLoadingComplete,
-}) => {
+const AuthScreen: React.FC = () => {
 	const [auth, setAuth] = useState("login");
 	const [user, setUser] = useState<UserCredentials>({
 		email: "",
 		password: "",
 	});
+	const loading = useSelector((state: Store) => state.globalLoading.loading);
+	const dispatch = useDispatch();
 
-	const handleSubmit = ({
+	const handleSubmit = async ({
 		email,
 		password,
 	}: {
 		email: string;
 		password: string;
 	}) => {
-		setLoading();
+		dispatch(setLoading());
 
-		authSchema
-			.validate(user, { abortEarly: false })
-			.then(() => {
-				auth === "login"
-					? signInUser(email, password)
-					: createAndSignUser(email, password);
-			})
-			.catch((e) => {
-				showWarnToast(e.errors.join(",\r\n"));
-				setLoadingComplete();
-			});
+		try {
+			await authSchema.validate(user, { abortEarly: false });
+			auth === "login"
+				? signInUser(email, password)
+				: createAndSignUser(email, password);
+		} catch (e) {
+			showWarnToast(e);
+		} finally {
+			dispatch(setLoadingComplete());
+		}
 	};
 
-	const signInUser = (email: string, password: string) => {
-		signIn(email, password)
-			.then(({ user }) => logInUser(user as User))
-			.catch(({ message }) => showWarnToast(message))
-			.finally(() => setLoadingComplete());
+	const signInUser = async (email: string, password: string) => {
+		try {
+			const { user } = await signIn(email, password);
+			dispatch(logInUser(user as User));
+		} catch ({ message }) {
+			showWarnToast(message, true);
+		} finally {
+			dispatch(setLoadingComplete());
+		}
 	};
 
-	const createAndSignUser = (email: string, password: string) => {
-		createUser(email, password)
-			.then(({ user }) => {
-				createUserProfileDocument(user);
-				logInUser(user as User);
-			})
-			.catch(({ message }) => showWarnToast(message))
-			.finally(() => setLoadingComplete());
+	const createAndSignUser = async (email: string, password: string) => {
+		try {
+			const { user } = await createUser(email, password);
+			createUserProfileDocument(user);
+			dispatch(logInUser(user as User));
+		} catch ({ message }) {
+			showWarnToast(message);
+		} finally {
+			dispatch(setLoadingComplete());
+		}
 	};
 
 	return (
@@ -209,12 +204,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-const mapStateToProps = (state: Store) => ({
-	loading: state.globalLoading.loading,
-});
-
-export default connect(mapStateToProps, {
-	logInUser,
-	setLoading,
-	setLoadingComplete,
-})(AuthScreen);
+export default AuthScreen;
