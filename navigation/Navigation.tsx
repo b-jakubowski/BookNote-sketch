@@ -3,7 +3,7 @@ import {
 	createStackNavigator,
 	StackNavigationOptions,
 } from "@react-navigation/stack";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
 	NavigationContainer,
 	DarkTheme,
@@ -26,18 +26,7 @@ import { StackParamList } from "./types";
 import { Container } from "native-base";
 import { backgroundColor } from "../constants/Theme";
 import { logInUser } from "../store/actions/auth";
-
-interface Props {
-	loading: boolean;
-	logInUser: (user: any) => void;
-}
-
-interface StateProps {
-	auth: User;
-	globalLoading: {
-		loading: boolean;
-	};
-}
+import { Store } from "../store/store";
 
 const Stack = createStackNavigator<StackParamList>();
 
@@ -50,14 +39,16 @@ const stackScreenOptions: StackNavigationOptions = {
 	headerTitleAlign: "center",
 };
 
-const Navigation: React.FC<Props> = ({ loading, logInUser }) => {
+const Navigation: React.FC = () => {
 	const [initializing, setInitializing] = useState(true);
 	const [user, setUser] = useState();
+	const loading = useSelector((state: Store) => state.globalLoading.loading);
+	const dispatch = useDispatch();
 	const theme = useTheme();
 
 	const onAuthStateChanged = (user: any) => {
 		setUser(user);
-		if (user) logInUser(user);
+		if (user) dispatch(logInUser(user));
 		if (initializing) setInitializing(false);
 	};
 
@@ -124,9 +115,4 @@ const Navigation: React.FC<Props> = ({ loading, logInUser }) => {
 	);
 };
 
-const mapStateToProps = (state: StateProps) => ({
-	user: state.auth,
-	loading: state.globalLoading.loading,
-});
-
-export default connect(mapStateToProps, { logInUser })(Navigation);
+export default Navigation;

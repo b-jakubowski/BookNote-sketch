@@ -9,6 +9,26 @@ import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/s
 import { showWarnToast } from "../helpers/Toast";
 import { StackParamList } from "../navigation/types";
 
+const styles = StyleSheet.create({
+	button: {
+		marginBottom: 10,
+	},
+	buttonContainer: {
+		alignItems: "flex-end",
+		backgroundColor: "transparent",
+		flex: 1,
+		flexDirection: "row",
+		justifyContent: "center",
+	},
+	camera: {
+		flex: 1,
+	},
+	container: {
+		height: "75%",
+		width: "100%",
+	},
+});
+
 interface Props {
 	navigation: StackNavigationHelpers;
 	route: RouteProp<StackParamList, "Camera">;
@@ -52,10 +72,10 @@ const CameraScreen: React.FC<Props> = ({ navigation, route }) => {
 							id: route.params.id,
 							initialBookValues: {
 								...route.params.initialBookValues,
-								cover: asset.uri,
+								cover: asset?.uri,
 							},
 					  })
-					: navigation.navigate("Add book", { uri: asset.uri });
+					: navigation.navigate("Add book", { uri: asset?.uri });
 			}
 		}
 	};
@@ -95,25 +115,5 @@ const CameraScreen: React.FC<Props> = ({ navigation, route }) => {
 		</View>
 	);
 };
-
-const styles = StyleSheet.create({
-	button: {
-		marginBottom: 10,
-	},
-	buttonContainer: {
-		alignItems: "flex-end",
-		backgroundColor: "transparent",
-		flex: 1,
-		flexDirection: "row",
-		justifyContent: "center",
-	},
-	camera: {
-		flex: 1,
-	},
-	container: {
-		height: "75%",
-		width: "100%",
-	},
-});
 
 export default CameraScreen;

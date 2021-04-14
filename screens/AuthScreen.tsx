@@ -32,6 +32,45 @@ import { showWarnToast } from "../helpers/Toast";
 import { User, UserCredentials } from "../interfaces/user.interface";
 import { Store } from "../store/store";
 
+const styles = StyleSheet.create({
+	backButton: {
+		marginLeft: 10,
+		width: 100,
+	},
+	button: {
+		marginTop: 30,
+	},
+	content: {
+		flex: 1,
+		justifyContent: "center",
+	},
+	form: {
+		flex: 1,
+		paddingHorizontal: 15,
+		paddingVertical: 30,
+	},
+	image: {
+		flex: 1,
+		justifyContent: "center",
+		resizeMode: "cover",
+	},
+	input: {
+		marginBottom: 10,
+	},
+	safeArea: {
+		paddingTop: Constants.platform?.android ? 25 : 0,
+	},
+	signUpButton: {
+		width: 150,
+	},
+	signUpContainer: {
+		alignItems: "center",
+		flexDirection: "row",
+		justifyContent: "space-around",
+		marginTop: 50,
+	},
+});
+
 const authSchema = yup.object({
 	email: yup.string().email().required(),
 	password: yup.string().required().min(5),
@@ -164,44 +203,5 @@ const AuthScreen: React.FC = () => {
 		</ImageBackground>
 	);
 };
-
-const styles = StyleSheet.create({
-	backButton: {
-		marginLeft: 10,
-		width: 100,
-	},
-	button: {
-		marginTop: 30,
-	},
-	content: {
-		flex: 1,
-		justifyContent: "center",
-	},
-	form: {
-		flex: 1,
-		paddingHorizontal: 15,
-		paddingVertical: 30,
-	},
-	image: {
-		flex: 1,
-		justifyContent: "center",
-		resizeMode: "cover",
-	},
-	input: {
-		marginBottom: 10,
-	},
-	safeArea: {
-		paddingTop: Constants.platform?.android ? 25 : 0,
-	},
-	signUpButton: {
-		width: 150,
-	},
-	signUpContainer: {
-		alignItems: "center",
-		flexDirection: "row",
-		justifyContent: "space-around",
-		marginTop: 50,
-	},
-});
 
 export default AuthScreen;

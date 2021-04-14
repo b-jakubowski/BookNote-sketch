@@ -1,21 +1,14 @@
 import React from "react";
 import { Text, Button, View, ActionSheet } from "native-base";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import { Store } from "../store/store";
 import { logOutUser } from "../store/actions/auth";
 import { clearBooks } from "../store/actions/book";
-import { User } from "../interfaces/user.interface";
 import { signOut } from "../constants/Firebase";
 import { showWarnToast } from "../helpers/Toast";
 import { titleTextColor, spacing } from "../constants/Theme";
-
-interface Props {
-	user: User;
-	logOutUser: () => void;
-	clearBooks: () => void;
-}
 
 const ScreenContainer = styled(View)`
 	flex: 1;
@@ -32,18 +25,18 @@ const ButtonsContainer = styled(View)`
 	margin-top: 80px;
 `;
 
-const UserDetailsScreen: React.FC<Props> = ({
-	user,
-	logOutUser,
-	clearBooks,
-}) => {
-	const logOut = () => {
-		signOut()
-			.then(() => {
-				clearBooks();
-				logOutUser();
-			})
-			.catch((e) => showWarnToast(e));
+const UserDetailsScreen: React.FC = () => {
+	const user = useSelector((state: Store) => state.auth);
+	const dispatch = useDispatch();
+
+	const logOut = async () => {
+		try {
+			await signOut();
+			dispatch(clearBooks());
+			dispatch(logOutUser());
+		} catch (e) {
+			showWarnToast(e);
+		}
 	};
 
 	const confirmLogout = () => {
@@ -75,10 +68,4 @@ const UserDetailsScreen: React.FC<Props> = ({
 	);
 };
 
-const mapStateToProps = (state: Store) => ({
-	user: state.auth,
-});
-
-export default connect(mapStateToProps, { logOutUser, clearBooks })(
-	UserDetailsScreen
-);
+export default UserDetailsScreen;

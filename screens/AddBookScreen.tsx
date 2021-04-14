@@ -15,6 +15,24 @@ import { showWarnToast } from "../helpers/Toast";
 import { bookDetailsSchema } from "../constants/Schemas";
 import { StackParamList } from "../navigation/types";
 
+const styles = StyleSheet.create({
+	addButton: {
+		flex: 1.5,
+		margin: 5,
+	},
+	buttonsContainer: {
+		flexDirection: "row",
+	},
+	clearButton: {
+		flex: 1,
+		margin: 5,
+	},
+	container: {
+		flex: 1,
+		flexDirection: "column",
+		justifyContent: "space-between",
+	},
+});
 interface Props {
 	route: RouteProp<StackParamList, "Add book">;
 	navigation: StackNavigationHelpers;
@@ -126,24 +144,5 @@ const AddBookScreen: React.FC<Props> = ({ route, navigation }) => {
 		</>
 	);
 };
-
-const styles = StyleSheet.create({
-	addButton: {
-		flex: 1.5,
-		margin: 5,
-	},
-	buttonsContainer: {
-		flexDirection: "row",
-	},
-	clearButton: {
-		flex: 1,
-		margin: 5,
-	},
-	container: {
-		flex: 1,
-		flexDirection: "column",
-		justifyContent: "space-between",
-	},
-});
 
 export default AddBookScreen;

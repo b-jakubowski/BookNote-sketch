@@ -14,6 +14,45 @@ import { showWarnToast } from "../helpers/Toast";
 import { uuid } from "../helpers/uuid";
 import { StackParamList } from "../navigation/types";
 
+const styles = StyleSheet.create({
+	addButton: {
+		flex: 1.5,
+		margin: 5,
+	},
+	buttonsContainer: {
+		flex: 1,
+		justifyContent: "flex-end",
+	},
+	clearButtonsContainer: {
+		flexDirection: "row",
+		marginTop: 20,
+	},
+	categories: {
+		flexDirection: "row",
+		flexWrap: "wrap",
+		justifyContent: "center",
+	},
+	clearButton: {
+		flex: 1,
+		margin: 5,
+	},
+	content: {
+		flex: 1,
+		padding: 10,
+	},
+	deleteButton: {
+		flex: 0.8,
+		margin: 5,
+	},
+	form: {
+		flex: 1,
+		flexDirection: "column",
+		justifyContent: "space-between",
+	},
+	formItem: {
+		marginBottom: 15,
+	},
+});
 interface Props {
 	route: RouteProp<StackParamList, "Add/Edit Quote">;
 	navigation: StackNavigationHelpers;
@@ -179,45 +218,5 @@ const AddQuoteScreen: React.FC<Props> = ({ route, navigation }) => {
 		</View>
 	);
 };
-
-const styles = StyleSheet.create({
-	addButton: {
-		flex: 1.5,
-		margin: 5,
-	},
-	buttonsContainer: {
-		flex: 1,
-		justifyContent: "flex-end",
-	},
-	clearButtonsContainer: {
-		flexDirection: "row",
-		marginTop: 20,
-	},
-	categories: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-		justifyContent: "center",
-	},
-	clearButton: {
-		flex: 1,
-		margin: 5,
-	},
-	content: {
-		flex: 1,
-		padding: 10,
-	},
-	deleteButton: {
-		flex: 0.8,
-		margin: 5,
-	},
-	form: {
-		flex: 1,
-		flexDirection: "column",
-		justifyContent: "space-between",
-	},
-	formItem: {
-		marginBottom: 15,
-	},
-});
 
 export default AddQuoteScreen;

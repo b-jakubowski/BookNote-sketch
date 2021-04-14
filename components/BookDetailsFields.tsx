@@ -18,7 +18,7 @@ import Autocomplete from "react-native-autocomplete-input";
 
 import { BookDetails, Book } from "../interfaces/book.interface";
 import { Store } from "../store/store";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import {
 	foregroundColor,
@@ -28,14 +28,6 @@ import {
 	black,
 } from "../constants/Theme";
 import { useTheme } from "../context/ThemeContext";
-
-interface Props extends BookDetails {
-	isEdit: boolean;
-	id?: string | number;
-	form: BookDetails;
-	setForm: (f: BookDetails) => void;
-	books: Book[];
-}
 
 const FormItem = styled(View)`
 	background-color: ${foregroundColor};
@@ -51,8 +43,42 @@ const AutocompleteList = styled(TouchableOpacity)`
 	z-index: 100000;
 `;
 
+const styles = StyleSheet.create({
+	autocompleteContainer: {
+		flex: 2,
+		paddingVertical: 12,
+	},
+	autocompleteList: {
+		borderTopColor: "lightgrey",
+		borderTopWidth: 1,
+		marginTop: 8,
+		paddingBottom: 8,
+		elevation: 10,
+	},
+	autocompleteListItem: {
+		padding: 12,
+		backgroundColor: "white",
+	},
+	autocompleteInput: {
+		paddingVertical: 4,
+		borderWidth: 0,
+	},
+	coverButton: {
+		marginVertical: 12,
+	},
+	coverInput: {
+		flex: 2,
+	},
+});
+
+interface Props extends BookDetails {
+	isEdit: boolean;
+	id?: string | number;
+	form: BookDetails;
+	setForm: (f: BookDetails) => void;
+}
+
 const BookDetailsFields: React.FC<Props> = ({
-	books,
 	id,
 	title,
 	author,
@@ -66,6 +92,7 @@ const BookDetailsFields: React.FC<Props> = ({
 	const [showAuthorResults, setShowAuthorResults] = useState(true);
 	const navigation = useNavigation();
 	const theme = useTheme();
+	const books = useSelector((state: Store) => state.books);
 
 	const textColor = theme.mode === "dark" ? gray[100] : black;
 
@@ -232,36 +259,4 @@ const BookDetailsFields: React.FC<Props> = ({
 	);
 };
 
-const styles = StyleSheet.create({
-	autocompleteContainer: {
-		flex: 2,
-		paddingVertical: 12,
-	},
-	autocompleteList: {
-		borderTopColor: "lightgrey",
-		borderTopWidth: 1,
-		marginTop: 8,
-		paddingBottom: 8,
-		elevation: 10,
-	},
-	autocompleteListItem: {
-		padding: 12,
-		backgroundColor: "white",
-	},
-	autocompleteInput: {
-		paddingVertical: 4,
-		borderWidth: 0,
-	},
-	coverButton: {
-		marginVertical: 12,
-	},
-	coverInput: {
-		flex: 2,
-	},
-});
-
-const mapStateToProps = (state: Store) => ({
-	books: state.books,
-});
-
-export default connect(mapStateToProps)(BookDetailsFields);
+export default BookDetailsFields;

@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { List, ListItem, View, Icon, Fab } from "native-base";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
+import { FlatList, TouchableOpacity } from "react-native";
+import styled from "styled-components";
 
 import QuoteItem from "../../components/QuoteItem";
-import { Book, Quote } from "../../interfaces/book.interface";
+import { Quote } from "../../interfaces/book.interface";
 import Search from "../../components/Search";
-import styled from "styled-components";
 import {
 	foregroundColor,
 	spacing,
@@ -14,17 +15,7 @@ import {
 	fontSize,
 	orange,
 } from "../../constants/Theme";
-import { FlatList, TouchableOpacity } from "react-native";
-
-type Props = {
-	books: Book[];
-	navigation: StackNavigationHelpers;
-};
-
-export interface QuoteListItem extends Quote {
-	bookAuthor: string;
-	bookTitle: string;
-}
+import { Store } from "../../store/store";
 
 export const QuotesList = styled(List)`
 	flex: 1;
@@ -57,9 +48,19 @@ export const EditIcon = styled(Icon)`
 	font-size: ${fontSize.l};
 `;
 
-const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
+type Props = {
+	navigation: StackNavigationHelpers;
+};
+
+export interface QuoteListItem extends Quote {
+	bookAuthor: string;
+	bookTitle: string;
+}
+
+const QuotesScreen: React.FC<Props> = ({ navigation }) => {
 	const [searchVisible, setSearchVisible] = useState(false);
 	const [searchVal, setSearchVal] = useState("");
+	const books = useSelector((state: Store) => state.books);
 	const quotes: QuoteListItem[] = [];
 
 	// TODO: Put all quotes to redux store instead loop here
@@ -138,6 +139,4 @@ const QuotesScreen: React.FC<Props> = ({ books, navigation }) => {
 	);
 };
 
-const mapStateToProps = ({ books }: Props) => ({ books });
-
-export default connect(mapStateToProps)(QuotesScreen);
+export default QuotesScreen;

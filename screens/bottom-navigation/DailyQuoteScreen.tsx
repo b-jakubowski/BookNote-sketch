@@ -9,11 +9,6 @@ import {
 	noteText,
 } from "../../constants/Theme";
 
-interface RandomQuote {
-	content: string;
-	author: string;
-}
-
 const ContainerTheme = styled(View)`
 	flex: 1;
 	padding: ${spacing.m};
@@ -27,6 +22,11 @@ const Author = styled(Text)`
 	font-size: ${fontSize.m};
 	color: ${noteText};
 `;
+
+interface RandomQuote {
+	content: string;
+	author: string;
+}
 
 const DailyQuoteScreen: React.FC = () => {
 	const [quote, setQuote] = useState<RandomQuote>({ content: "", author: "" });

@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Image, FlatList } from "react-native";
 import { Text, CardItem, Button, Fab, Icon, H3 } from "native-base";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationHelpers } from "@react-navigation/stack/lib/typescript/src/types";
 
 import QuoteItem from "../components/QuoteItem";
-import { Book, Quote } from "../interfaces/book.interface";
+import { Quote } from "../interfaces/book.interface";
 import { Store } from "../store/store";
 import { StackParamList } from "../navigation/types";
 import { QuotesList, ListItemTheme } from "./bottom-navigation/QuotesScreen";
@@ -20,12 +20,6 @@ import {
 	foregroundColor,
 	noteText,
 } from "../constants/Theme";
-
-interface Props {
-	navigation: StackNavigationHelpers;
-	route: RouteProp<StackParamList, "Book details">;
-	books: Book[];
-}
 
 const BookDetailsCard = styled(CardItem)`
 	background-color: ${foregroundColor};
@@ -51,8 +45,14 @@ const EditBookButton = styled(Button)`
 	min-height: 40px;
 `;
 
-const BookDetailsScreen: React.FC<Props> = ({ route, books, navigation }) => {
+interface Props {
+	navigation: StackNavigationHelpers;
+	route: RouteProp<StackParamList, "Book details">;
+}
+
+const BookDetailsScreen: React.FC<Props> = ({ route, navigation }) => {
 	const { id } = route.params;
+	const books = useSelector((state: Store) => state.books);
 	const { cover, title, author, quotes, status } =
 		books.filter((book) => book.id === id)[0] || {};
 
@@ -122,8 +122,4 @@ const BookDetailsScreen: React.FC<Props> = ({ route, books, navigation }) => {
 	);
 };
 
-const mapStateToProps = (state: Store): { books: Book[] } => ({
-	books: state.books,
-});
-
-export default connect(mapStateToProps)(BookDetailsScreen);
+export default BookDetailsScreen;

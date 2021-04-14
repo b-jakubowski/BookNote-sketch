@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { addBook, addBooks } from "../../store/actions/book";
+import { addBooks } from "../../store/actions/book";
 import BookList from "../../components/BookList/BookList";
 import Search from "../../components/Search";
 import firestore from "@react-native-firebase/firestore";
